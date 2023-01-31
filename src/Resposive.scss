@@ -1,0 +1,57 @@
+$res_max_600: "only screen and (max-width: 600px)";
+$res_min_600: "only screen and (min-width: 600px)";
+$res_min_768: "only screen and (min-width: 768px)";
+$res_min_992: "only screen and (min-width: 992px)";
+$res_min_1200: "only screen and (min-width: 1200px)";
+
+@mixin responsive_max_600() {
+    @media #{$res_max_600} {
+        @content;
+    }
+}
+@mixin responsive_min_600() {
+    @media #{$res_min_600} {
+        @content;
+    }
+}
+@mixin responsive_min_768() {
+    @media #{$res_min_768} {
+        @content;
+    }
+}
+@mixin responsive_min_992() {
+    @media #{$res_min_992} {
+        @content;
+    }
+}
+@mixin responsive_min_1200() {
+    @media #{$res_min_1200} {
+        @content;
+    }
+}
+
+@mixin media($keys...) {
+    @each $key in $keys {
+        @if ($key == responsive_max_600) {
+            @include responsive_max_600 {
+                @content;
+            }
+        } @else if ($key == responsive_min_600) {
+            @include responsive_min_600 {
+                @content;
+            }
+        } @else if ($key == responsive_min_768) {
+            @include responsive_min_768 {
+                @content;
+            }
+        } @else if ($key == responsive_min_992) {
+            @include responsive_min_992 {
+                @content;
+            }
+        } @else if ($key == responsive_min_1200) {
+            @include responsive_min_1200 {
+                @content;
+            }
+        }
+    }
+}
