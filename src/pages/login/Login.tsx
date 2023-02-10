@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,12 +6,23 @@ import classNames from "classnames/bind";
 import style from "./Login.module.scss";
 import { Link } from "react-router-dom";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { useAppDispatch } from "../../redux/hooks";
+import authAPI from "~/redux/apis/auth";
+
 
 const cls = classNames.bind(style);
 
 function Login() {
     const userState = useAppSelector((state) => state.user);
     const [showPassword, setShowPassword] = useState(false);
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const dispatch = useAppDispatch()
+
+    const login = (e:FormEvent)=>{
+        e.preventDefault()
+        dispatch(authAPI.login()({username, password}))
+    }
 
     useEffect(() => {
         if (userState.error) {
@@ -32,7 +43,7 @@ function Login() {
             <ToastContainer />
             <img src="bg.webp" alt="" id="bg_login" className={cls("bg")} />
 
-            <form action="">
+            <form action="" onSubmit={login}>
                 <img src="Logo_IUH.png" alt="" />
                 <div className={cls("form_header")}>Đăng nhập</div>
                 <div className={cls("form_group")}>
@@ -41,6 +52,7 @@ function Login() {
                         name="username"
                         placeholder="Mã giảng viên"
                         autoComplete="off"
+                        onChange={(e)=>setUsername(e.target.value)}
                     />
                 </div>
                 <div className={cls("form_group")}>
@@ -49,6 +61,7 @@ function Login() {
                         name="password"
                         placeholder="Mật khẩu"
                         autoComplete="off"
+                        onChange={(e)=>setPassword(e.target.value)}
                     />
                     {showPassword ? (
                         <EyeInvisibleOutlined
