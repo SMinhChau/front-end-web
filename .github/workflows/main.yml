@@ -1,0 +1,38 @@
+name: CI
+
+on:
+    push:
+        branches: ["production"]
+    pull_request:
+        branches: ["production"]
+    workflow_dispatch:
+
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+        steps:
+           
+            - uses: actions/checkout@v3
+            - name: Login to DockerHub Registry
+              run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+            - name: Build
+              run: cd front-end-web && docker build -t ${{secrets.DOCKERHUB_USERNAME}}/FE-web:latest .
+
+            - name: Push Docker Hub
+              run: docker push ${{secrets.DOCKERHUB_USERNAME}}/FE-web:latest
+    Deploy:
+        needs: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: deploy
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  script: |
+                      docker stop fe-web
+                      docker rm fe-web
+                      docker rmi ${{secrets.DOCKERHUB_USERNAME}}/FE-web:latest
+                      docker run -d -p 3000:3000 --name fe-web ${{secrets.DOCKERHUB_USERNAME}}/FE-web:latest
