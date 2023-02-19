@@ -38,7 +38,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpg|gif|webp)$/,
         exclude: /node_modules/,
         use: "file-loader?name=./assets/[name].[ext]",
       },

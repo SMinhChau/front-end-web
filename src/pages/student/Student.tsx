@@ -1,6 +1,6 @@
 import React from 'react'
 import Wrapper from '~/components/wapper/Wrapper'
-import StudentManagement from '~/components/studen_management/StudentManagement'
+import StudentManagement from '~/components/student_management/StudentManagement'
 
 const Student = () => {
   return (

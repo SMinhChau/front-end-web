@@ -9,6 +9,8 @@ import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useAppDispatch } from "../../redux/hooks";
 import authAPI from "~/redux/apis/auth";
 import { useNavigate } from "react-router-dom";
+import logo from '../../assets/Logo_IUH.png'
+import bgImg from '../../assets/bg.webp'
 
 const cls = classNames.bind(style);
 
@@ -49,10 +51,10 @@ function Login() {
     return (
         <div className={cls("login_container")}>
             <ToastContainer />
-            <img src="bg.webp" alt="" id="bg_login" className={cls("bg")} />
+            <img src={bgImg} alt="" id="bg_login" className={cls("bg")} />
 
             <form action="" onSubmit={login}>
-                <img src="Logo_IUH.png" alt="" />
+                <img src={logo} alt="" />
                 <div className={cls("form_header")}>Đăng nhập</div>
                 <div className={cls("form_group")}>
                     <input

@@ -9,7 +9,7 @@ interface User {
     email: string;
     is_staff: boolean;
     is_superuser: boolean;
-    role: "admin"|"teacher-v1"|"teacher-v2"|"student"
+    role: "admin"|"teacher-v1"|"teacher-v2"
     major: number
 }
 
