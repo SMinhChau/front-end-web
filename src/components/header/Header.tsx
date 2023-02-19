@@ -6,6 +6,9 @@ import headerMenu from "./header.menu";
 import { useAppSelector } from "../../redux/hooks";
 import { Link } from "react-router-dom";
 import { Badge } from "antd";
+import avatar from "../../assets/avatars/2.jpg";
+import imgLogout from "../../assets/icons/4.png";
+import tokenService from "~/services/token";
 
 const cls = classNames.bind(style);
 
@@ -30,10 +33,14 @@ function AppHeader() {
         };
     }, []);
 
+    const logout = () =>{
+        tokenService.reset()
+        window.location.href = '/login'
+    }
+
     return (
         <div className={cls("header")}>
-            <div className={cls("logo")}>
-            </div>
+            <div className={cls("logo")}></div>
             <div className={cls("menu")}>
                 <div className={cls("item")}>
                     <Badge count={5}>
@@ -41,7 +48,11 @@ function AppHeader() {
                     </Badge>
                 </div>
                 <div className={cls("account")} id="account">
-                    <img src="avatars/2.jpg" alt="" onClick={() => setToggleUser((prev) => !prev)}/>
+                    <img
+                        src={avatar}
+                        alt=""
+                        onClick={() => setToggleUser((prev) => !prev)}
+                    />
                     <div
                         className={cls("account_submenu")}
                         style={
@@ -66,6 +77,13 @@ function AppHeader() {
                                 </Link>
                             );
                         })}
+                        <div
+                            className={cls("menu_item")}
+                            onClick={logout}
+                        >
+                            <img src={imgLogout} alt="" />
+                            <div>Đăng xuất</div>
+                        </div>
                     </div>
                 </div>
             </div>

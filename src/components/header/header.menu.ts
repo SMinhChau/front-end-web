@@ -1,49 +1,40 @@
+import image2 from '../../assets/icons/2.png'
+import image3 from '../../assets/icons/3.png'
+
 const headerMenu = {
     admin: [
         {
-            icon: "icons/2.png",
+            icon: image2,
             name: "Cài đặt",
             url: "/setting",
         },
-        {
-            icon: "icons/4.png",
-            name: "Đăng xuất",
-            url: "/logout",
-        },
+       
     ],
     "teacher-v1": [
         {
-            icon: "icons/3.png",
+            icon: image3,
             name: "Xem thông tin",
             url: "/info",
         },
         {
-            icon: "icons/2.png",
+            icon: image2,
             name: "Cài đặt",
             url: "/setting",
         },
-        {
-            icon: "icons/4.png",
-            name: "Đăng xuất",
-            url: "/logout",
-        },
+       
     ],
     "teacher-v2": [
         {
-            icon: "icons/3.png",
+            icon: image3,
             name: "Xem thông tin",
             url: "/info",
         },
         {
-            icon: "icons/2.png",
+            icon: image2,
             name: "Cài đặt",
             url: "/setting",
         },
-        {
-            icon: "icons/4.png",
-            name: "Đăng xuất",
-            url: "/logout",
-        },
+       
     ],
     "teacher":[]
 };

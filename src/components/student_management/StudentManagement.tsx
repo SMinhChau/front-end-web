@@ -1,32 +1,15 @@
 import React from "react";
 import classNames from "classnames/bind";
-import style from "./TeacherManagement.module.scss";
+import style from "./StudentManagement.module.scss";
 import { Table, Avatar, Button, Upload } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-
 import data from "./data";
-
-const ColumeStatus = ({ text }: { text: string }) => {
-    return (
-        <span
-            style={{
-                padding: "5px 10px",
-                color: "#fff",
-                backgroundColor: text === "Đang Dạy" ? "#29CC57" : "#FEC400",
-                fontSize: "11px",
-                borderRadius: "100px",
-                fontWeight: "600",
-            }}
-        >
-            {text}
-        </span>
-    );
-};
 
 const cls = classNames.bind(style);
 
-const TeacherManagement = () => {
+
+const StudentManagement = () => {
     const columns: ColumnsType<any> = [
         {
             title: "",
@@ -42,38 +25,45 @@ const TeacherManagement = () => {
         },
 
         {
-            title: "Tên giảng viên",
+            title: "MSSV",
+            dataIndex: "mssv",
+            key: "mssv",
+        },
+        {
+            title: "Tên Sinh viên",
             dataIndex: "name",
             key: "name",
         },
         {
-            title: "Cấp bậc",
-            dataIndex: "role",
-            key: "role",
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
         {
-            title: "Ngày sinh",
-            dataIndex: "birthday",
-            key: "birthday",
+            title: "Lớp",
+            dataIndex: "class",
+            key: "class",
         },
         {
-            title: "Trạng thái",
-            dataIndex: "status",
-            key: "status",
-            render: (text: string) => <ColumeStatus text={text} />,
+            title: "Giới tính",
+            dataIndex: "gender",
+            key: "gender",
         },
     ];
-
     return (
-        <div className={cls("teacher_management")}>
+        <div className={cls("student")}>
             <div className={cls("function")}>
-                <h4>Quản lý giảng viên</h4>
+                <h4>Quản lý sinh viên</h4>
                 <div>
                     <Button
                         type="dashed"
                         icon={<PlusOutlined />}
                         size="large"
-                        style={{ margin: "0 10px", animation: "none", color:'rgb(80, 72, 229)' }}
+                        style={{
+                            margin: "0 10px",
+                            animation: "none",
+                            color: "rgb(80, 72, 229)",
+                        }}
                     >
                         Tạo
                     </Button>
@@ -82,7 +72,11 @@ const TeacherManagement = () => {
                             type="dashed"
                             icon={<UploadOutlined />}
                             size="large"
-                            style={{ marginBottom: "10px", animation: "none", color:'rgb(80, 72, 229)' }}
+                            style={{
+                                marginBottom: "10px",
+                                animation: "none",
+                                color: "rgb(80, 72, 229)",
+                            }}
                         >
                             Tải lên
                         </Button>
@@ -94,4 +88,4 @@ const TeacherManagement = () => {
     );
 };
 
-export default TeacherManagement;
+export default StudentManagement;
