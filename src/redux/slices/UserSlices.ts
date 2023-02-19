@@ -9,8 +9,8 @@ interface User {
     email: string;
     is_staff: boolean;
     is_superuser: boolean;
-    role: "admin"|"teacher-v1"|"teacher-v2"
-    major:string
+    role: "admin"|"teacher-v1"|"teacher-v2"|"student"
+    major: number
 }
 
 interface StateType {
@@ -26,10 +26,10 @@ const initialState = {
         fullName: "Nguyễn Thị Minh Châu",
         email: "",
         role:"admin",
-        major: "Kỹ thuật phần mềm"
+        major: 1
     },
     error: false,
-    is_login: tokenService.getRefreshToken() !== undefined,
+    is_login: tokenService.getRefreshToken() !== null,
 } as StateType;
 
 export const userSlice = createSlice({

@@ -32,15 +32,15 @@ axiosAuth.interceptors.response.use(
                 const refresh_token = tokenService.getRefreshToken();
                 if (refresh_token) {
                     const res = await axios({
-                        url: URL + "/auth/Refresh-token",
+                        url: URL + "/lecturer/auth/Refresh-token",
                         method: "post",
                         data: {
                             refreshToken: tokenService.getRefreshToken()
                         },
                     });
-                    if (res.data.access_token) {
-                        tokenService.setAccessToken(res.data.access_token);
-                        tokenService.setRefreshToken(res.data.refresh_token);
+                    if (res.data.accessToken) {
+                        tokenService.setAccessToken(res.data.accessToken);
+                        tokenService.setRefreshToken(res.data.refreshToken);
                     }
                     return axiosAuth(config);
                 }
