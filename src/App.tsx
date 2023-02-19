@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './App.css'
+import "./App.css";
 import { Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "antd/dist/reset.css";
@@ -9,7 +9,10 @@ import NoMatch from "./pages/NoMatch";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { useAppSelector } from "./redux/hooks";
 import Login from "./pages/login/Login";
-import Management from "./pages/management/Management";
+import Semester from "./pages/semester/Semester";
+import Teacher from "./pages/teacher/Teacher";
+import Student from "./pages/student/Student";
+import Evaludate from "./pages/evaluate/Evaludate";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
@@ -21,12 +24,36 @@ function App() {
                     path="/"
                     element={
                         <PrivateRoute isLogin={userState.is_login}>
-                            <Management />
+                            <Semester />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/teacher"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <Teacher />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/student"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <Student />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/evaluate"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <Evaludate />
                         </PrivateRoute>
                     }
                 />
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Login />} />
+                    <Route path="/register" element={<Login />} />
                 <Route path="*" element={<NoMatch />} />
             </Routes>
         </Router>

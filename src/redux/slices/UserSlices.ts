@@ -25,11 +25,11 @@ const initialState = {
         avatar: "",
         fullName: "Nguyễn Thị Minh Châu",
         email: "",
-        role:"teacher-v1",
+        role:"admin",
         major: "Kỹ thuật phần mềm"
     },
     error: false,
-    is_login: true,
+    is_login: tokenService.getRefreshToken() !== undefined,
 } as StateType;
 
 export const userSlice = createSlice({
@@ -40,8 +40,8 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(authAPI.login().fulfilled, (state, action) => {
-            tokenService.setAccessToken(action.payload.access_token);
-            tokenService.setRefreshToken(action.payload.refresh_token);
+            tokenService.setAccessToken(action.payload.accessToken);
+            tokenService.setRefreshToken(action.payload.refreshToken);
             state.error = false;
             state.is_login = true;
         });

@@ -1,13 +1,13 @@
-*:not(*[class^="ant"], img[id^="bg"], svg){
+*:not(*[class^="ant"], svg){
     box-sizing:  border-box;
     margin: 0;
     padding: 0;
     font-family:"Roboto", sans-serif;
 
     scroll-behavior: smooth;
-    transition: all 0.2s;
+    /* transition: all 0.2s;
     animation-name: myfading;
-    animation-duration: 0.3s;
+    animation-duration: 0.3s; */
 }
 
 @keyframes myfading {

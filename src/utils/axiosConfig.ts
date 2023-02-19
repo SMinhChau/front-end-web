@@ -1,8 +1,9 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import tokenService from "../services/token";
+import { URL } from "~/constant";
 
 const axiosAuth = axios.create({
-    baseURL: process.env.REACT_APP_URL,
+    baseURL: URL,
     headers: {
         "Content-type": "application/json",
     },
@@ -31,13 +32,10 @@ axiosAuth.interceptors.response.use(
                 const refresh_token = tokenService.getRefreshToken();
                 if (refresh_token) {
                     const res = await axios({
-                        url: process.env.REACT_APP_URL + "/o/token/",
+                        url: URL + "/auth/Refresh-token",
                         method: "post",
                         data: {
-                            grant_type: "refresh_token",
-                            refresh_token: refresh_token,
-                            client_id: process.env.REACT_APP_CLIENT_ID,
-                            client_secret: process.env.REACT_APP_CLIENT_SECRET,
+                            refreshToken: tokenService.getRefreshToken()
                         },
                     });
                     if (res.data.access_token) {
@@ -57,7 +55,7 @@ axiosAuth.interceptors.response.use(
 const axiosNotAuth = axios.create();
 axiosNotAuth.interceptors.request.use(
     (config) => {
-        config.baseURL = process.env.REACT_APP_URL;
+        config.baseURL = URL;
         return config;
     },
     (error) => Promise.reject(error)

@@ -1,0 +1,38 @@
+[
+    {
+        "key": "1",
+        "avatar": "avatars/1.png",
+        "mssv": "12345678",
+        "name": "Nguyen Van A",
+        "email": "anguyen@gmail.com",
+        "class": "DHKTPM",
+        "gender": "Nam"
+    },
+    {
+        "key": "2",
+        "avatar": "avatars/1.png",
+        "mssv": "12345678",
+        "name": "Nguyen Van A",
+        "email": "anguyen@gmail.com",
+        "class": "DHKTPM",
+        "gender": "Nam"
+    },
+    {
+        "key": "3",
+        "avatar": "avatars/1.png",
+        "mssv": "12345678",
+        "name": "Nguyen Van A",
+        "email": "anguyen@gmail.com",
+        "class": "DHKTPM",
+        "gender": "Nam"
+    },
+    {
+        "key": "4",
+        "avatar": "avatars/1.png",
+        "mssv": "12345678",
+        "name": "Nguyen Van A",
+        "email": "anguyen@gmail.com",
+        "class": "DHKTPM",
+        "gender": "Nam"
+    }
+]

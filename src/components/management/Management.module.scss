@@ -1,0 +1,104 @@
+@import "../../Variables.scss";
+@import "../../Resposive.scss";
+
+.management {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .menu {
+        width: 100%;
+        height: 100%;
+        background-color: #121828;
+        hr{
+            margin: 24px 0px;
+            flex-shrink: 0;
+            border-width: 0px 0px thin;
+            border-style: solid;
+            border-color: rgb(45, 55, 72);
+            display: block;
+            unicode-bidi: isolate;
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+            margin-inline-start: auto;
+            margin-inline-end: auto;
+            overflow: hidden;
+            color: rgb(255, 255, 255);
+        }
+        .expand_menu {
+            @include media(
+                responsive_max_600,
+                responsive_min_600,
+                responsive_min_768
+            ) {
+                display: block;
+                font-size: 25px;
+                color: #fff;
+                margin-top: 10px;
+                cursor: pointer;
+            }
+
+            @include media(responsive_min_992) {
+                display: none;
+            }
+        }
+
+        .empty {
+            margin-top: 100px;
+        }
+
+        .menu_item {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            padding: 10px;
+            margin-top: 30px;
+            text-decoration: none;
+            cursor: pointer;
+
+            @include media(
+                responsive_max_600,
+                responsive_min_600,
+                responsive_min_768
+            ) {
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            @include media(responsive_min_992) {
+                justify-content: inherit;
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.08);
+            }
+
+            img {
+                @include media(
+                    responsive_max_600,
+                    responsive_min_600,
+                    responsive_min_768
+                ) {
+                    width: 25px;
+                    height: 25px;
+                    margin-right: 0 !important;
+                }
+
+                @include media(responsive_min_992) {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 20px !important;
+                }
+            }
+            p {
+                padding: 0;
+                margin: 0;
+                font-size: 0.875rem;
+                line-height: 1.75;
+                font-weight: 700;
+            }
+        }
+    }
+}

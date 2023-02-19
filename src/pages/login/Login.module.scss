@@ -60,10 +60,12 @@
             font-size: 20px;
             border-radius: 20px;
             position: relative;
+            background-color: #fff !important;
 
             input {
                 width: 100%;
                 border: none;
+               
                 &:focus {
                     outline: none;
                 }
