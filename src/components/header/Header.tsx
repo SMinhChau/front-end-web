@@ -6,7 +6,6 @@ import headerMenu from "./header.menu";
 import { useAppSelector } from "../../redux/hooks";
 import { Link } from "react-router-dom";
 import { Badge } from "antd";
-import avatar from "../../assets/avatars/2.jpg";
 import imgLogout from "../../assets/icons/4.png";
 import tokenService from "~/services/token";
 
@@ -15,6 +14,8 @@ const cls = classNames.bind(style);
 function AppHeader() {
     const [toggleUser, setToggleUser] = useState(false);
     const userState = useAppSelector((state) => state.user).user;
+    console.log(userState);
+    
 
     const menu = headerMenu[userState.role];
 
@@ -49,7 +50,7 @@ function AppHeader() {
                 </div>
                 <div className={cls("account")} id="account">
                     <img
-                        src={avatar}
+                        src={userState.avatar}
                         alt=""
                         onClick={() => setToggleUser((prev) => !prev)}
                     />
@@ -61,7 +62,7 @@ function AppHeader() {
                                 : {}
                         }
                     >
-                        <p className={cls("username")}>{userState.fullName}</p>
+                        <p className={cls("username")}>{userState.name}</p>
                         <p className={cls("role")}>{userState.role}</p>
                         <div className={cls("break_line")}></div>
                         {menu.map((value, index) => {

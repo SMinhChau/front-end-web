@@ -10,7 +10,7 @@ const headerMenu = {
         },
        
     ],
-    "teacher-v1": [
+    "Lecturer": [
         {
             icon: image3,
             name: "Xem thông tin",
