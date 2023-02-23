@@ -1,4 +1,4 @@
-import { axiosNotAuth } from "../utils/axiosConfig";
+import { axiosAuth, axiosNotAuth } from "../utils/axiosConfig";
 
 class AuthService {
     login(data: { username: string; password: string }) {
@@ -7,6 +7,12 @@ class AuthService {
             method: "post",
             data,
         });
+    }
+
+    getInfo(){
+        return axiosAuth({
+            url: '/lecturer/user'
+        })
     }
 }
 

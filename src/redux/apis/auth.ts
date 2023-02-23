@@ -12,6 +12,16 @@ class AuthAPI {
             }
         );
     }
+    getInfo(){
+        return createAsyncThunk(
+            'user/get-info',
+            async (thunkAPI)=>{
+                const result = await authService.getInfo()
+                if(result.status === 200) return result.data
+                
+            }
+        )
+    }
 }
 
 const authAPI = new AuthAPI();
