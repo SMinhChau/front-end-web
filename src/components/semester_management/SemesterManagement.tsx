@@ -215,6 +215,7 @@ const SemesterManagement = () => {
                     Tạo
                 </Button>
                 <Modal
+                    destroyOnClose
                     open={open}
                     title="Title"
                     onCancel={handleCancel}
