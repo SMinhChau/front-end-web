@@ -11,7 +11,7 @@ class AuthService {
 
     getInfo(){
         return axiosAuth({
-            url: '/lecturer/user'
+            url: '/lecturer/me'
         })
     }
 }
