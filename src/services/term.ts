@@ -15,6 +15,20 @@ class TermService {
             data: values,
         });
     }
+
+    async deleteTerm(id: number){
+        return await axiosAuth({
+            url: '/lecturer/term/'+id,
+            method:'delete',
+        })
+    }
+    async update(id:any, data:any){
+        return await axiosAuth({
+            url:'/lecturer/term/'+id,
+            method: 'put',
+            data
+        })
+    }
 }
 
 const termService = new TermService();

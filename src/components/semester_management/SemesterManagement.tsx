@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Form, Input, DatePicker } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import style from "./SemesterManagement.module.scss";
 import termService from "~/services/term";
@@ -80,9 +80,22 @@ const SemesterManagement = () => {
             key: "dateReport",
             render: (t: Date) => moment(t).format("DD/MM/YYYY"),
         },
+        {
+            title: "",
+            dataIndex: "id",
+            render: (id:any) => <Button onClick={()=>deleteTerm(id)}><DeleteOutlined /></Button>,
+        },
+        {
+            title: "",
+            dataIndex: "id",
+            render: (id:any) => <Button onClick={()=>showEditModal(id)}><EditOutlined /></Button>,
+        },
     ];
     const [terms, setTerms] = useState<Array<Term>>([]);
     const [open, setOpen] = useState(false);
+    const [status, setStatus] = useState("insert")
+    const [initData, setInitData] = useState({})
+    const [idUpdate, setIdUpdate] = useState(null)
 
     useEffect(() => {
         termService.getTerm(1).then((result) => {
@@ -96,6 +109,7 @@ const SemesterManagement = () => {
 
     const showModal = () => {
         setOpen(true);
+        setStatus('insert')
     };
 
     const handleCancel = () => {
@@ -115,10 +129,44 @@ const SemesterManagement = () => {
             dateDiscussion: values.dateDiscussion.format('MM/DD/YYYY'),
             dateReport: values.dateReport.format('MM/DD/YYYY'),
         }
-        termService.createTerm(values).then(()=>{
+        if(status==='insert'){
+            termService.createTerm(values).then(()=>{
+                window.location.reload()
+            }).catch(err=>{
+                toast.info(err.response.data.error, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            })
+        }else{
+            termService.update(idUpdate, values).then(()=>{
+                window.location.reload()
+            }).catch(err=>{
+                toast.info(err.response.data.error, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            })
+        }
+        
+
+    };
+
+    const deleteTerm = (id:number)=>{
+        termService.deleteTerm(id).then(()=>{
             window.location.reload()
-        }).catch(err=>{
-            toast.info(err.response.data.error, {
+        }).catch((err)=>{
+            toast.error(err.response.data.error, {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -128,8 +176,24 @@ const SemesterManagement = () => {
                 progress: undefined,
             });
         })
-
-    };
+    }
+    const showEditModal = (id:any) =>{
+        setOpen(true)
+        setStatus('update')
+        setIdUpdate(id)
+        const term = terms.filter(value=>value.id===id)[0]
+        setInitData({
+            ...term,
+            startDate: moment(term.startDate),
+            endDate: moment(term.endDate),
+            startDateSubmitTopic: moment(term.startDateSubmitTopic),
+            endDateSubmitTopic: moment(term.endDateSubmitTopic),
+            startDateChooseTopic: moment(term.startDateChooseTopic),
+            endDateChooseTopic: moment(term.endDateChooseTopic),
+            dateDiscussion: moment(term.dateDiscussion),
+            dateReport: moment(term.dateReport),
+        })
+    }
 
     return (
         <div className={cls("semester_management")}>
@@ -151,6 +215,7 @@ const SemesterManagement = () => {
                     Tạo
                 </Button>
                 <Modal
+                    destroyOnClose
                     open={open}
                     title="Title"
                     onCancel={handleCancel}
@@ -167,6 +232,7 @@ const SemesterManagement = () => {
                         onFinish={onFinish}
                         // onSubmitCapture = {onFinish}
                         style={{ maxWidth: 600 }}
+                        initialValues={initData}
                     >
                         <Form.Item
                             label="Tên học kì"

@@ -1,5 +1,3 @@
-import SemesterManagement from "../semester_management/SemesterManagement"
-import TeacherManagement from "../teacher_management/TeacherManagement"
 import { AiOutlineCalendar, AiOutlineUsergroupAdd } from "react-icons/ai";
 import {GiTeacher} from 'react-icons/gi'
 import {FaChild} from 'react-icons/fa'
@@ -13,6 +11,11 @@ const menus = {
             name:"Quản lý Học Kỳ",
             image: AiOutlineCalendar,
             url: "/"
+        },
+        {
+            name:"Quản lý chuyên ngành",
+            image: AiOutlineCalendar,
+            url: "/major"
         },
         {
             name:"Quản lý Giảng Viên",
@@ -43,37 +46,37 @@ const menus = {
     "teacher-v1":[
         {
             name:"Quản lý Học Kỳ",
-            image: "menu-icons/1.png",
-            url: SemesterManagement
+            image: AiOutlineCalendar,
+            url: '/'
         },
         {
             name:"Quản lý Giảng Viên",
-            image: "menu-icons/2.png",
-            url: TeacherManagement
+            image: AiOutlineCalendar,
+            url: '/teacher'
         },
         {
             name:"Quản lý Sinh Viên",
-            image: "menu-icons/2.png",
-            url: '/empty'
+            image: AiOutlineCalendar,
+            url: '/student'
         },
         {
             name:"Quản lý nhóm Giảng Viên",
-            image: "menu-icons/4.png",
+            image: AiOutlineCalendar,
             url: '/empty'
         },
         {
             name:"Quản lý Nhóm Đề Tài",
-            image: "menu-icons/4.png",
+            image: AiOutlineCalendar,
             url: '/empty'
         },
         {
             name:"Quản lý Đề tài",
-            image: "menu-icons/1.png",
+            image: AiOutlineCalendar,
             url: '/empty'
         },
         {
             name:"Quản lý Đánh giá",
-            image: "menu-icons/5.png",
+            image: AiOutlineCalendar,
             url: '/empty'
         },
     ],

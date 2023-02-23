@@ -3,14 +3,18 @@ import authAPI from "../apis/auth";
 import tokenService from "../../services/token";
 
 interface User {
+    id: any,
     username: string;
     avatar: string;
-    fullName: string;
+    name: string;
     email: string;
-    is_staff: boolean;
-    is_superuser: boolean;
-    role: "admin"|"teacher-v1"|"teacher-v2"
-    major: number
+    phoneNumber: string;
+    gender: string;
+    role: "admin"|"Lecturer"|"teacher-v2"
+    majors: {
+        id: number
+    },
+    degree: string
 }
 
 interface StateType {
@@ -21,12 +25,18 @@ interface StateType {
 
 const initialState = {
     user: {
+        id:"",
         username: "",
         avatar: "",
-        fullName: "Nguyễn Thị Minh Châu",
+        phoneNumber: "",
+        name: "",
         email: "",
         role:"admin",
-        major: 1
+        majors: {
+            id: 1
+        },
+        gender:"",
+        degree:""
     },
     error: false,
     is_login: tokenService.getRefreshToken() !== null,
@@ -42,6 +52,8 @@ export const userSlice = createSlice({
         builder.addCase(authAPI.login().fulfilled, (state, action) => {
             tokenService.setAccessToken(action.payload.accessToken);
             tokenService.setRefreshToken(action.payload.refreshToken);
+            
+            state.user = action.payload.user
             state.error = false;
             state.is_login = true;
         });

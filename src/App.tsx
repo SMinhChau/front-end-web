@@ -13,6 +13,7 @@ import Semester from "./pages/semester/Semester";
 import Teacher from "./pages/teacher/Teacher";
 import Student from "./pages/student/Student";
 import Evaludate from "./pages/evaluate/Evaludate";
+import Major from "./pages/major/Major";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
@@ -33,6 +34,14 @@ function App() {
                     element={
                         <PrivateRoute isLogin={userState.is_login}>
                             <Teacher />
+                        </PrivateRoute>
+                    }
+                />
+                 <Route
+                    path="/major"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <Major />
                         </PrivateRoute>
                     }
                 />
