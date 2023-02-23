@@ -14,7 +14,6 @@ const cls = classNames.bind(style);
 function AppHeader() {
     const [toggleUser, setToggleUser] = useState(false);
     const userState = useAppSelector((state) => state.user).user;
-    console.log(userState);
     
 
     const menu = headerMenu[userState.role];

@@ -7,16 +7,26 @@ import "react-toastify/dist/ReactToastify.css";
 
 import NoMatch from "./pages/NoMatch";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector, useAppDispatch } from "./redux/hooks";
 import Login from "./pages/login/Login";
 import Semester from "./pages/semester/Semester";
 import Teacher from "./pages/teacher/Teacher";
 import Student from "./pages/student/Student";
 import Evaludate from "./pages/evaluate/Evaludate";
 import Major from "./pages/major/Major";
+import tokenService from "./services/token";
+import authAPI from "./redux/apis/auth";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (tokenService.getRefreshToken() && userState.user.username === "") {
+            dispatch(authAPI.getInfo()());
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userState]);
 
     return (
         <Router>

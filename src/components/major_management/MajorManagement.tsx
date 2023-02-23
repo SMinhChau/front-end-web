@@ -66,8 +66,6 @@ const MajorManagement = () => {
 
     useEffect(() => {
         headOfLecturerService.getAll().then((result) => {
-            console.log(result.data);
-
             setHeadLecture(
                 result.data.map((value: any) => {
                     return {
@@ -94,8 +92,6 @@ const MajorManagement = () => {
             );
         });
     }, []);
-
-    console.log(initData);
 
     const showModal = () => {
         setOpen(true);
