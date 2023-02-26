@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import NoMatch from "./pages/NoMatch";
+import NoMatch from "./pages/404/NoMatch";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 import Login from "./pages/login/Login";
@@ -23,7 +23,8 @@ function App() {
 
     useEffect(() => {
         if (tokenService.getRefreshToken() && userState.user.username === "") {
-            dispatch(authAPI.getInfo()());
+            dispatch(authAPI.getInfo()())
+
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userState]);

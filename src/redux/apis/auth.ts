@@ -18,7 +18,6 @@ class AuthAPI {
             async (thunkAPI)=>{
                 const result = await authService.getInfo()
                 if(result.status === 200) return result.data
-                
             }
         )
     }

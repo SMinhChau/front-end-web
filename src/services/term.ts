@@ -1,16 +1,16 @@
 import { axiosAuth } from "~/utils/axiosConfig";
 
 class TermService {
-    async getTerm(major: number) {
+    async getTerm(data: any) {
         return await axiosAuth({
-            url: "/lecturer/term/",
+            url: "/lecturer/terms",
             method: "get",
-            params: { majorsId: major },
+            params: data,
         });
     }
     async createTerm(values: any) {
         return await axiosAuth({
-            url: "/lecturer/term/",
+            url: "/lecturer/terms",
             method: "post",
             data: values,
         });
@@ -18,13 +18,13 @@ class TermService {
 
     async deleteTerm(id: number){
         return await axiosAuth({
-            url: '/lecturer/term/'+id,
+            url: '/lecturer/terms/'+id,
             method:'delete',
         })
     }
     async update(id:any, data:any){
         return await axiosAuth({
-            url:'/lecturer/term/'+id,
+            url:'/lecturer/terms/'+id,
             method: 'put',
             data
         })

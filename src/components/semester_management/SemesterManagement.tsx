@@ -98,7 +98,7 @@ const SemesterManagement = () => {
     const [idUpdate, setIdUpdate] = useState(null)
 
     useEffect(() => {
-        termService.getTerm(1).then((result) => {
+        termService.getTerm({majorsId: 1}).then((result) => {
             setTerms(
                 result.data.map((value: any) => {
                     return { ...value, key: value.id };
@@ -199,7 +199,7 @@ const SemesterManagement = () => {
         <div className={cls("semester_management")}>
             <ToastContainer />
             <div className={cls("semester_func")}>
-                <h4 className={cls("semester_title")}>Quản lý học kì</h4>
+                {/* <h4 className={cls("semester_title")}>Quản lý học kì</h4> */}
                 <Button
                     type="dashed"
                     icon={<PlusOutlined />}
@@ -222,7 +222,7 @@ const SemesterManagement = () => {
                     footer={[
                         <Button key="back" onClick={handleCancel}>
                             Cancel
-                        </Button>,
+                        </Button>
                     ]}
                 >
                     <Form
@@ -230,7 +230,6 @@ const SemesterManagement = () => {
                         wrapperCol={{ span: 14 }}
                         layout="horizontal"
                         onFinish={onFinish}
-                        // onSubmitCapture = {onFinish}
                         style={{ maxWidth: 600 }}
                         initialValues={initData}
                     >
