@@ -61,4 +61,22 @@ axiosNotAuth.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-export { axiosAuth, axiosNotAuth };
+const axiosFormData = axios.create({
+    baseURL: URL,
+    headers: {
+        "Content-type": "multipart/form-data",
+    },
+});
+axiosFormData.interceptors.response = axiosAuth.interceptors.response
+
+axiosFormData.interceptors.request.use(
+    (config) => {
+        const access_token = tokenService.getAccessToken();
+        (config.headers as AxiosRequestHeaders).Authorization =
+            "Bearer " + access_token;
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+export { axiosAuth, axiosNotAuth, axiosFormData };

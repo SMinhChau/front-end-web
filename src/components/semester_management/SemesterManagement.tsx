@@ -109,7 +109,7 @@ const SemesterManagement = () => {
 
     const showModal = () => {
         setOpen(true);
-        // setStatus('insert')
+        setStatus('insert')
     };
 
     const handleCancel = () => {

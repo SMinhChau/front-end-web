@@ -1,24 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import authAPI from "../apis/auth";
 import tokenService from "../../services/token";
-
-interface User {
-    id: any;
-    username: string;
-    avatar: string;
-    name: string;
-    email: string;
-    phoneNumber: string;
-    gender: string;
-    role: "admin" | "Lecturer" | "teacher-v2";
-    majors: {
-        id: number;
-    };
-    degree: string;
-}
+import Teacher from "~/entities/teacher";
 
 interface StateType {
-    user: User;
+    user: Teacher;
     error: boolean;
     is_login: boolean;
 }
