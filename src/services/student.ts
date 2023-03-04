@@ -1,24 +1,24 @@
-import { axiosAuth, axiosFormData } from "~/utils/axiosConfig"
+import { axiosAuth, axiosFormData } from "~/utils/axiosConfig";
 
-class StudentService{
-    getStudent(filter: {majorsId?: number}){
+class StudentService {
+    getStudent(filter: { majorsId?: number }) {
         return axiosAuth({
-            url:'/lecturer/students',
+            url: "/lecturer/students",
             params: filter,
-            method:'get'
-        })
+            method: "get",
+        });
     }
 
-    importSudent(data:FormData){
+    importSudent(data: FormData) {
         return axiosFormData({
-            url: '/lecturer/students/import-student',
-            method:'post',
-            data
-        })
+            url: "/lecturer/students/import-student",
+            method: "post",
+            data,
+        });
     }
-
 }
 
-const studentService = new StudentService()
+const studentService = new StudentService();
 
-export default studentService
+export default studentService;
+

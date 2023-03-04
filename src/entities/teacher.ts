@@ -1,4 +1,4 @@
-interface Teacher{
+interface Teacher {
     id: any;
     username: string;
     avatar: string;
@@ -6,10 +6,10 @@ interface Teacher{
     email: string;
     phoneNumber: string;
     gender: string;
-    role: "admin" | "Lecturer" | "teacher-v2";
+    role: "admin" | "headLecturer" | "Lecturer";
     majors: {
         id: number;
     };
     degree: string;
 }
-export default Teacher
+export default Teacher;

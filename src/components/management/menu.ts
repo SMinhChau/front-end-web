@@ -1,86 +1,70 @@
-import { AiOutlineCalendar, AiOutlineUsergroupAdd } from "react-icons/ai";
-import {GiTeacher} from 'react-icons/gi'
-import {FaChild} from 'react-icons/fa'
-import {RiGroupLine} from 'react-icons/ri'
-import {SiSimpleanalytics} from 'react-icons/si'
-
+import { AiOutlineCalendar } from "react-icons/ai";
+import { GiTeacher } from "react-icons/gi";
+import { FaChild } from "react-icons/fa";
+import { RiGroupLine } from "react-icons/ri";
+import { SiSimpleanalytics } from "react-icons/si";
 
 const menus = {
-    "admin":[
+    admin: [
         {
-            name:"Quản lý Học Kỳ",
+            name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
-            url: "/"
+            url: "/",
         },
         {
-            name:"Quản lý chuyên ngành",
+            name: "Quản lý chuyên ngành",
             image: AiOutlineCalendar,
-            url: "/major"
+            url: "/major",
         },
         {
-            name:"Quản lý Giảng Viên",
+            name: "Quản lý Giảng Viên",
             image: GiTeacher,
-            url: '/teacher'
+            url: "/teacher",
         },
         {
-            name:"Quản lý Sinh Viên",
+            name: "Quản lý Sinh Viên",
             image: FaChild,
-            url: '/student'
+            url: "/student",
         },
         {
-            name:"Quản lý nhóm Giảng Viên",
-            image: AiOutlineUsergroupAdd,
-            url: '/empty'
-        },
-        {
-            name:"Quản lý Nhóm Đề Tài",
+            name: "Quản lý đề tài",
             image: RiGroupLine,
-            url: '/empty'
+            url: "/empty",
         },
         {
-            name:"Quản lý Đánh giá",
+            name: "Quản lý Đánh giá",
             image: SiSimpleanalytics,
-            url: '/evaluate'
+            url: "/evaluate",
         },
     ],
-    "teacher-v1":[
+    headLecturer: [
         {
-            name:"Quản lý Học Kỳ",
+            name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
-            url: '/'
+            url: "/",
         },
         {
-            name:"Quản lý Giảng Viên",
+            name: "Quản lý Giảng Viên",
             image: AiOutlineCalendar,
-            url: '/teacher'
+            url: "/teacher",
         },
         {
-            name:"Quản lý Sinh Viên",
+            name: "Quản lý Sinh Viên",
             image: AiOutlineCalendar,
-            url: '/student'
+            url: "/student",
         },
         {
-            name:"Quản lý nhóm Giảng Viên",
+            name: "Quản lý Đề tài",
             image: AiOutlineCalendar,
-            url: '/empty'
+            url: "/topic",
         },
         {
-            name:"Quản lý Nhóm Đề Tài",
+            name: "Quản lý Đánh giá",
             image: AiOutlineCalendar,
-            url: '/empty'
-        },
-        {
-            name:"Quản lý Đề tài",
-            image: AiOutlineCalendar,
-            url: '/empty'
-        },
-        {
-            name:"Quản lý Đánh giá",
-            image: AiOutlineCalendar,
-            url: '/empty'
+            url: "/empty",
         },
     ],
-    "teacher-v2":[]
-}
+    Lecturer: [],
+};
 
-export default menus
+export default menus;

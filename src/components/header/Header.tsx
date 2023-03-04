@@ -14,7 +14,6 @@ const cls = classNames.bind(style);
 function AppHeader() {
     const [toggleUser, setToggleUser] = useState(false);
     const userState = useAppSelector((state) => state.user).user;
-    
 
     const menu = headerMenu[userState.role];
 
@@ -33,10 +32,10 @@ function AppHeader() {
         };
     }, []);
 
-    const logout = () =>{
-        tokenService.reset()
-        window.location.href = '/login'
-    }
+    const logout = () => {
+        tokenService.reset();
+        window.location.href = "/login";
+    };
 
     return (
         <div className={cls("header")}>
@@ -77,10 +76,7 @@ function AppHeader() {
                                 </Link>
                             );
                         })}
-                        <div
-                            className={cls("menu_item")}
-                            onClick={logout}
-                        >
+                        <div className={cls("menu_item")} onClick={logout}>
                             <img src={imgLogout} alt="" />
                             <div>Đăng xuất</div>
                         </div>

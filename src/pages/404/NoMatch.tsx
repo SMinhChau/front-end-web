@@ -5,12 +5,12 @@ const { useNavigate } = require("react-router-dom");
 const cls = classNames.bind(style);
 
 function NoMatch() {
-    const naviagte = useNavigate()
-    const back = () =>{
-        naviagte(-1)
-    }
+    const naviagte = useNavigate();
+    const back = () => {
+        naviagte(-1);
+    };
     return (
-        <div className={cls('container_404')}>
+        <div className={cls("container_404")}>
             <div>
                 <svg
                     width="1123"
@@ -18,7 +18,7 @@ function NoMatch() {
                     viewBox="0 0 1123 837"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className={cls('svg_404')}
+                    className={cls("svg_404")}
                 >
                     <rect width="1123" height="837" fill="black" />
                     <g id="sky" filter="url(#filter0_d)">
@@ -31,7 +31,7 @@ function NoMatch() {
                             rx="20"
                             fill="black"
                         />
-                        <g id={cls('stars')}>
+                        <g id={cls("stars")}>
                             <path
                                 id="Vector"
                                 d="M202.12 319.2C204.937 319.2 207.22 316.917 207.22 314.1C207.22 311.283 204.937 309 202.12 309C199.303 309 197.02 311.283 197.02 314.1C197.02 316.917 199.303 319.2 202.12 319.2Z"
@@ -327,12 +327,14 @@ function NoMatch() {
                     </defs>
                 </svg>
             </div>
-            <div className={cls('text')}>
+            <div className={cls("text")}>
                 <h1>404 Error</h1>
                 <h2>Couldn't launch :(</h2>
                 <h3>
                     Page Not Found - lets take you{" "}
-                    <div onClick={back} className={cls('back')}>BACK</div>
+                    <div onClick={back} className={cls("back")}>
+                        BACK
+                    </div>
                 </h3>
             </div>
         </div>

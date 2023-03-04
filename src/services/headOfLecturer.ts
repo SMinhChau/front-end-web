@@ -1,11 +1,11 @@
 import { axiosAuth } from "~/utils/axiosConfig";
 
 class HeadOfLecturerService {
-    async getAll(){
+    async getAll() {
         return await axiosAuth({
-            url:'/lecturer/lecturers?isHeadLecturer=true',
-            method:'get'
-        })
+            url: "/lecturer/lecturers?isHeadLecturer=true",
+            method: "get",
+        });
     }
 }
 

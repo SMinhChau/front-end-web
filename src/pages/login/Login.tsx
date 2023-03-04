@@ -9,8 +9,8 @@ import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useAppDispatch } from "../../redux/hooks";
 import authAPI from "~/redux/apis/auth";
 import { useNavigate } from "react-router-dom";
-import logo from '../../assets/Logo_IUH.png'
-import bgImg from '../../assets/bg.webp'
+import logo from "../../assets/Logo_IUH.png";
+import bgImg from "../../assets/bg.webp";
 
 const cls = classNames.bind(style);
 
@@ -20,12 +20,12 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useAppDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const login = (e: FormEvent) => {
         e.preventDefault();
-        console.table({username, password})
-        
+        console.table({ username, password });
+
         dispatch(authAPI.login()({ username, password }));
     };
 
@@ -45,7 +45,7 @@ function Login() {
                 });
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userState]);
 
     return (

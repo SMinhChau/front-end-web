@@ -16,6 +16,7 @@ import Evaludate from "./pages/evaluate/Evaludate";
 import Major from "./pages/major/Major";
 import tokenService from "./services/token";
 import authAPI from "./redux/apis/auth";
+import Topic from "./pages/topic/Topic";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
@@ -23,8 +24,7 @@ function App() {
 
     useEffect(() => {
         if (tokenService.getRefreshToken() && userState.user.username === "") {
-            dispatch(authAPI.getInfo()())
-
+            dispatch(authAPI.getInfo()());
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userState]);
@@ -48,7 +48,7 @@ function App() {
                         </PrivateRoute>
                     }
                 />
-                 <Route
+                <Route
                     path="/major"
                     element={
                         <PrivateRoute isLogin={userState.is_login}>
@@ -72,8 +72,16 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/topic"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <Topic />
+                        </PrivateRoute>
+                    }
+                />
                 <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Login />} />
+                <Route path="/register" element={<Login />} />
                 <Route path="*" element={<NoMatch />} />
             </Routes>
         </Router>
@@ -87,7 +95,7 @@ export const PrivateRoute = (props: {
     const [redirect, setRedirect] = useState(false);
     useEffect(() => {
         if (!props.isLogin) {
-            toast.info("Bạn vụi lòng đăng nhập để sử dụng!", {
+            toast.info("Bạn vui lòng đăng nhập để sử dụng!", {
                 position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,

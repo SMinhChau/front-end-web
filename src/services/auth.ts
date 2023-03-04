@@ -9,10 +9,10 @@ class AuthService {
         });
     }
 
-    getInfo(){
+    getInfo() {
         return axiosAuth({
-            url: '/lecturer/me'
-        })
+            url: "/lecturer/me",
+        });
     }
 }
 

@@ -1,5 +1,5 @@
-import image2 from '../../assets/icons/2.png'
-import image3 from '../../assets/icons/3.png'
+import image2 from "../../assets/icons/2.png";
+import image3 from "../../assets/icons/3.png";
 
 const headerMenu = {
     admin: [
@@ -8,9 +8,8 @@ const headerMenu = {
             name: "Cài đặt",
             url: "/setting",
         },
-       
     ],
-    "Lecturer": [
+    Lecturer: [
         {
             icon: image3,
             name: "Xem thông tin",
@@ -21,9 +20,8 @@ const headerMenu = {
             name: "Cài đặt",
             url: "/setting",
         },
-       
     ],
-    "teacher-v2": [
+    headLecturer: [
         {
             icon: image3,
             name: "Xem thông tin",
@@ -34,9 +32,8 @@ const headerMenu = {
             name: "Cài đặt",
             url: "/setting",
         },
-       
     ],
-    "teacher":[]
+    teacher: [],
 };
 
 export default headerMenu;

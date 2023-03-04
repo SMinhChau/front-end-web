@@ -131,7 +131,7 @@ const StudentManagement = () => {
         },
         beforeUpload: (file) => {
             console.log(file);
-            
+
             setFileList([...fileList, file]);
 
             return false;

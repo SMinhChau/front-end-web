@@ -6,24 +6,9 @@ import style from "./SemesterManagement.module.scss";
 import termService from "~/services/term";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
+import Term from "~/entities/term";
 
 const cls = classNames.bind(style);
-
-interface Term {
-    id: number;
-    key: number;
-    createdAt: Date;
-    dateDiscussion: Date;
-    dateReport: Date;
-    endDate: Date;
-    endDateChooseTopic: Date;
-    endDateSubmitTopic: Date;
-    name: Date;
-    startDate: Date;
-    startDateChooseTopic: Date;
-    startDateSubmitTopic: Date;
-    updatedAt: Date;
-}
 
 const SemesterManagement = () => {
     const columns = [
@@ -83,22 +68,30 @@ const SemesterManagement = () => {
         {
             title: "",
             dataIndex: "id",
-            render: (id:any) => <Button onClick={()=>deleteTerm(id)}><DeleteOutlined /></Button>,
+            render: (id: any) => (
+                <Button onClick={() => deleteTerm(id)}>
+                    <DeleteOutlined />
+                </Button>
+            ),
         },
         {
             title: "",
             dataIndex: "id",
-            render: (id:any) => <Button onClick={()=>showEditModal(id)}><EditOutlined /></Button>,
+            render: (id: any) => (
+                <Button onClick={() => showEditModal(id)}>
+                    <EditOutlined />
+                </Button>
+            ),
         },
     ];
     const [terms, setTerms] = useState<Array<Term>>([]);
     const [open, setOpen] = useState(false);
-    const [status, setStatus] = useState("insert")
-    const [initData, setInitData] = useState({})
-    const [idUpdate, setIdUpdate] = useState(null)
+    const [status, setStatus] = useState("insert");
+    const [initData, setInitData] = useState({});
+    const [idUpdate, setIdUpdate] = useState(null);
 
     useEffect(() => {
-        termService.getTerm({majorsId: 1}).then((result) => {
+        termService.getTerm({ majorsId: 1 }).then((result) => {
             setTerms(
                 result.data.map((value: any) => {
                     return { ...value, key: value.id };
@@ -109,7 +102,7 @@ const SemesterManagement = () => {
 
     const showModal = () => {
         setOpen(true);
-        setStatus('insert')
+        setStatus("insert");
     };
 
     const handleCancel = () => {
@@ -119,69 +112,78 @@ const SemesterManagement = () => {
     const onFinish = async (values: any) => {
         values = {
             ...values,
-            majorsId:1,
-            startDate: values.startDate.format('MM/DD/YYYY'),
-            endDate: values.endDate.format('MM/DD/YYYY'),
-            startDateSubmitTopic: values.startDateSubmitTopic.format('MM/DD/YYYY'),
-            endDateSubmitTopic: values.endDateSubmitTopic.format('MM/DD/YYYY'),
-            startDateChooseTopic: values.startDateChooseTopic.format('MM/DD/YYYY'),
-            endDateChooseTopic: values.endDateChooseTopic.format('MM/DD/YYYY'),
-            dateDiscussion: values.dateDiscussion.format('MM/DD/YYYY'),
-            dateReport: values.dateReport.format('MM/DD/YYYY'),
-        }
-        if(status==='insert'){
-            termService.createTerm(values).then(()=>{
-                window.location.reload()
-            }).catch(err=>{
-                toast.info(err.response.data.error, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
+            majorsId: 1,
+            startDate: values.startDate.format("MM/DD/YYYY"),
+            endDate: values.endDate.format("MM/DD/YYYY"),
+            startDateSubmitTopic:
+                values.startDateSubmitTopic.format("MM/DD/YYYY"),
+            endDateSubmitTopic: values.endDateSubmitTopic.format("MM/DD/YYYY"),
+            startDateChooseTopic:
+                values.startDateChooseTopic.format("MM/DD/YYYY"),
+            endDateChooseTopic: values.endDateChooseTopic.format("MM/DD/YYYY"),
+            dateDiscussion: values.dateDiscussion.format("MM/DD/YYYY"),
+            dateReport: values.dateReport.format("MM/DD/YYYY"),
+        };
+        if (status === "insert") {
+            termService
+                .createTerm(values)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    toast.info(err.response.data.error, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 });
-            })
-        }else{
-            termService.update(idUpdate, values).then(()=>{
-                window.location.reload()
-            }).catch(err=>{
-                toast.info(err.response.data.error, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
+        } else {
+            termService
+                .update(idUpdate, values)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    toast.info(err.response.data.error, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 });
-            })
         }
-        
-
     };
 
-    const deleteTerm = (id:number)=>{
-        termService.deleteTerm(id).then(()=>{
-            window.location.reload()
-        }).catch((err)=>{
-            toast.error(err.response.data.error, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+    const deleteTerm = (id: number) => {
+        termService
+            .deleteTerm(id)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((err) => {
+                toast.error(err.response.data.error, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             });
-        })
-    }
-    const showEditModal = (id:any) =>{
-        setOpen(true)
-        setStatus('update')
-        setIdUpdate(id)
-        const term = terms.filter(value=>value.id===id)[0]
+    };
+    const showEditModal = (id: any) => {
+        setOpen(true);
+        setStatus("update");
+        setIdUpdate(id);
+        const term = terms.filter((value) => value.id === id)[0];
         setInitData({
             ...term,
             startDate: moment(term.startDate),
@@ -192,8 +194,8 @@ const SemesterManagement = () => {
             endDateChooseTopic: moment(term.endDateChooseTopic),
             dateDiscussion: moment(term.dateDiscussion),
             dateReport: moment(term.dateReport),
-        })
-    }
+        });
+    };
 
     return (
         <div className={cls("semester_management")}>
@@ -222,7 +224,7 @@ const SemesterManagement = () => {
                     footer={[
                         <Button key="back" onClick={handleCancel}>
                             Cancel
-                        </Button>
+                        </Button>,
                     ]}
                 >
                     <Form
