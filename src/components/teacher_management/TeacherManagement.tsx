@@ -73,7 +73,11 @@ const TeacherManagement = () => {
                         type="dashed"
                         icon={<PlusOutlined />}
                         size="large"
-                        style={{ margin: "0 10px", animation: "none", color:'rgb(80, 72, 229)' }}
+                        style={{
+                            margin: "0 10px",
+                            animation: "none",
+                            color: "rgb(80, 72, 229)",
+                        }}
                     >
                         Tạo
                     </Button>
@@ -82,7 +86,11 @@ const TeacherManagement = () => {
                             type="dashed"
                             icon={<UploadOutlined />}
                             size="large"
-                            style={{ marginBottom: "10px", animation: "none", color:'rgb(80, 72, 229)' }}
+                            style={{
+                                marginBottom: "10px",
+                                animation: "none",
+                                color: "rgb(80, 72, 229)",
+                            }}
                         >
                             Tải lên
                         </Button>

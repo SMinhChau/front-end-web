@@ -16,18 +16,18 @@ class TermService {
         });
     }
 
-    async deleteTerm(id: number){
+    async deleteTerm(id: number) {
         return await axiosAuth({
-            url: '/lecturer/terms/'+id,
-            method:'delete',
-        })
+            url: "/lecturer/terms/" + id,
+            method: "delete",
+        });
     }
-    async update(id:any, data:any){
+    async update(id: any, data: any) {
         return await axiosAuth({
-            url:'/lecturer/terms/'+id,
-            method: 'put',
-            data
-        })
+            url: "/lecturer/terms/" + id,
+            method: "put",
+            data,
+        });
     }
 }
 

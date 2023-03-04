@@ -62,7 +62,7 @@ const MajorManagement = () => {
         name: string;
         headLecturerId: number | null;
     }>({ name: "", headLecturerId: null });
-    const [updateId, setUpdateId] = useState<number|null>(null)
+    const [updateId, setUpdateId] = useState<number | null>(null);
 
     useEffect(() => {
         headOfLecturerService.getAll().then((result) => {
@@ -126,7 +126,7 @@ const MajorManagement = () => {
     };
 
     const showEditModal = (id: number) => {
-        setUpdateId(id)
+        setUpdateId(id);
         setOpen(true);
         setStatus("update");
         const m = major.filter((value) => value.id === id)[0];
@@ -153,7 +153,7 @@ const MajorManagement = () => {
                         progress: undefined,
                     });
                 });
-        else{
+        else {
             majorService
                 .updateMajor(updateId as number, value)
                 .then(() => {

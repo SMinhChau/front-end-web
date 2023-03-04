@@ -38,13 +38,12 @@
         flex-direction: column;
         align-items: center;
 
-        img{
+        img {
             position: absolute;
             width: 100px;
             top: 5px;
             left: 5px;
         }
-
 
         .form_header {
             font-size: 30px;
@@ -65,13 +64,13 @@
             input {
                 width: 100%;
                 border: none;
-               
+
                 &:focus {
                     outline: none;
                 }
             }
 
-            span{
+            span {
                 position: absolute;
                 right: 10px;
                 top: 12px;
@@ -101,7 +100,7 @@
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
             &:hover {
-                background-color: #34aadc   ;
+                background-color: #34aadc;
             }
         }
     }
