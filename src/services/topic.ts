@@ -28,6 +28,12 @@ class TopicService {
             method: "get",
         });
     }
+    deleteTopic(id: number) {
+        return axiosAuth({
+            url: "/lecturer/topics/" + id,
+            method: "delete",
+        });
+    }
 }
 const topicService = new TopicService();
 export default topicService;

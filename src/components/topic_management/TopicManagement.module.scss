@@ -1,2 +1,15 @@
 .topic_management {
+    margin-left: 10px;
+    .semester_func {
+        padding: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .selectTerm {
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+    }
 }
