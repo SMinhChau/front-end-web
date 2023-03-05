@@ -1,23 +1,53 @@
 import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import style from "./TopicManagement.module.scss";
-import moment from "moment";
 import Term from "~/entities/term";
 import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
 import { Select, Table, Button, Modal, Form, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import topicService from "~/services/topic";
 import Topic from "~/entities/topic";
-import column from "./column";
+import { default as base_column } from "./column";
+import { toast, ToastContainer } from "react-toastify";
 
 const cls = classNames.bind(style);
+
+interface TopicData extends Term {
+    key: number;
+}
 
 const TopicManagement = () => {
     const userState = useAppSelector((state) => state.user).user;
     const [term, setTerm] = useState<Array<Term>>([]);
-    const [topic, setTopic] = useState<Array<Topic>>([]);
+    const [topic, setTopic] = useState<Array<TopicData>>([]);
     const [open, setOpen] = useState(false);
+    const [termSelect, setTermSelect] = useState<number | null>(null);
+    const [status, setStatus] = useState("insert");
+    const [initData, setInitData] = useState({});
+    const [idUpdate, setIdUpdate] = useState<number | null>(null);
+
+    const column = [
+        ...base_column,
+        {
+            title: "",
+            dataIndex: "id",
+            render: (id: any) => (
+                <Button onClick={() => deleteTerm(id)}>
+                    <DeleteOutlined />
+                </Button>
+            ),
+        },
+        {
+            title: "",
+            dataIndex: "id",
+            render: (id: any) => (
+                <Button onClick={() => showEditModal(id)}>
+                    <EditOutlined />
+                </Button>
+            ),
+        },
+    ];
 
     useEffect(() => {
         termService
@@ -29,48 +59,122 @@ const TopicManagement = () => {
                 console.log(error);
             });
     }, []);
-    useEffect(() => {
-        if (term.length > 0)
-            topicService
-                .getTopic({
-                    termId: term[0].id,
-                    lecturerId: userState.id,
-                })
-                .then((response) => {
-                    setTopic(response.data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-    }, [term]);
-
-    const showModal = () => {
-        setOpen(true);
-    };
-    const handleCancel = () => {
-        setOpen(false);
-    };
-    const onFinish = (value: any) => {
+    const getTopic = (termId: number) => {
         topicService
-            .createTopic({ ...value, termId: term[0].id })
+            .getTopic({
+                termId,
+                lecturerId: userState.id,
+            })
             .then((response) => {
-                console.log(response);
+                setTopic(
+                    response.data.map((value: Topic) => {
+                        return {
+                            ...value,
+                            key: value.id,
+                        };
+                    })
+                );
             })
             .catch((error) => {
                 console.log(error);
             });
     };
+    useEffect(() => {
+        if (term.length > 0) getTopic(term[0].id);
+    }, [term]);
+
+    useEffect(() => {
+        if (termSelect) {
+            getTopic(termSelect);
+        }
+    }, [termSelect]);
+
+    const showModal = () => {
+        setOpen(true);
+        setStatus("insert");
+    };
+    const handleCancel = () => {
+        setOpen(false);
+    };
+    const onFinish = (value: any) => {
+        if (status === "insert")
+            topicService
+                .createTopic({
+                    ...value,
+                    termId: termSelect ? termSelect : term[0].id,
+                })
+                .then((_response) => {
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        else
+            topicService
+                .updateTopic(idUpdate as number, {
+                    ...value,
+                    termId: termSelect ? termSelect : term[0].id,
+                })
+                .then((_response) => {
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    toast.info(error.response.data.error, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                });
+    };
+    const handleTermChange = (value: number) => {
+        setTermSelect(value);
+    };
+
+    const deleteTerm = (id: number) => {
+        topicService
+            .deleteTopic(id)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                toast.info(error.response.data.error, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            });
+    };
+    const showEditModal = (id: number) => {
+        setOpen(true);
+        setStatus("update");
+        setIdUpdate(id);
+        const t = topic.filter((value) => value.id === id)[0];
+        setInitData(t);
+    };
 
     return (
         <div className={cls("topic_management")}>
+            <ToastContainer />
+
             <div className={cls("semester_func")}>
-                <Select
-                    style={{ width: 120 }}
-                    //onChange={handleChange}
-                    options={term.map((val) => {
-                        return { value: val.id, label: val.name };
-                    })}
-                />
+                <div className={cls("selectTerm")}>
+                    <div>Học kì: </div>
+                    <Select
+                        style={{ width: 120 }}
+                        onChange={handleTermChange}
+                        options={term.map((val) => {
+                            return { value: val.id, label: val.name };
+                        })}
+                    />
+                </div>
                 <Button
                     type="dashed"
                     icon={<PlusOutlined />}
@@ -103,7 +207,7 @@ const TopicManagement = () => {
                         layout="horizontal"
                         onFinish={onFinish}
                         style={{ maxWidth: 600 }}
-                        //initialValues={initData}
+                        initialValues={initData}
                     >
                         <Form.Item
                             label="Tên"
