@@ -7,7 +7,7 @@ class MajorService {
             method: "get",
         });
     }
-    async createMajor(data: { name: string; headLecturerId: number }) {
+    async createMajor(data: { name: string }) {
         return await axiosAuth({
             url: "/lecturer/majors",
             method: "post",
@@ -36,4 +36,3 @@ class MajorService {
 const majorService = new MajorService();
 
 export default majorService;
-
