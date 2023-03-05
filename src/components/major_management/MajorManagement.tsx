@@ -13,8 +13,8 @@ const cls = classNames.bind(style);
 interface Major {
     id: number;
     name: String;
-    headName: string;
-    headID: number;
+    headName?: string;
+    headID?: number;
 }
 
 interface HeadLecturer {
@@ -85,8 +85,8 @@ const MajorManagement = () => {
                         id: value.id,
                         key: value.id,
                         name: value.name,
-                        headName: value.headLecturer.name,
-                        headID: value.headLecturer.id,
+                        headName: value.headLecturer?.name,
+                        headID: value.headLecturer?.id,
                     };
                 })
             );
@@ -218,28 +218,32 @@ const MajorManagement = () => {
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item
-                            label="Head Lecturer"
-                            rules={[{ required: true }]}
-                            name="headLecturerId"
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Chọn"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    (option?.label ?? "").includes(input)
-                                }
-                                filterSort={(optionA, optionB) =>
-                                    (optionA?.label ?? "")
-                                        .toLowerCase()
-                                        .localeCompare(
-                                            (optionB?.label ?? "").toLowerCase()
-                                        )
-                                }
-                                options={headLecture}
-                            />
-                        </Form.Item>
+                        {status === "update" && (
+                            <Form.Item
+                                label="Head Lecturer"
+                                rules={[{ required: true }]}
+                                name="headLecturerId"
+                            >
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? "").includes(input)
+                                    }
+                                    filterSort={(optionA, optionB) =>
+                                        (optionA?.label ?? "")
+                                            .toLowerCase()
+                                            .localeCompare(
+                                                (
+                                                    optionB?.label ?? ""
+                                                ).toLowerCase()
+                                            )
+                                    }
+                                    options={headLecture}
+                                />
+                            </Form.Item>
+                        )}
 
                         <Form.Item label=" ">
                             <Button type="primary" htmlType="submit">
