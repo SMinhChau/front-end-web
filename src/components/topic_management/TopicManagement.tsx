@@ -34,7 +34,7 @@ const TopicManagement = () => {
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => deleteTerm(id)}>
-                    <DeleteOutlined />
+                    <DeleteOutlined style={{color: 'red'}}/>
                 </Button>
             ),
         },
@@ -43,7 +43,7 @@ const TopicManagement = () => {
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => showEditModal(id)}>
-                    <EditOutlined />
+                    <EditOutlined style={{color: '#30a3f1'}}/>
                 </Button>
             ),
         },
@@ -58,6 +58,7 @@ const TopicManagement = () => {
             .then((error) => {
                 console.log(error);
             });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const getTopic = (termId: number) => {
         topicService
@@ -81,12 +82,14 @@ const TopicManagement = () => {
     };
     useEffect(() => {
         if (term.length > 0) getTopic(term[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [term]);
 
     useEffect(() => {
         if (termSelect) {
             getTopic(termSelect);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [termSelect]);
 
     const showModal = () => {

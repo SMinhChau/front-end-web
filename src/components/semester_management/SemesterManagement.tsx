@@ -70,7 +70,7 @@ const SemesterManagement = () => {
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => deleteTerm(id)}>
-                    <DeleteOutlined />
+                    <DeleteOutlined style={{color: 'red'}} />
                 </Button>
             ),
         },
@@ -79,7 +79,7 @@ const SemesterManagement = () => {
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => showEditModal(id)}>
-                    <EditOutlined />
+                    <EditOutlined style={{color: '#30a3f1'}}/>
                 </Button>
             ),
         },
