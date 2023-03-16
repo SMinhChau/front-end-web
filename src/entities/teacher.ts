@@ -1,3 +1,4 @@
+import { EnumRole, EnumGender } from "~/enum";
 interface Teacher {
     id: any;
     username: string;
@@ -5,11 +6,12 @@ interface Teacher {
     name: string;
     email: string;
     phoneNumber: string;
-    gender: string;
-    role: "admin" | "headLecturer" | "Lecturer";
+    gender: EnumGender;
+    role: EnumRole;
     majors: {
         id: number;
     };
     degree: string;
+    isAdmin: string;
 }
 export default Teacher;

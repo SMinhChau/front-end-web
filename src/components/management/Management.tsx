@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import classNames from "classnames/bind";
 import style from "./Management.module.scss";
-import menus from "./menu";
 import { useAppSelector } from "../../redux/hooks";
 import { Link } from "react-router-dom";
 import tokenService from "~/services/token";
@@ -12,8 +11,6 @@ const cls = classNames.bind(style);
 const Management = () => {
     const pathRef = useRef(window.location.pathname);
     const userState = useAppSelector((state) => state.user);
-    const role = userState.user.role;
-    const menu = menus[role];
 
     const logout = () => {
         tokenService.reset();
@@ -28,7 +25,7 @@ const Management = () => {
                     <div className={cls('username')}>{userState.user.name}</div>
                 </div>
                 <hr />
-                {menu.map(({ name, image: Image, url }, index) => {
+                {userState.functions.map(({ name, image: Image, url }, index) => {
                     return (
                         <Link
                             to={url + ""}
