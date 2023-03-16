@@ -29,6 +29,7 @@ const initialState = {
         degree: "",
     },
     error: false,
+    functions: [] as any,
     is_login: tokenService.getRefreshToken() !== null,
 } as StateType;
 
@@ -46,7 +47,14 @@ export const userSlice = createSlice({
             state.user = action.payload.user;
             state.error = false;
             state.is_login = true;
-            state.functions = [...menus[state.user.role], ...(state.user.isAdmin?menus[EnumRole.ADMIN]:[])]
+            const my_menu = menus[state.user.role];
+            if (state.user.isAdmin) {
+                for (const i of menus[EnumRole.ADMIN])
+                    if (!my_menu.map((value) => value.url).includes(i.url)) {
+                        my_menu.push(i);
+                    }
+            }
+            state.functions = my_menu;
         });
         builder.addCase(authAPI.login().rejected, (state) => {
             state.is_login = false;
@@ -59,6 +67,17 @@ export const userSlice = createSlice({
                 state.user = action.payload;
                 state.error = false;
                 state.is_login = true;
+
+                const my_menu = menus[state.user.role];
+                if (state.user.isAdmin) {
+                    for (const i of menus[EnumRole.ADMIN])
+                        if (
+                            !my_menu.map((value) => value.url).includes(i.url)
+                        ) {
+                            my_menu.push(i);
+                        }
+                }
+                state.functions = my_menu;
             }
         );
     },
