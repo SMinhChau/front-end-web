@@ -17,9 +17,9 @@ const menus = {
             name: "Quản lý Giảng Viên",
             image: GiTeacher,
             url: "/teacher",
-        }
+        },
     ],
-    HEADLECTURER: [
+    HEAD_LECTURER: [
         {
             name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
@@ -46,7 +46,7 @@ const menus = {
             url: "/empty",
         },
     ],
-    SUBHEADLECTURER: [
+    SUB_HEAD_LECTURER: [
         {
             name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
@@ -73,7 +73,18 @@ const menus = {
             url: "/empty",
         },
     ],
-    LECTURER: [],
+    LECTURER: [
+        {
+            name: "Quản lý Đề tài",
+            image: AiOutlineCalendar,
+            url: "/topic",
+        },
+        {
+            name: "Quản lý Đánh giá",
+            image: AiOutlineCalendar,
+            url: "/empty",
+        },
+    ],
 };
 
 export default menus;
