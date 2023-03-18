@@ -1,9 +1,10 @@
+import { EnumGender } from "~/enum";
 interface Student {
     id: number;
     username: string;
     createdAt?: Date;
     email?: string;
-    gender?: string | number | boolean;
+    gender: EnumGender;
     majors: {
         id: number;
     };
@@ -12,6 +13,7 @@ interface Student {
     schoolYear?: string;
     typeTraining?: string;
     updatedAt?: Date;
+    avatar?:string;
 }
 export default Student;
 
