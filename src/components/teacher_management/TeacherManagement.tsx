@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import classNames from "classnames/bind";
 import style from "./TeacherManagement.module.scss";
 import { Table, Avatar, Button, Upload } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import Config from "~/utils/config";
+import ColumnSetting from "../column_setting/ColumnSetting";
 
 import data from "./data";
 
@@ -27,7 +29,7 @@ const ColumeStatus = ({ text }: { text: string }) => {
 const cls = classNames.bind(style);
 
 const TeacherManagement = () => {
-    const columns: ColumnsType<any> = [
+    const baseColumns: ColumnsType<any> = [
         {
             title: "",
             dataIndex: "avatar",
@@ -64,10 +66,11 @@ const TeacherManagement = () => {
         },
     ];
 
+    const [columnVisible, setColumnVisible] = useState<Array<any>>([])
+
     return (
         <div className={cls("teacher_management")}>
             <div className={cls("function")}>
-                <h4>Quản lý giảng viên</h4>
                 <div>
                     <Button
                         type="dashed"
@@ -96,8 +99,9 @@ const TeacherManagement = () => {
                         </Button>
                     </Upload>
                 </div>
+                <ColumnSetting setColumnVisible={setColumnVisible} columns={baseColumns} cacheKey={Config.TEACHER_CACHE_KEY}  />
             </div>
-            <Table dataSource={data} columns={columns} />
+            <Table dataSource={data} columns={columnVisible} />
         </div>
     );
 };

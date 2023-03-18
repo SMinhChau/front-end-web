@@ -27,6 +27,8 @@ import Student from "~/entities/student";
 import { ToastContainer, toast } from "react-toastify";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import { useAppSelector } from "~/redux/hooks";
+import Config from "~/utils/config";
+import ColumnSetting from "../column_setting/ColumnSetting";
 
 const cls = classNames.bind(style);
 
@@ -35,7 +37,7 @@ interface StudentData extends Student {
 }
 
 const StudentManagement = () => {
-    const columns: ColumnsType<any> = [
+    const baseColumns: ColumnsType<any> = [
         {
             title: "",
             dataIndex: "avatar",
@@ -80,7 +82,8 @@ const StudentManagement = () => {
     const [uploading, setUploading] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const userState = useAppSelector((state) => state.user);
-    const [viewType, setviewType] = useState<"table" | "card">("card");
+    const [viewType, setviewType] = useState<"table" | "card">("table");
+    const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
     const showModal = () => {
         setOpen(true);
@@ -156,7 +159,7 @@ const StudentManagement = () => {
                 <div>
                     <label htmlFor="select_view">Hiển thị: </label>
                     <Select
-                        defaultValue="card"
+                        defaultValue="table"
                         style={{ width: 120 }}
                         onChange={(value: "table" | "card") => {
                             setviewType(value);
@@ -208,6 +211,15 @@ const StudentManagement = () => {
                     >
                         {uploading ? "Uploading" : "Start Upload"}
                     </Button>
+
+                    {viewType === "table" && (
+                        <ColumnSetting
+                            setColumnVisible={setColumnVisible}
+                            columns={baseColumns}
+                            cacheKey={Config.STUDENT_CACHE_KEY}
+                            style={{ marginLeft: 20 }}
+                        />
+                    )}
                 </div>
                 <Modal
                     destroyOnClose
@@ -241,7 +253,7 @@ const StudentManagement = () => {
             {viewType === "table" ? (
                 <Table
                     dataSource={student}
-                    columns={columns}
+                    columns={columnVisible}
                     scroll={{ y: 600 }}
                 />
             ) : (
@@ -249,7 +261,7 @@ const StudentManagement = () => {
                     {student.map((value) => (
                         <Col span={6}>
                             <Card className={cls("card_item")} key={value.id}>
-                                <div className={cls('card_body')}>
+                                <div className={cls("card_body")}>
                                     <div className={cls("card_top")}>
                                         <img src={value.avatar} alt="" />
                                         <div className={cls("card_func")}>

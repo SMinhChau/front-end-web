@@ -10,6 +10,8 @@ import topicService from "~/services/topic";
 import Topic from "~/entities/topic";
 import { default as base_column } from "./column";
 import { toast, ToastContainer } from "react-toastify";
+import Config from "~/utils/config";
+import ColumnSetting from "../column_setting/ColumnSetting";
 
 const cls = classNames.bind(style);
 
@@ -26,15 +28,16 @@ const TopicManagement = () => {
     const [status, setStatus] = useState("insert");
     const [initData, setInitData] = useState({});
     const [idUpdate, setIdUpdate] = useState<number | null>(null);
+    const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
-    const column = [
+    const baseColumns = [
         ...base_column,
         {
             title: "",
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => deleteTerm(id)}>
-                    <DeleteOutlined style={{color: 'red'}}/>
+                    <DeleteOutlined style={{ color: "red" }} />
                 </Button>
             ),
         },
@@ -43,7 +46,7 @@ const TopicManagement = () => {
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => showEditModal(id)}>
-                    <EditOutlined style={{color: '#30a3f1'}}/>
+                    <EditOutlined style={{ color: "#30a3f1" }} />
                 </Button>
             ),
         },
@@ -58,7 +61,7 @@ const TopicManagement = () => {
             .then((error) => {
                 console.log(error);
             });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const getTopic = (termId: number) => {
         topicService
@@ -82,14 +85,14 @@ const TopicManagement = () => {
     };
     useEffect(() => {
         if (term.length > 0) getTopic(term[0].id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [term]);
 
     useEffect(() => {
         if (termSelect) {
             getTopic(termSelect);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [termSelect]);
 
     const showModal = () => {
@@ -178,20 +181,28 @@ const TopicManagement = () => {
                         })}
                     />
                 </div>
-                <Button
-                    type="dashed"
-                    icon={<PlusOutlined />}
-                    size="large"
-                    style={{
-                        marginBottom: "10px",
-                        animation: "none",
-                        color: "rgb(80, 72, 229)",
-                        fontWeight: "600",
-                    }}
-                    onClick={showModal}
-                >
-                    Tạo
-                </Button>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                    <Button
+                        type="dashed"
+                        icon={<PlusOutlined />}
+                        size="large"
+                        style={{
+                            marginBottom: "10px",
+                            animation: "none",
+                            color: "rgb(80, 72, 229)",
+                            fontWeight: "600",
+                        }}
+                        onClick={showModal}
+                    >
+                        Tạo
+                    </Button>
+                    <ColumnSetting
+                        setColumnVisible={setColumnVisible}
+                        columns={baseColumns}
+                        cacheKey={Config.TOPIC_CACHE_KEY}
+                        style={{marginLeft: 20}}
+                    />
+                </div>
 
                 <Modal
                     destroyOnClose
@@ -282,7 +293,7 @@ const TopicManagement = () => {
                     </Form>
                 </Modal>
             </div>
-            <Table columns={column} dataSource={topic} />
+            <Table columns={columnVisible} dataSource={topic} />
         </div>
     );
 };
