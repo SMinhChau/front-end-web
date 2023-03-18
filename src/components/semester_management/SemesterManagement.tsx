@@ -307,7 +307,7 @@ const SemesterManagement = () => {
                     </Form>
                 </Modal>
             </div>
-            <Table columns={columns} dataSource={terms} />
+            <Table columns={columns} dataSource={terms} style={{backgroundColor: "#fff"}} />
         </div>
     );
 };

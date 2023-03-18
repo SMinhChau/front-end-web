@@ -14,7 +14,7 @@ const Wrapper = ({ children }: { children: React.ReactElement }) => {
             </div>
             <div className={cls("menu_right")}>
                 <AppHeader />
-                {children}
+                <div className={cls('content')}>{children}</div>
             </div>
         </div>
     );
