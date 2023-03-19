@@ -2,7 +2,8 @@ import React from "react";
 import classNames from "classnames/bind";
 import style from "./Header.module.scss";
 import { MdOutlineNotificationsActive } from "react-icons/md";
-import { Badge, Input } from "antd";
+import { Badge, Input, Button } from "antd";
+import { Link } from "react-router-dom";
 const { Search } = Input;
 
 const cls = classNames.bind(style);
@@ -25,6 +26,7 @@ function AppHeader() {
                     size="large"
                     onSearch={onSearch}
                 />
+                <Link to="/login" style={{margin: "0 20px"}} ><Button size="large" type="primary">Đăng nhập</Button></Link>
             </div>
         </div>
     );

@@ -17,6 +17,7 @@ import Major from "./pages/major/Major";
 import tokenService from "./services/token";
 import authAPI from "./redux/apis/auth";
 import Topic from "./pages/topic/Topic";
+import Home from "./pages/home/Home";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
@@ -32,8 +33,9 @@ function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Home/>} />
                 <Route
-                    path="/"
+                    path="/term"
                     element={
                         <PrivateRoute isLogin={userState.is_login}>
                             <Semester />

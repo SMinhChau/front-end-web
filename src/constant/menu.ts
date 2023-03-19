@@ -6,7 +6,7 @@ const menus = {
         {
             name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
-            url: "/",
+            url: "/term",
         },
         {
             name: "Quản lý chuyên ngành",
@@ -23,7 +23,7 @@ const menus = {
         {
             name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
-            url: "/",
+            url: "/term",
         },
         {
             name: "Quản lý Giảng Viên",
@@ -50,7 +50,7 @@ const menus = {
         {
             name: "Quản lý Học Kỳ",
             image: AiOutlineCalendar,
-            url: "/",
+            url: "/term",
         },
         {
             name: "Quản lý Giảng Viên",
