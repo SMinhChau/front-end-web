@@ -7,7 +7,8 @@ import AppHeader from "~/components/header/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import slide1 from "~/assets/home/lms-01.jpg";
+import slide1 from "~/assets/home/sl01.jpg";
+import slide2 from "~/assets/home/sl02.png";
 import "./Home.css";
 
 const cls = classNames.bind(style);
@@ -44,7 +45,7 @@ const Home = () => {
                                 toàn cầu
                             </span>
                         </div>
-                        <img src={slide1} alt="" />
+                        <img src={slide2} alt="" />
                     </div>
                     <div className={cls("slide_item")}>
                         <div>
