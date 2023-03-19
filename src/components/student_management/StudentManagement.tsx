@@ -10,14 +10,25 @@ import {
     Form,
     Input,
     message,
+    Card,
+    Select,
+    Row,
+    Col,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+    DeleteOutlined,
+    PlusOutlined,
+    UploadOutlined,
+    EditOutlined,
+} from "@ant-design/icons";
 import studentService from "~/services/student";
 import Student from "~/entities/student";
 import { ToastContainer, toast } from "react-toastify";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import { useAppSelector } from "~/redux/hooks";
+import Config from "~/utils/config";
+import ColumnSetting from "../column_setting/ColumnSetting";
 
 const cls = classNames.bind(style);
 
@@ -26,7 +37,7 @@ interface StudentData extends Student {
 }
 
 const StudentManagement = () => {
-    const columns: ColumnsType<any> = [
+    const baseColumns: ColumnsType<any> = [
         {
             title: "",
             dataIndex: "avatar",
@@ -71,6 +82,8 @@ const StudentManagement = () => {
     const [uploading, setUploading] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const userState = useAppSelector((state) => state.user);
+    const [viewType, setviewType] = useState<"table" | "card">("table");
+    const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
     const showModal = () => {
         setOpen(true);
@@ -143,27 +156,42 @@ const StudentManagement = () => {
         <div className={cls("student")}>
             <ToastContainer />
             <div className={cls("function")}>
-                <Button
-                    type="dashed"
-                    icon={<PlusOutlined />}
-                    size="large"
-                    style={{
-                        margin: "0 10px",
-                        animation: "none",
-                        color: "rgb(80, 72, 229)",
-                    }}
-                    onClick={showModal}
-                >
-                    Tạo
-                </Button>
+                <div>
+                    <label htmlFor="select_view">Hiển thị: </label>
+                    <Select
+                        defaultValue="table"
+                        style={{ width: 120 }}
+                        onChange={(value: "table" | "card") => {
+                            setviewType(value);
+                        }}
+                        options={[
+                            { value: "table", label: "Bảng" },
+                            { value: "card", label: "Thẻ" },
+                        ]}
+                        id="select_view"
+                    />
+                </div>
+
                 <div className={cls("upload_group_btn")}>
+                    <Button
+                        type="dashed"
+                        icon={<PlusOutlined />}
+                        size="large"
+                        style={{
+                            margin: "10px",
+                            animation: "none",
+                            color: "rgb(80, 72, 229)",
+                        }}
+                        onClick={showModal}
+                    >
+                        Tạo
+                    </Button>
                     <Upload {...props}>
                         <Button
                             type="dashed"
                             icon={<UploadOutlined />}
                             size="large"
                             style={{
-                                marginBottom: "10px",
                                 animation: "none",
                                 color: "rgb(80, 72, 229)",
                             }}
@@ -177,13 +205,21 @@ const StudentManagement = () => {
                         disabled={fileList.length === 0}
                         loading={uploading}
                         style={{
-                            marginBottom: "10px",
                             animation: "none",
                             marginLeft: 10,
                         }}
                     >
                         {uploading ? "Uploading" : "Start Upload"}
                     </Button>
+
+                    {viewType === "table" && (
+                        <ColumnSetting
+                            setColumnVisible={setColumnVisible}
+                            columns={baseColumns}
+                            cacheKey={Config.STUDENT_CACHE_KEY}
+                            style={{ marginLeft: 20 }}
+                        />
+                    )}
                 </div>
                 <Modal
                     destroyOnClose
@@ -214,7 +250,45 @@ const StudentManagement = () => {
                     </Form>
                 </Modal>
             </div>
-            <Table dataSource={student} columns={columns} scroll={{ y: 600 }} />
+            {viewType === "table" ? (
+                <Table
+                    dataSource={student}
+                    columns={columnVisible}
+                    scroll={{ y: 600 }}
+                />
+            ) : (
+                <Row className={cls("card_view")}>
+                    {student.map((value) => (
+                        <Col span={6}>
+                            <Card className={cls("card_item")} key={value.id}>
+                                <div className={cls("card_body")}>
+                                    <div className={cls("card_top")}>
+                                        <img src={value.avatar} alt="" />
+                                        <div className={cls("card_func")}>
+                                            <Button>
+                                                <DeleteOutlined
+                                                    style={{ color: "red" }}
+                                                />
+                                            </Button>
+                                            <Button>
+                                                <EditOutlined
+                                                    style={{ color: "#30a3f1" }}
+                                                />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className={cls("content")}>
+                                        <p>{value.name}</p>
+                                        <p>{value.gender}</p>
+                                        <p>{value.schoolYear}</p>
+                                        <p>{value.typeTraining}</p>
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            )}
         </div>
     );
 };

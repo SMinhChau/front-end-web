@@ -7,11 +7,13 @@ import termService from "~/services/term";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import Term from "~/entities/term";
+import ColumnSetting from "../column_setting/ColumnSetting";
+import Config from "~/utils/config";
 
 const cls = classNames.bind(style);
 
 const SemesterManagement = () => {
-    const columns = [
+    const baseColumns = [
         {
             title: "Tên",
             dataIndex: "name",
@@ -66,20 +68,20 @@ const SemesterManagement = () => {
             render: (t: Date) => moment(t).format("DD/MM/YYYY"),
         },
         {
-            title: "",
+            title: "Xóa",
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => deleteTerm(id)}>
-                    <DeleteOutlined style={{color: 'red'}} />
+                    <DeleteOutlined style={{ color: "red" }} />
                 </Button>
             ),
         },
         {
-            title: "",
+            title: "Sửa",
             dataIndex: "id",
             render: (id: any) => (
                 <Button onClick={() => showEditModal(id)}>
-                    <EditOutlined style={{color: '#30a3f1'}}/>
+                    <EditOutlined style={{ color: "#30a3f1" }} />
                 </Button>
             ),
         },
@@ -89,6 +91,7 @@ const SemesterManagement = () => {
     const [status, setStatus] = useState("insert");
     const [initData, setInitData] = useState({});
     const [idUpdate, setIdUpdate] = useState(null);
+    const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
     useEffect(() => {
         termService.getTerm({ majorsId: 1 }).then((result) => {
@@ -216,6 +219,11 @@ const SemesterManagement = () => {
                 >
                     Tạo
                 </Button>
+                <ColumnSetting
+                    setColumnVisible={setColumnVisible}
+                    columns={baseColumns}
+                    cacheKey={Config.SEMESTER_CACHE_KEY}
+                />
                 <Modal
                     destroyOnClose
                     open={open}
@@ -307,7 +315,11 @@ const SemesterManagement = () => {
                     </Form>
                 </Modal>
             </div>
-            <Table columns={columns} dataSource={terms} />
+            <Table
+                columns={columnVisible}
+                dataSource={terms}
+                style={{ backgroundColor: "#fff" }}
+            />
         </div>
     );
 };
