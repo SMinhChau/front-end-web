@@ -4,11 +4,6 @@ import { GiTeacher } from "react-icons/gi";
 const menus = {
     ADMIN: [
         {
-            name: "Quản lý Học Kỳ",
-            image: AiOutlineCalendar,
-            url: "/term",
-        },
-        {
             name: "Quản lý chuyên ngành",
             image: AiOutlineCalendar,
             url: "/major",
