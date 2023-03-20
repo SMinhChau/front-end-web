@@ -10,12 +10,12 @@ class TopicService {
     }
     updateTopic(id: number, data: any) {
         return axiosAuth({
-            url: "/lecturer/topics/" + id,
+            url: "/lecturer/topics/" + id+'/review',
             method: "put",
             data,
         });
     }
-    getTopic(query: { lecturerId: number; termId: number }) {
+    getTopic(query: { lecturerId?: number; termId: number }) {
         return axiosAuth({
             url: "/lecturer/topics",
             method: "get",
