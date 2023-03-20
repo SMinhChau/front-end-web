@@ -15,7 +15,7 @@ import ColumnSetting from "../column_setting/ColumnSetting";
 
 const cls = classNames.bind(style);
 
-interface TopicData extends Term {
+interface TopicData extends Topic {
     key: number;
 }
 
@@ -32,6 +32,25 @@ const TopicManagement = () => {
 
     const baseColumns = [
         ...base_column,
+        {
+            title: "Trạng thái",
+            dataIndex: "status",
+            render: (status: any) => (
+                <span
+                    style={{
+                        padding: "5px 10px",
+                        color: "#fff",
+                        backgroundColor:
+                        status === "PE" ? "#29CC57" : "#FEC400",
+                        fontSize: "11px",
+                        borderRadius: "100px",
+                        fontWeight: "600",
+                    }}
+                >
+                    {status}
+                </span>
+            ),
+        },
         {
             title: "",
             dataIndex: "id",
@@ -56,7 +75,7 @@ const TopicManagement = () => {
         termService
             .getTerm({ majorsId: userState.majors.id })
             .then((response) => {
-                setTerm(response.data);
+                setTerm(response.data.reverse());
             })
             .then((error) => {
                 console.log(error);
@@ -181,7 +200,7 @@ const TopicManagement = () => {
                         })}
                     />
                 </div>
-                <div style={{display: 'flex', alignItems: 'center'}}>
+                <div style={{ display: "flex", alignItems: "center" }}>
                     <Button
                         type="dashed"
                         icon={<PlusOutlined />}
@@ -200,7 +219,7 @@ const TopicManagement = () => {
                         setColumnVisible={setColumnVisible}
                         columns={baseColumns}
                         cacheKey={Config.TOPIC_CACHE_KEY}
-                        style={{marginLeft: 20}}
+                        style={{ marginLeft: 20 }}
                     />
                 </div>
 
