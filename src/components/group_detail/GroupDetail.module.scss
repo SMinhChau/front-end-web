@@ -1,0 +1,38 @@
+.group_detail{
+    width: 50vw;
+    span{
+        font-weight: 700;
+    }
+    h3{
+        font-weight: 600;
+        padding: 10px 0;
+    }
+    .group_name{
+        font-size: 1.5rem;
+        font-weight: 600;
+        padding: 20px 0;
+    }
+    .group_member{
+        margin-bottom: 20px;
+        .member{
+            padding: 5px 0;
+        }
+    }
+    .lecturer{
+        padding: 10px 0;
+    }
+
+    .topic{
+        margin: 10px 0;
+        text-align: justify;
+        line-height: 1.5;
+        font-size: 17px;
+    }
+    .counter_argument, .council{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+
+}

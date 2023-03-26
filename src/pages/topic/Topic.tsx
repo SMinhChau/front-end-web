@@ -6,16 +6,16 @@ import { useAppSelector } from "~/redux/hooks";
 import { EnumRole } from "~/enum";
 
 const Topic = () => {
-    const userState = useAppSelector((state) => state.user);
-    return (
-        <Wrapper>
-            {userState.user.role === EnumRole.HEAD_LECTURER ? (
-                <HEADTopicManagement />
-            ) : (
-                <TopicManagement />
-            )}
-        </Wrapper>
-    );
+  const userState = useAppSelector((state) => state.user);
+  return (
+    <Wrapper>
+      {userState.user.role === EnumRole.LECTURER ? (
+        <TopicManagement />
+      ) : (
+        <HEADTopicManagement />
+      )}
+    </Wrapper>
+  );
 };
 
 export default Topic;
