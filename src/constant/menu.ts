@@ -13,6 +13,11 @@ const menus = {
             image: GiTeacher,
             url: "/teacher",
         },
+        {
+          name: "Quản lý nhóm",
+          image: AiOutlineCalendar,
+          url: "/grading",
+      },
     ],
     HEAD_LECTURER: [
         {
@@ -40,6 +45,11 @@ const menus = {
             image: AiOutlineCalendar,
             url: "/empty",
         },
+        {
+            name: "Quản lý nhóm",
+            image: AiOutlineCalendar,
+            url: "/grading",
+        },
     ],
     SUB_HEAD_LECTURER: [
         {
@@ -66,6 +76,11 @@ const menus = {
             name: "Quản lý Đánh giá",
             image: AiOutlineCalendar,
             url: "/empty",
+        },
+        {
+            name: "Quản lý nhóm",
+            image: AiOutlineCalendar,
+            url: "/grading",
         },
     ],
     LECTURER: [

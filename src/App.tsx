@@ -18,6 +18,8 @@ import tokenService from "./services/token";
 import authAPI from "./redux/apis/auth";
 import Topic from "./pages/topic/Topic";
 import Home from "./pages/home/Home";
+import GradingAssigment from "./pages/grading_assigment/GradingAssigment";
+import GroupDetail from "./pages/group_detail/GroupDetail";
 
 function App() {
     const userState = useAppSelector((state) => state.user);
@@ -79,6 +81,22 @@ function App() {
                     element={
                         <PrivateRoute isLogin={userState.is_login}>
                             <Topic />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/grading"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <GradingAssigment />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/group"
+                    element={
+                        <PrivateRoute isLogin={userState.is_login}>
+                            <GroupDetail />
                         </PrivateRoute>
                     }
                 />
