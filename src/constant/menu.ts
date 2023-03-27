@@ -43,7 +43,7 @@ const menus = {
         {
             name: "Quản lý Đánh giá",
             image: AiOutlineCalendar,
-            url: "/empty",
+            url: "/evaluate",
         },
         {
             name: "Quản lý nhóm",
