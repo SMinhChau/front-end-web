@@ -70,14 +70,14 @@ const TeacherManagement = () => {
             ),
         },
         {
-            title: "Tên giảng viên",
-            dataIndex: "name",
-            key: "name",
-        },
-        {
             title: "Mã giảng viên",
             dataIndex: "username",
             key: "userame",
+        },
+        {
+            title: "Tên giảng viên",
+            dataIndex: "name",
+            key: "name",
         },
         {
             title: "Cấp bậc",
@@ -88,6 +88,11 @@ const TeacherManagement = () => {
             title: "SĐT",
             dataIndex: "phoneNumber",
             key: "phoneNumber",
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
         {
             title: "Giới tính",
