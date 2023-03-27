@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import style from "./MajorManagement.module.scss";
 import type { ColumnsType } from "antd/es/table";
-import headOfLecturerService from "~/services/headOfLecturer";
+import headOfLecturerService from "~/services/lecturer";
 import majorService from "~/services/major";
 
 const cls = classNames.bind(style);
