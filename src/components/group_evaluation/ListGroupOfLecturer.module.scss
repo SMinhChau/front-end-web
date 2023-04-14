@@ -1,9 +1,9 @@
-.grading_assigment {
+.list_evaluation {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  // width: 100vw;
+
   .title_group {
     width: 98%;
     background-color: white;
@@ -48,15 +48,15 @@
       padding: 30px;
     }
     .icon_evaluation {
-      font-size: 50px;
+      font-size: 1.3rem;
       color: rgb(119, 113, 5);
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .group {
-      margin: 20px;
-      width: 30.5%;
+      margin: 30px;
+      width: 46%;
 
       .group_name {
         font-size: 1.1rem;
