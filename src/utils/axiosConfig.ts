@@ -5,7 +5,7 @@ import { URL } from "~/constant";
 const axiosAuth = axios.create({
     baseURL: URL,
     headers: {
-        "Content-type": "application/json",
+        'Content-Type': 'application/x-www-form-urlencoded'
     },
 });
 

@@ -11,33 +11,38 @@ const { Search } = Input;
 const cls = classNames.bind(style);
 
 function AppHeader() {
-    const onSearch = (value: string) => console.log(value);
-    const userState = useAppSelector((state) => state.user);
-    return (
-        <div className={cls("header")}>
-            <div className={cls("logo")}></div>
-            <div className={cls("menu")}>
-                <div className={cls("item")}>
-                    <Badge count={5}>
-                        <MdOutlineNotificationsActive />
-                    </Badge>
-                </div>
-                <Search
-                    placeholder="input search text"
-                    allowClear
-                    enterButton="Search"
-                    size="large"
-                    onSearch={onSearch}
-                />
-                {!userState.is_login && (
-                    <Link to="/login" style={{ margin: "0 20px" }}>
-                        <Button size="large" type="primary">
-                            Đăng nhập
-                        </Button>
-                    </Link>
-                )}
+  const onSearch = (value: string) => console.log(value);
+  const userState = useAppSelector((state) => state.user);
+  return (
+    <div className={cls("header")}>
+      <div className={cls("logo")}></div>
+      <div className={cls("menu")}>
+        {userState.is_login && (
+          <>
+            <div className={cls("item")}>
+              <Badge count={5}>
+                <MdOutlineNotificationsActive />
+              </Badge>
             </div>
-        </div>
-    );
+            <Search
+              placeholder="input search text"
+              allowClear
+              enterButton="Search"
+              size="large"
+              onSearch={onSearch}
+            />
+          </>
+        )}
+
+        {!userState.is_login && (
+          <Link to="/login" style={{ margin: "0 20px" }}>
+            <Button size="large" type="primary">
+              Đăng nhập
+            </Button>
+          </Link>
+        )}
+      </div>
+    </div>
+  );
 }
 export default AppHeader;
