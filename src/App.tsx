@@ -20,126 +20,162 @@ import Topic from "./pages/topic/Topic";
 import Home from "./pages/home/Home";
 import GradingAssigment from "./pages/grading_assigment/GradingAssigment";
 import GroupDetail from "./pages/group_detail/GroupDetail";
+import GroupLecturer from "./pages/group_lecturer/GroupLecturer";
+import UserInfo from "./pages/user_info/UserInfo";
+import GroupEvaluation from "./pages/group_evaluation/GroupEvaluation";
+import ListGroupOfLecturer from "./pages/evaluation_of_lecturer/ListGroupOfLecturer";
 
 function App() {
-    const userState = useAppSelector((state) => state.user);
-    const dispatch = useAppDispatch();
+  const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        if (tokenService.getRefreshToken() && userState.user.username === "") {
-            dispatch(authAPI.getInfo()());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userState]);
+  useEffect(() => {
+    if (tokenService.getRefreshToken() && userState.user.username === "") {
+      dispatch(authAPI.getInfo()());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userState]);
 
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home/>} />
-                <Route
-                    path="/term"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Semester />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/teacher"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Teacher />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/major"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Major />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/student"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Student />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/evaluate"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Evaludate />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/topic"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <Topic />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/grading"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <GradingAssigment />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/group"
-                    element={
-                        <PrivateRoute isLogin={userState.is_login}>
-                            <GroupDetail />
-                        </PrivateRoute>
-                    }
-                />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Login />} />
-                <Route path="*" element={<NoMatch />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/term"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Semester />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/teacher"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Teacher />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/major"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Major />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/student"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Student />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/evaluate"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Evaludate />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/topic"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Topic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/grading"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <GradingAssigment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/group/:id"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <GroupDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/group-lecturer"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <GroupLecturer />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Login />} />
+
+        <Route
+          path="/user-info"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <UserInfo />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/evaluation-group-of-lecturer"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <ListGroupOfLecturer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/group/evaluation-for-group/:id"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <GroupEvaluation />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="*" element={<NoMatch />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export const PrivateRoute = (props: {
-    children: JSX.Element;
-    isLogin: boolean;
+  children: JSX.Element;
+  isLogin: boolean;
 }) => {
-    const [redirect, setRedirect] = useState(false);
-    useEffect(() => {
-        if (!props.isLogin) {
-            toast.info("Bạn vui lòng đăng nhập để sử dụng!", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            const timeout = setTimeout(() => {
-                setRedirect(true);
-            }, 2500);
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    if (!props.isLogin) {
+      toast.info("Bạn vui lòng đăng nhập để sử dụng!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      const timeout = setTimeout(() => {
+        setRedirect(true);
+      }, 2500);
 
-            return () => clearTimeout(timeout);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+      return () => clearTimeout(timeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <>
-            <ToastContainer />
-            {props.isLogin
-                ? props.children
-                : redirect && <Navigate to="/login" />}
-        </>
-    );
+  return (
+    <>
+      <ToastContainer />
+      {props.isLogin ? props.children : redirect && <Navigate to="/login" />}
+    </>
+  );
 };
 export default App;
