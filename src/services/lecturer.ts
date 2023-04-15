@@ -30,9 +30,6 @@ class LecturerService {
   }
 
   async createGroupLecturer(data: { termId: number; name: string; lecturerIds: string }) {
-    console.log('createGroupLecturer============', data);
-    // return axiosAuth.postForm("/lecturer/group-lecturer", data, {headers: {'content-type': 'application/x-www-form-urlencoded'}})
-
     return await axiosAuth({
       url: '/lecturer/group-lecturer',
       method: 'post',
@@ -78,6 +75,21 @@ class LecturerService {
     return await axiosAuth({
       url: `lecturer/assigns/lecturers/:${groupLecturerId}?termId=${termId}`,
       method: 'get',
+    });
+  }
+
+  async createAssignGroupLecturer(data: { typeEvaluation: string; groupLecturerId: number; groupId: number }) {
+    return await axiosAuth({
+      url: '/lecturer/assigns',
+      method: 'post',
+      data: qs.stringify(data),
+    });
+  }
+  async updateAssignGroupLecturer(id: number, data: { typeEvaluation: string; groupLecturerId: number; groupId: number }) {
+    return await axiosAuth({
+      url: `lecturer/assigns/${id}`,
+      method: 'put',
+      data: qs.stringify(data),
     });
   }
 }

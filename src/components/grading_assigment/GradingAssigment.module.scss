@@ -19,7 +19,7 @@
     font-weight: 600;
   }
   .scroll {
-    height: calc(100vh - 100px);
+    height: calc(100vh - 2px);
     overflow-x: scroll;
   }
   .filter_term {
@@ -56,7 +56,7 @@
     }
     .group {
       margin: 20px;
-      width: 30.5%;
+      width: 30%;
 
       .group_name {
         font-size: 1.1rem;

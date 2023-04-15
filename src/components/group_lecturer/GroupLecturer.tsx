@@ -87,7 +87,7 @@ const GroupLecturer = () => {
   >([]);
 
   const { user } = useAppSelector((state) => state.user);
-  const [uploading, setUploading] = useState(false);
+  const [loadingListGroup, setLoadingListGroup] = useState(true);
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("insert");
   const [initData, setInitData] = useState<{
@@ -124,6 +124,7 @@ const GroupLecturer = () => {
               return { ...value, key: index };
             }
           );
+          setLoadingListGroup(false)
           setGroupLecturers(_data);
 
         });
@@ -401,38 +402,41 @@ const GroupLecturer = () => {
     <div className={cls("group_lecturer_management")}>
       <ToastContainer />
       <Row>
-        <Col style={{ backgroundColor: "#ffff" }} span={12}>
-          <div className={cls("group_content")}>
-            <div className={cls("function")}>
-              <Select
-                style={{ width: 120 }}
-                onChange={(value) => {
-                  setTermSelect(value);
-                }}
-                options={term.map((val) => {
-                  return {
-                    value: val.id,
-                    label: val.name,
-                  };
-                })}
-              />
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                size="large"
-                style={{
-                  margin: "0 10px",
-                  animation: "none",
-                  color: "rgb(80, 72, 229)",
-                }}
-                onClick={showModal}
-              >
-                Tạo
-              </Button>
-            </div>
 
-            <Table dataSource={groupLecturers} columns={columns} />
-          </div>
+        <Col style={{ backgroundColor: "#ffff" }} span={12}>
+          <Skeleton loading={loadingListGroup} avatar active>
+            <div className={cls("group_content")}>
+              <div className={cls("function")}>
+                <Select
+                  style={{ width: 120 }}
+                  onChange={(value) => {
+                    setTermSelect(value);
+                  }}
+                  options={term.map((val) => {
+                    return {
+                      value: val.id,
+                      label: val.name,
+                    };
+                  })}
+                />
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  size="large"
+                  style={{
+                    margin: "0 10px",
+                    animation: "none",
+                    color: "rgb(80, 72, 229)",
+                  }}
+                  onClick={showModal}
+                >
+                  Tạo
+                </Button>
+              </div>
+
+              <Table dataSource={groupLecturers} columns={columns} />
+            </div>
+          </Skeleton>
         </Col>
 
         <Col span={12} >
@@ -533,7 +537,7 @@ const GroupLecturer = () => {
           >
             <Select
               mode="multiple"
-              defaultValue={String(term?.[0]?.id)}
+
               style={{ width: "100%" }}
               placeholder="Giảng viên"
               onChange={handleChange}

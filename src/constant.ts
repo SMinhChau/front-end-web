@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 export const URL = 'https://manage-graduation-thesis-iuh.herokuapp.com/api';
 
 export const checkGender = (value: string) => {
@@ -20,3 +22,15 @@ export interface TypeEvaluation {
   REVIEWER: string;
   SESSION_HO: string;
 }
+
+export const showMessage = (mess: string, timeShow: number) => {
+  return toast.info(mess, {
+    position: 'top-center',
+    autoClose: timeShow,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};

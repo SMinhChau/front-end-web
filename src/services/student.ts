@@ -29,6 +29,13 @@ class StudentService {
       method: 'get',
     });
   }
+
+  async getGroupLecturerOfStudentByType(groupId?: number, termId?: number, type?: string) {
+    return await axiosAuth({
+      url: `lecturer/assigns?groupId=${groupId}&termId=${termId}&type=${type}`,
+      method: 'get',
+    });
+  }
 }
 
 const studentService = new StudentService();

@@ -67,7 +67,7 @@ const GradingAssigment = () => {
       <Card title={''} className={cls('list_group')}>
         <Skeleton loading={loading} avatar active></Skeleton>
         {listGroup.map((item, index) => (
-          <Card.Grid className={cls('group')} hoverable>
+          <Card.Grid key={index} className={cls('group')} hoverable>
             <div>
               <Avatar style={{ backgroundColor: '#87d068' }} icon={<SnippetsOutlined />} />
 
@@ -80,7 +80,7 @@ const GradingAssigment = () => {
 
 
                     {item?.members.map((i, d) => {
-                      return <Descriptions.Item label="Thành viên">{i?.student?.name}</Descriptions.Item>;
+                      return <Descriptions.Item key={d} label="Thành viên">{i?.student?.name}</Descriptions.Item>;
                     })}
                   </Descriptions>
                 </div>
