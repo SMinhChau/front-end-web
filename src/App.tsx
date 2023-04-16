@@ -6,7 +6,7 @@ import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import NoMatch from "./pages/404/NoMatch";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router, } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 import Login from "./pages/login/Login";
 import Semester from "./pages/semester/Semester";
@@ -38,7 +38,7 @@ function App() {
 
   return (
     <Router>
-      <Routes>
+      <Routes >
         <Route path="/" element={<Home />} />
         <Route
           path="/term"
