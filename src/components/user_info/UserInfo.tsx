@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styled from './UserInfo.module.scss';
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Select, Upload, UploadFile, UploadProps, message } from 'antd';
 import { useAppDispatch, useAppSelector } from '~/redux/hooks';
-import { checkDegree, checkGender, checkRole } from '~/constant';
+import { checkDegree, checkGender, checkRole, showMessage } from '~/constant';
 import { useEffect, useState } from 'react';
 import Major from '~/entities/major';
 import majorService from '~/services/major';
@@ -17,6 +17,7 @@ const UserInfo = () => {
     const dispatch = useAppDispatch();
 
     const { user } = useAppSelector((state) => state.user);
+    const userState = useAppSelector((state) => state.user);
     const [open, setOpen] = useState(false);
     const [status, setStatus] = useState('update');
     const [initData, setInitData] = useState<{
@@ -31,6 +32,7 @@ const UserInfo = () => {
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [error, setError] = useState<string>('');
+    const [fileImage, setFileImage] = useState<RcFile>()
 
     useEffect(() => {
         majorService
@@ -95,13 +97,22 @@ const UserInfo = () => {
         console.log(`selected ${value}`);
     };
 
+    useEffect(() => {
+        if (userState.update === true) {
+            setOpen(false)
+            showMessage("Cập nhật thành công", 5000)
+        }
+    }, [userState])
+
+
     const onFinish = (value: any) => {
         var bodyFormData = new FormData();
-        console.log("fileList?.[0]", fileList?.[0] as UploadFile);
+        console.log("fileImage 1", fileImage);
 
 
-        if (fileList?.[0]?.name !== "") {
-            bodyFormData.append('avatar', fileList?.[0] as RcFile)
+        if (fileImage) {
+            console.log('file -> ', fileImage)
+            bodyFormData.append('avatar', fileImage)
         } else {
             bodyFormData.append('avatar', user?.avatar)
         }
@@ -116,6 +127,7 @@ const UserInfo = () => {
         console.log("bodyFormData", bodyFormData);
 
         dispatch(authAPI.updateInfo()(bodyFormData));
+
     };
 
     const beforeUpload = (file: RcFile) => {
@@ -150,6 +162,12 @@ const UserInfo = () => {
         }
     };
 
+    const handleUploadImage: UploadProps['action'] = async (file: RcFile) => {
+        if (beforeUpload(file)) {
+            setFileImage(file);
+        }
+        return "";
+    }
 
     return (
         <div className={cls('user_info')}>
@@ -226,6 +244,7 @@ const UserInfo = () => {
                                             fileList={fileList}
                                             beforeUpload={beforeUpload}
                                             onChange={onChange}
+                                            action={handleUploadImage}
                                             maxCount={1}
                                         >
 

@@ -1,9 +1,7 @@
 import classNames from "classnames/bind";
 import style from "./GroupLecturer.module.scss";
-
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
-import Term from "~/entities/term";
 import {
   Avatar,
   Badge,
@@ -24,7 +22,6 @@ import {
   Upload,
   UploadProps,
 } from "antd";
-import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
 import {
   DeleteOutlined,
@@ -32,18 +29,12 @@ import {
   GroupOutlined,
   MoreOutlined,
   PlusOutlined,
-  SnippetsOutlined,
-  UploadOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import ColumnSetting from "../column_setting/ColumnSetting";
 import lecturerService from "~/services/lecturer";
-import { log } from "console";
 import Teacher from "~/entities/teacher";
-import { ColumnsType } from "antd/es/table";
-import data from "../teacher_management/data";
 import Meta from "antd/es/card/Meta";
-import { TypeEvaluation } from "~/constant";
+import { TypeEvaluation, showMessageEror } from "~/constant";
 import { Link } from "react-router-dom";
 
 const cls = classNames.bind(style);
@@ -80,13 +71,11 @@ interface GroupLecturerTable extends GroupLecturer {
 }
 
 const GroupLecturer = () => {
-  const [term, setTerm] = useState<Array<Term>>([]);
-  const [termSelect, setTermSelect] = useState<number | null>(null);
+
   const [groupLecturers, setGroupLecturers] = useState<
     Array<GroupLecturerTable>
   >([]);
 
-  const { user } = useAppSelector((state) => state.user);
   const [loadingListGroup, setLoadingListGroup] = useState(true);
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("insert");
@@ -102,44 +91,37 @@ const GroupLecturer = () => {
   const [groupStudents, setGroupStudents] = useState<Array<GroupStudent>>([]);
   const [loading, setLoading] = useState(true);
   const [loadingInfoGroup, setLoadingInfoGroup] = useState(true);
+  const termState = useAppSelector((state) => state.term);
+
+
 
   useEffect(() => {
-    termService
-      .getTerm({ majorsId: user.majors.id })
-      .then((response) => {
-        setTerm(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       lecturerService
-        .getGroupLecturers(termSelect !== null ? termSelect : term[0].id)
+        .getAllGroupLecturers({ termId: termState.termSelected })
         .then((response) => {
           const _data = response.data.map(
             (value: GroupLecturer, index: number) => {
               return { ...value, key: index };
             }
           );
+          console.log("gorup lectuirer _data -> ", _data);
           setLoadingListGroup(false)
           setGroupLecturers(_data);
 
         });
     }
-  }, [term, termSelect]);
+  }, [termState]);
 
   useEffect(() => {
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       lecturerService
-        .getWithTerm(termSelect !== null ? termSelect : term[0].id)
+        .getWithTerm(termState.termSelected)
         .then((response) => {
           setListLecturer(response.data);
         });
     }
-  }, [term]);
+  }, [termState]);
 
 
 
@@ -151,26 +133,17 @@ const GroupLecturer = () => {
         window.location.reload();
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 5000)
       });
   };
 
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
-    const termId = termSelect !== null ? termSelect : term[0].id;
+    const termId = termState.termSelected;
     setGroupDes(m);
     setLoadingInfoGroup(false)
     setGroupIdDelete(m?.id);
     lecturerService.getGroupStudentOfLecturer(termId, Number(m?.id)).then((result) => {
-      console.log("getGroupStudentOfLecturer result", result?.data);
       setLoading(false)
       setGroupStudents(result?.data)
     })
@@ -185,7 +158,7 @@ const GroupLecturer = () => {
     setInitData((prev: any) => {
       const data = {
         ...prev,
-        termId: termSelect !== null ? termSelect : term[0].id,
+        termId: termState.termSelected,
         name: m.name,
         lecturerIds: m.members?.map((value) => value?.lecturer?.id),
       };
@@ -201,15 +174,8 @@ const GroupLecturer = () => {
         window.location.reload();
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 5000)
+
       });
   };
 
@@ -314,43 +280,27 @@ const GroupLecturer = () => {
       lecturerService
         .createGroupLecturer({
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termSelected,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
           window.location.reload();
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 5000)
         });
     else {
       lecturerService
         .updateGroupLecturer(updateId as number, {
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termSelected,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
           window.location.reload();
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 5000)
         });
     }
   };
@@ -407,18 +357,7 @@ const GroupLecturer = () => {
           <Skeleton loading={loadingListGroup} avatar active>
             <div className={cls("group_content")}>
               <div className={cls("function")}>
-                <Select
-                  style={{ width: 120 }}
-                  onChange={(value) => {
-                    setTermSelect(value);
-                  }}
-                  options={term.map((val) => {
-                    return {
-                      value: val.id,
-                      label: val.name,
-                    };
-                  })}
-                />
+
                 <Button
                   type="dashed"
                   icon={<PlusOutlined />}

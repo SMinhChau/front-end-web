@@ -19,26 +19,16 @@ const cls = classNames.bind(styled);
 const ListGroupOfLecturer = () => {
     const { user } = useAppSelector((state) => state.user);
     const userState = useAppSelector((state) => state.user).user;
-    const [term, setTerm] = useState<Array<Term>>([]);
-    const [termSelect, setTermSelect] = useState<number | null>(null);
+
     const [listAssign, setListAssign] = useState<Array<Assign>>([]);
     const [loading, setLoading] = useState(true);
     const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR)
+    const termState = useAppSelector((state) => state.term);
+
 
     useEffect(() => {
-        termService
-            .getTerm({ majorsId: user.majors.id })
-            .then((response) => {
-                setTerm(response.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
-
-    useEffect(() => {
-        if (term.length > 0) {
-            assignService.getAssignByLecturer(termSelect ? termSelect : term[0].id, userState.id, typeEvalution)
+        if (termState.term.length > 0) {
+            assignService.getAssignByLecturer(termState.termSelected, userState.id, typeEvalution)
                 .then((result) => {
                     setLoading(false);
                     setListAssign(result?.data);
@@ -48,25 +38,14 @@ const ListGroupOfLecturer = () => {
                     console.log('error', error);
                 });
         }
-    }, [termSelect, term, typeEvalution, userState.id]);
+    }, [termState, typeEvalution, userState.id]);
     const handlerChangeType = (props: any) => {
         setTypeEvalution(props.target.value)
     };
     return (
         <div className={cls('list_evaluation')}>
             <div className={cls('filter_term')}>
-                <Select
-                    style={{ width: 120 }}
-                    onChange={(value) => {
-                        setTermSelect(value);
-                    }}
-                    options={term.map((val) => {
-                        return {
-                            value: val.id,
-                            label: val.name,
-                        };
-                    })}
-                />
+
             </div>
             <h3 className={cls('title_group')}>Danh sách Nhóm sinh viên chấm điểm</h3>
 

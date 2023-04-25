@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GroupDetail.module.scss';
-import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Select, Skeleton, Space, TreeSelect } from 'antd';
+import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Select, Skeleton, Space, TreeSelect, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
 import studentService from '~/services/student';
 import GroupStudent from '~/entities/group_student';
@@ -9,13 +9,12 @@ import topicService from '~/services/topic';
 import Topic from '~/entities/topic';
 import Teacher from '~/entities/teacher';
 import GroupLecturer from '../group_lecturer/GroupLecturer';
-import Term from '~/entities/term';
 import lecturerService from '~/services/lecturer';
-import termService from '~/services/term';
 import { useAppSelector } from '~/redux/hooks';
-import { toast, ToastContainer } from 'react-toastify';
-import { checkDegree, checkGender, showMessage } from '~/constant';
-import { DownOutlined } from '@ant-design/icons';
+import { ToastContainer } from 'react-toastify';
+import { checkDegree, checkGender, showMessage, showMessageEror } from '~/constant';
+import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons';
+
 
 const cls = classNames.bind(style);
 interface GroupAssign {
@@ -27,16 +26,19 @@ interface GroupAssign {
   };
 }
 
+interface NameOfLecturer {
+  key: number;
+  name: string;
+}
+
 const GroupDetail = () => {
   const { id } = useParams();
   const [inforGroup, setInfoGroup] = useState<GroupStudent>();
   const [topic, setTopic] = useState<Topic>();
   const [lecturer, setLecturer] = useState<Teacher>();
   const [loading, setLoading] = useState(true);
-  const [groupLecturer, setGroupLecturer] = useState<Array<GroupLecturer>>([]);
-  const [term, setTerm] = useState<Array<Term>>([]);
-  const [termSelect, setTermSelect] = useState<number | null>(null);
-  const { user } = useAppSelector((state) => state.user);
+  const [groupLecturerReview, setGroupLecturerReview] = useState<Array<GroupLecturer>>([]);
+  const [groupLecturerHost, setGroupLecturerHost] = useState<Array<GroupLecturer>>([]);
 
   const [status, setStatus] = useState('insert');
   const [statusHost, setStatusHost] = useState('insert');
@@ -57,26 +59,19 @@ const GroupDetail = () => {
 
   const [groupAssignReview, setGroupAssignRieview] = useState<Array<GroupAssign>>([]);
   const [groupAssignSessionHost, setGroupAssignSessionHost] = useState<Array<GroupAssign>>([]);
+  const termState = useAppSelector((state) => state.term);
+  const [nameOfLecturerReview, setNameOfLecturerReview] = useState<Array<Teacher>>([]);
+  const [nameOfLecturerHost, setNameOfLecturerHost] = useState<Array<Teacher>>([]);
 
-  useEffect(() => {
-    termService
-      .getTerm({ majorsId: user.majors.id })
-      .then((response) => {
-        setTerm(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const { Text } = Typography;
 
   useEffect(() => {
     const idGroup = id;
 
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       studentService
         .getGroupStudentByID(Number(idGroup))
         .then((result) => {
-          console.log('getGroupStudentByID', result?.data);
           setLoading(false);
           setInfoGroup(result.data);
           getTopic(result.data?.topic?.id);
@@ -84,24 +79,20 @@ const GroupDetail = () => {
         .catch((errr) => console.log('erre', errr));
 
       studentService
-        .getGroupLecturerOfStudentByType(Number(idGroup), termSelect !== null ? termSelect : term[0].id, 'REVIEWER')
+        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termSelected, 'REVIEWER')
         .then((resutl) => {
-          console.log(' REVIEWER', resutl?.data);
           setGroupAssignRieview(resutl?.data);
         })
         .catch((error) => console.log('error REVIEWER', error));
 
-
-
       studentService
-        .getGroupLecturerOfStudentByType(Number(idGroup), termSelect !== null ? termSelect : term[0].id, 'SESSION_HOST')
+        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termSelected, 'SESSION_HOST')
         .then((resutl) => {
-          console.log('SESSION_HOST', resutl?.data);
           setGroupAssignSessionHost(resutl?.data);
         })
         .catch((error) => console.log('error SESSION_HOST', error));
     }
-  }, [term, termSelect]);
+  }, [termState]);
 
   const getTopic = (id: number) => {
     if (id) {
@@ -115,32 +106,46 @@ const GroupDetail = () => {
     }
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const handleChangeGroupReview = (value: string) => {
+    const t = groupLecturerReview.filter((item) => item.id === Number(value))[0];
+    setNameOfLecturerReview(t.members.map((m) => m.lecturer));
+  };
+
+  const handleChangeGroupHost = (value: string) => {
+    const t = groupLecturerHost.filter((item) => item.id === Number(value))[0];
+    setNameOfLecturerHost(t.members.map((m) => m.lecturer));
   };
 
   useEffect(() => {
-    if (term.length > 0) {
-      lecturerService.getGroupLecturers(termSelect !== null ? termSelect : term[0].id).then((resutl) => {
-        setGroupLecturer(resutl?.data);
-      });
+    if (termState.term.length > 0) {
+      lecturerService
+        .getGroupLecturers({ termId: termState.termSelected, typeEvaluation: 'REVIEWER' })
+        .then((resutl) => {
+          setGroupLecturerReview(resutl?.data);
+        })
+        .catch((er) => console.log('getGroupLecturers REVIEW', er));
+      lecturerService
+        .getGroupLecturers({ termId: termState.termSelected, typeEvaluation: 'SESSION_HOST' })
+        .then((resutl) => {
+          setGroupLecturerHost(resutl?.data);
+        })
+        .catch((er) => console.log('getGroupLecturers Host', er));
     }
-  }, [term, termSelect]);
+  }, [termState]);
 
   useEffect(() => {
-    getInfoReview()
-  }, [groupAssignReview?.[0]?.groupLecturer?.id, idGroupReview])
-
+    getInfoReview();
+  }, [groupAssignReview?.[0]?.groupLecturer?.id, idGroupReview]);
 
   useEffect(() => {
-    getInfoHost()
+    getInfoHost();
   }, [groupAssignSessionHost?.[0]?.groupLecturer?.id, idGroupHost]);
 
   const getInfoReview = () => {
     const groupId = id;
     if (groupAssignReview?.[0]?.groupLecturer?.id) {
       setStatus('update');
-      setIdGroupReview(groupAssignReview?.[0]?.id)
+      setIdGroupReview(groupAssignReview?.[0]?.id);
       setInitData((prev: any) => {
         const data = {
           ...prev,
@@ -151,61 +156,57 @@ const GroupDetail = () => {
         return data;
       });
     }
-  }
+  };
 
   const getInfoHost = () => {
     const groupId = id;
     if (groupAssignSessionHost?.[0]?.groupLecturer?.id) {
       setStatusHost('update');
-      setIdGroupHost(groupAssignSessionHost?.[0]?.id)
+      setIdGroupHost(groupAssignSessionHost?.[0]?.id);
       setInitDataHost((prev: any) => {
         const data = {
           ...prev,
           groupId: groupId,
-          groupLecturerId: groupAssignReview?.[0]?.groupLecturer?.id,
-          typeEvaluation: 'REVIEWER',
+          groupLecturerId: groupAssignSessionHost?.[0]?.groupLecturer?.id,
+          typeEvaluation: 'SESSION_HOST',
         };
         return data;
       });
     }
-  }
-
-
-
+  };
 
   const onFinishChosseGroupReview = (value: { typeEvaluation: string; groupLecturerId: number; groupId: number }) => {
     const idGroup = id;
     if (status === 'insert') {
-
       lecturerService
         .createAssignGroupLecturer({
           ...value,
           typeEvaluation: 'REVIEWER',
           groupLecturerId: value?.groupLecturerId,
           groupId: Number(idGroup),
-
         })
         .then((result) => {
-          setStatus('update')
-          setIdGroupReview(result?.data?.id)
-          showMessage("Đã gắn nhóm thành công", 3000)
+          setStatus('update');
+          setIdGroupReview(result?.data?.id);
+          showMessage('Đã gắn nhóm thành công', 3000);
         })
         .catch((error) => {
           console.log(error);
-          showMessage(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     } else {
       lecturerService
         .updateAssignGroupLecturer(Number(idGroupReview), {
-          ...value, groupId: Number(idGroup),
+          ...value,
+          groupId: Number(idGroup),
           groupLecturerId: value?.groupLecturerId,
           typeEvaluation: 'REVIEWER',
         })
         .then((result) => {
-          showMessage("Cập nhật thành công", 3000)
+          showMessage('Cập nhật thành công', 3000);
         })
         .catch((error) => {
-          showMessage(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     }
   };
@@ -219,31 +220,29 @@ const GroupDetail = () => {
           typeEvaluation: 'SESSION_HOST',
           groupLecturerId: value?.groupLecturerId,
           groupId: Number(idGroup),
-
         })
         .then((result) => {
-          showMessage("Đã gắn nhóm thành công", 3000)
-          setStatusHost('update')
-          setIdGroupHost(result?.data?.id)
+          showMessage('Đã gắn nhóm thành công', 3000);
+          setStatusHost('update');
+          setIdGroupHost(result?.data?.id);
         })
         .catch((error) => {
           console.log(error);
-          showMessage(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     } else {
       lecturerService
         .updateAssignGroupLecturer(Number(idGroupHost), {
-          ...value, groupId: Number(idGroup),
+          ...value,
+          groupId: Number(idGroup),
           groupLecturerId: value?.groupLecturerId,
           typeEvaluation: 'SESSION_HOST',
         })
         .then((result) => {
-
-          showMessage("Cập nhật thành công", 3000)
+          showMessage('Cập nhật thành công', 3000);
         })
         .catch((error) => {
-
-          showMessage(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     }
   };
@@ -255,18 +254,15 @@ const GroupDetail = () => {
         return (
           <>
             {inforGroup?.members?.map((i, index) => {
-
               const items: MenuProps['items'] = [
                 {
-                  label: "Mã SV: " + i?.student?.username,
+                  label: 'Mã SV: ' + i?.student?.username,
                   key: 1,
                 },
                 {
-                  label: "Giới tính: " + `${checkGender(i?.student?.gender)}`,
+                  label: 'Giới tính: ' + `${checkGender(i?.student?.gender)}`,
                   key: 2,
-                }
-
-
+                },
               ];
               return (
                 <Descriptions key={index} title="">
@@ -279,8 +275,6 @@ const GroupDetail = () => {
                         </Space>
                       </p>
                     </Dropdown>
-
-
                   </Descriptions.Item>
                 </Descriptions>
               );
@@ -301,30 +295,25 @@ const GroupDetail = () => {
   }, [inforGroup?.members?.length]);
   const [open, setOpen] = useState(false);
 
-
-
   const renderTopic = useMemo(() => {
     const items: MenuProps['items'] = [
       {
-        label: "Mô tả: " + topic?.description,
+        label: 'Mô tả: ' + topic?.description,
         key: 1,
       },
       {
-        label: "Yều cầu đầu vào: " + topic?.requireInput,
+        label: 'Yều cầu đầu vào: ' + topic?.requireInput,
         key: 2,
       },
       {
-        label: "Yều cầu đầu ra:  " + topic?.standradOutput,
-        key: 3
+        label: 'Yều cầu đầu ra:  ' + topic?.standradOutput,
+        key: 3,
       },
       {
-        label: "Ghi chú: " + topic?.note,
+        label: 'Ghi chú: ' + topic?.note,
         key: 4,
       },
-
     ];
-
-
 
     if (topic)
       return (
@@ -337,8 +326,7 @@ const GroupDetail = () => {
             </Descriptions>
           </Col>
 
-          <Col  >
-
+          <Col>
             <Dropdown menu={{ items }}>
               <p onClick={(e) => e.preventDefault()}>
                 <Space>
@@ -347,7 +335,6 @@ const GroupDetail = () => {
                 </Space>
               </p>
             </Dropdown>
-
           </Col>
         </Row>
       );
@@ -364,26 +351,22 @@ const GroupDetail = () => {
   }, [topic]);
 
   const renderLecturerForGroup = useMemo(() => {
-
     const items: MenuProps['items'] = [
       {
-        label: "Mã GV: " + lecturer?.username,
+        label: 'Mã GV: ' + lecturer?.username,
         key: 1,
       },
 
       {
-        label: "Trình độ:  " + `${checkDegree(String(lecturer?.degree))}`,
+        label: 'Trình độ:  ' + `${checkDegree(String(lecturer?.degree))}`,
         key: 2,
       },
-
-
     ];
 
     if (lecturer)
       return (
         <Descriptions title="">
           <Descriptions.Item label={'Giảng viên hướng dẫn'}>
-
             <Dropdown menu={{ items }}>
               <p onClick={(e) => e.preventDefault()}>
                 <Space>
@@ -392,8 +375,6 @@ const GroupDetail = () => {
                 </Space>
               </p>
             </Dropdown>
-
-
           </Descriptions.Item>
         </Descriptions>
       );
@@ -411,12 +392,13 @@ const GroupDetail = () => {
 
   const renderFormAssignReview = useMemo(() => {
     const nameDefault = groupAssignReview?.[0]?.groupLecturer?.name;
-    const data = groupLecturer.map((value) => {
+    const data = groupLecturerReview.map((value) => {
       return {
         value: value.id,
         label: value.name,
       };
-    })
+    });
+
     return (
       <Form
         labelCol={{ span: 14 }}
@@ -430,7 +412,7 @@ const GroupDetail = () => {
           <Select
             style={{ width: '100%' }}
             placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
-            onChange={handleChange}
+            onChange={(value) => handleChangeGroupReview(value)}
             optionLabelProp="label"
             options={data}
           />
@@ -444,12 +426,63 @@ const GroupDetail = () => {
             </Col>
           </Row>
         </Form.Item>
+
+        <div className={cls('group_of_lecture')}>
+          {nameOfLecturerReview.length > 0 ? (
+            <>
+              <Row align={'middle'}>
+                <Col span={8}>
+                  <Text strong className={cls('title_group')}>{`${nameOfLecturerReview.length} Giảng Viên: `}</Text>
+                </Col>
+                <Col span={16}>
+
+                  {nameOfLecturerReview.map((i) => {
+                    const items: MenuProps['items'] = [
+                      {
+                        label: 'Mã GV: ' + i?.username,
+                        key: 1,
+                      },
+
+                      {
+                        label: 'Trình độ:  ' + `${checkDegree(String(i?.degree))}`,
+                        key: 2,
+                      },
+                    ];
+                    return (
+                      <Row justify={'space-evenly'}>
+                        <Col>
+                          <Dropdown menu={{ items }}>
+                            <p onClick={(e) => e.preventDefault()}>
+                              <Space>
+                                <div className={cls('sub_name_group')}>{i?.name}</div>
+                                <InfoCircleOutlined />
+                              </Space>
+                            </p>
+                          </Dropdown>
+                        </Col>
+                      </Row>
+                    );
+                  })}
+                </Col>
+              </Row>
+            </>
+          ) : (
+            ''
+          )}
+        </div>
       </Form>
     );
-  }, [status, initData, groupLecturer, onFinishChosseGroupReview]);
+  }, [status, initData, groupLecturerReview, onFinishChosseGroupReview]);
 
   const renderFormAssignSessionHost = useMemo(() => {
     const nameDefault = groupAssignSessionHost?.[0]?.groupLecturer?.name;
+    const data = groupLecturerHost.map((value) => {
+      return {
+        value: value.id,
+        label: value.name,
+      };
+    });
+
     return (
       <Form
         labelCol={{ span: 14 }}
@@ -463,14 +496,9 @@ const GroupDetail = () => {
           <Select
             style={{ width: '100%' }}
             placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
-            onChange={handleChange}
+            onChange={(value) => handleChangeGroupHost(value)}
             optionLabelProp="label"
-            options={groupLecturer.map((value) => {
-              return {
-                value: value.id,
-                label: value.name,
-              };
-            })}
+            options={data}
           ></Select>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }}>
@@ -482,25 +510,59 @@ const GroupDetail = () => {
             </Col>
           </Row>
         </Form.Item>
+        <div className={cls('group_of_lecture')}>
+
+
+          {nameOfLecturerHost.length > 0 ? (
+            <>
+              <Row align={'middle'} >
+
+                <Col span={8}>
+                  <Text strong className={cls('title_group')}>{`${nameOfLecturerHost.length} Giảng Viên: `}</Text>
+                </Col>
+                <Col span={16}>
+                  {nameOfLecturerHost.map((i) => {
+                    const items: MenuProps['items'] = [
+                      {
+                        label: 'Mã GV: ' + i?.username,
+                        key: 1,
+                      },
+
+                      {
+                        label: 'Trình độ:  ' + `${checkDegree(String(i?.degree))}`,
+                        key: 2,
+                      },
+                    ];
+                    return (
+                      <Row justify={'space-evenly'}>
+                        <Col>
+                          <Dropdown menu={{ items }}>
+                            <p onClick={(e) => e.preventDefault()}>
+                              <Space>
+                                <div className={cls('sub_name_group')}>{i?.name}</div>
+                                <InfoCircleOutlined />
+                              </Space>
+                            </p>
+                          </Dropdown>
+                        </Col>
+                      </Row>
+                    );
+                  })}</Col>
+              </Row>
+
+            </>
+          ) : (
+            ''
+          )}
+        </div>
       </Form>
     );
-  }, [statusHost, initDataHost, groupLecturer]);
+  }, [statusHost, initDataHost, groupLecturerHost, onFinishChosseGroupSessionHost]);
 
   return (
     <div className={cls('group_detail')}>
       <ToastContainer />
-      <Select
-        style={{ width: 120 }}
-        onChange={(value) => {
-          setTermSelect(value);
-        }}
-        options={term.map((val) => {
-          return {
-            value: val.id,
-            label: val.name,
-          };
-        })}
-      />
+
       <Skeleton loading={loading} avatar active>
         <Badge.Ribbon>
           <Card
@@ -522,13 +584,11 @@ const GroupDetail = () => {
 
             <Row className={cls('lecturer')} justify={'space-between'}>
               <Col span={12}>
-
                 <Card title="Nhóm Giảng Viên chấm 'PHẢN BIỆN'" bordered={false}>
                   {renderFormAssignReview}
                 </Card>
               </Col>
               <Col span={12}>
-
                 <Card title="Nhóm Giảng Viên chấm 'HỘI ĐỒNG'" bordered={false}>
                   {renderFormAssignSessionHost}
                 </Card>

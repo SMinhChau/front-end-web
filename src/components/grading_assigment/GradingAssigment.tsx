@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GradingAssigment.module.scss';
-import { Avatar, Badge, Card, Descriptions, Select, Skeleton } from 'antd';
+import { Avatar, Badge, Card, Col, Descriptions, Row, Select, Skeleton, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import Term from '~/entities/term';
 import termService from '~/services/term';
@@ -16,26 +16,14 @@ const cls = classNames.bind(style);
 const GradingAssigment = () => {
   const { user } = useAppSelector((state) => state.user);
 
-  const [term, setTerm] = useState<Array<Term>>([]);
-  const [termSelect, setTermSelect] = useState<number | null>(null);
   const [listGroup, setListGroup] = useState<Array<GroupStudent>>([]);
   const [loading, setLoading] = useState(true);
+  const termState = useAppSelector((state) => state.term);
 
   useEffect(() => {
-    termService
-      .getTerm({ majorsId: user.majors.id })
-      .then((response) => {
-        setTerm(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       studentService
-        .getGroupStudents(termSelect ? termSelect : term[0].id)
+        .getGroupStudents(termState.termSelected)
         .then((result) => {
           setLoading(false);
           setListGroup(result?.data);
@@ -44,24 +32,11 @@ const GradingAssigment = () => {
           console.log('error', error);
         });
     }
-  }, [termSelect, term]);
+  }, [termState]);
 
   return (
     <div className={cls('grading_assigment')}>
-      <div className={cls('filter_term')}>
-        <Select
-          style={{ width: 120 }}
-          onChange={(value) => {
-            setTermSelect(value);
-          }}
-          options={term.map((val) => {
-            return {
-              value: val.id,
-              label: val.name,
-            };
-          })}
-        />
-      </div>
+      <div className={cls('filter_term')}></div>
 
       <h3 className={cls('title_group')}>Danh sách nhóm Sinh Viên</h3>
       <Card title={''} className={cls('list_group')}>
@@ -73,29 +48,38 @@ const GradingAssigment = () => {
 
               <GroupOutlined size={30} className={cls('icon')} />
             </div>
-            <Meta
-              title={
-                <div className={cls('group_name')}>
-                  <Descriptions column={2} title={<div className={cls('name_info')} >Nhóm: {item?.name}</div>}>
 
+            <Row justify={'space-between'} align={'stretch'}>
+              <Col span={18}>
 
-                    {item?.members.map((i, d) => {
-                      return <Descriptions.Item key={d} label="Thành viên">{i?.student?.name}</Descriptions.Item>;
-                    })}
-                  </Descriptions>
-                </div>
-              }
-              description={
+                <Meta
+                  title={
+                    <div className={cls('group_name')}>
+                      <Descriptions column={2} title={<div className={cls('name_info')}>Nhóm: {item?.name}</div>}>
+                        <Descriptions.Item label="Thành viên">
+                          <div className={cls('item')}>
+                            {item?.members.map((i, d) => {
+                              return <Space key={d}>{i?.student?.name}</Space>;
+                            })}
+                          </div>
+                        </Descriptions.Item>
+                      </Descriptions>
+                    </div>
+                  }
+                  description={''}
+                />
+              </Col>
+              <Col span={6} >
                 <div className={cls('group_more')}>
-                  {/* <div className={cls('eva')}> <Link to={'/group/evaluation-for-group/' + item?.id}> Đánh giá  </Link>
-                    <FileDoneOutlined className={cls('icon_evaluation')} color='red' size={40} /></div> */}
+
                   <Link to={'/group/' + item?.id}> Chi tiết...</Link>
+
                 </div>
-              }
-            />
+              </Col>
+
+            </Row>
           </Card.Grid>
         ))}
-
       </Card>
     </div>
   );

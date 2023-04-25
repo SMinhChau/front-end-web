@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import style from "./TeacherManagement.module.scss";
-import { Table, Avatar, Button, Upload, Select, message } from "antd";
+import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import Config from "~/utils/config";
 import ColumnSetting from "../column_setting/ColumnSetting";
 import Term from "~/entities/term";
@@ -14,7 +14,10 @@ import type { UploadProps, UploadFile, RcFile } from "antd/es/upload/interface";
 import termService from "~/services/term";
 import lecturerService from "~/services/lecturer";
 import { EnumGender } from "~/enum";
-
+import { checkDegree, checkGender, showMessage, showMessageEror } from "~/constant";
+import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
+import authAPI from "~/redux/apis/auth";
+import { ToastContainer } from "react-toastify";
 const cls = classNames.bind(style);
 
 interface LecturerTable extends Teacher {
@@ -22,40 +25,6 @@ interface LecturerTable extends Teacher {
 }
 
 const TeacherManagement = () => {
-    const [term, setTerm] = useState<Array<Term>>([]);
-    const [termSelect, setTermSelect] = useState<number | null>(null);
-    const [lecturer, setLecturer] = useState<Array<LecturerTable>>([]);
-    const { user } = useAppSelector((state) => state.user);
-    const [uploading, setUploading] = useState(false);
-
-    useEffect(() => {
-        termService
-            .getTerm({ majorsId: user.majors.id })
-            .then((response) => {
-                setTerm(response.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (term.length > 0) {
-            lecturerService
-                .getWithTerm(termSelect !== null ? termSelect : term[0].id)
-                .then((response) => {
-                    const _data = response.data.map(
-                        (value: Teacher, index: number) => {
-                            return { ...value, key: index };
-                        }
-                    );
-                    setLecturer(_data);
-                });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [term, termSelect]);
-
     const baseColumns: ColumnsType<any> = [
         {
             title: "",
@@ -82,7 +51,9 @@ const TeacherManagement = () => {
         {
             title: "Cấp bậc",
             dataIndex: "degree",
-            key: "degree",
+            key: 'degree',
+            render: (text: string) =>
+                checkDegree(text),
         },
         {
             title: "SĐT",
@@ -99,9 +70,62 @@ const TeacherManagement = () => {
             dataIndex: "gender",
             key: "gender",
             render: (text: string) =>
-                text === EnumGender.FEMALE ? "Nam" : "Nữ",
+                checkGender(text)
+        },
+        {
+            title: "Sửa",
+            dataIndex: "id",
+            render: (id: any) => (
+                <Button onClick={() => showEditModal(id)}>
+                    <EditOutlined style={{ color: "#30a3f1" }} />
+                </Button>
+            ),
         },
     ];
+
+    const [lecturer, setLecturer] = useState<Array<LecturerTable>>([]);
+    const { user } = useAppSelector((state) => state.user);
+    const [uploading, setUploading] = useState(false);
+    const termState = useAppSelector((state) => state.term);
+
+    const [initData, setInitData] = useState<{
+        avatar: string;
+        name: string;
+        gender: string;
+        email: string;
+        phoneNumber: string;
+        degree: string;
+    }>({ avatar: '', name: '', gender: '', email: '', phoneNumber: '', degree: '' });
+
+    const [fileListImage, setFileListImage] = useState<MyUploadFile[]>([]);
+    const [error, setError] = useState<string>('');
+    const [fileImage, setFileImage] = useState<RcFile>()
+
+    const [updateId, setUpdateId] = useState<number | null>(null);
+    const [status, setStatus] = useState("insert");
+
+    const [open, setOpen] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [modalText, setModalText] = useState('Content of the modal');
+
+    useEffect(() => {
+        if (termState.termSelected) {
+            lecturerService
+                .getWithTerm(termState.termSelected)
+                .then((response) => {
+                    const _data = response.data.map(
+                        (value: Teacher, index: number) => {
+                            return { ...value, key: index };
+                        }
+                    );
+                    setLecturer(_data);
+                    console.log("lecturer _data ->", _data);
+
+                });
+        }
+    }, [termState]);
+
+
 
     const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
@@ -110,19 +134,24 @@ const TeacherManagement = () => {
     const handleUpload = () => {
         const formData = new FormData();
         formData.append("majorsId", user.majors.id + "");
-        formData.append("termId", (termSelect ? termSelect : term[0].id) + "");
+        formData.append("termId", String(termState.termSelected));
         formData.append("file", fileList[0] as RcFile);
+
+
+        console.log("fileList[0]  == ", fileList[0]);
+        console.log("formdata== ", formData);
 
         setUploading(true);
         lecturerService
             .import(formData)
-            .then(() => {
+            .then((result) => {
+                console.log("result", result);
                 setFileList([]);
-                message.success("upload successfully.");
+                showMessage("Tải file thành công", 3000)
             })
-            .catch(() => {
+            .catch((error) => {
                 setFileList([]);
-                message.error("upload failed.");
+                showMessageEror("Tải file thất bại! Vui lòng kiểm tra lại", 3000)
             })
             .finally(() => {
                 setUploading(false);
@@ -145,23 +174,117 @@ const TeacherManagement = () => {
         fileList,
     };
 
+
+
+    const showModal = () => {
+        setOpen(true);
+    };
+
+    const handleCancel = () => {
+
+        setOpen(false);
+    };
+    const beforeUploadImage = (file: RcFile) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+
+        if (!isJpgOrPng) {
+            setError('Vui lòng upload ảnh có phần mở rộng là jpeg | png')
+            return false;
+        }
+
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isLt2M) {
+            setError('Vui lòng chọn ảnh dưới 2MB');
+            return false;
+        }
+        return isJpgOrPng && isLt2M;
+    };
+
+    const onChangeImage: MyUploadProps['onChange'] = ({ fileList: newFileList }) => {
+        if (newFileList.length > 0) {
+
+            if (beforeUploadImage(newFileList[0] as RcFile)) {
+
+
+                setFileListImage(newFileList);
+                setError('');
+            }
+        } else {
+            //remove image
+            setFileListImage(newFileList);
+        }
+    };
+
+    const handleUploadImage: MyUploadProps['action'] = async (file: RcFile) => {
+        if (beforeUploadImage(file)) {
+
+            setFileImage(file);
+        }
+
+        return "";
+    }
+
+    const onFinish = (value: any) => {
+        var bodyFormData = new FormData();
+        console.log("value 1", value);
+
+
+        if (fileImage) {
+            console.log('file -> ', fileImage)
+            bodyFormData.append('avatar', fileImage)
+        } else {
+            bodyFormData.append('avatar', user?.avatar)
+        }
+
+        bodyFormData.append("name", value?.name);
+        bodyFormData.append("gender", value?.gender);
+        bodyFormData.append("email", value?.email);
+        bodyFormData.append("phoneNumber", value?.phoneNumber);
+        bodyFormData.append("degree", value?.degree);
+
+
+        console.log("bodyFormData", bodyFormData);
+
+
+    };
+
+
+    const handleChangeSelectedOption = (value: string) => {
+        console.log(`selected ${value}`);
+    };
+
+    const showEditModal = (id: number) => {
+        console.log("update id -> ", id);
+        console.log("lecturer -> ", lecturer);
+
+        setUpdateId(id);
+        setOpen(true);
+        setStatus("update");
+        const m = lecturer.filter((value) => value.id === id)[0];
+        console.log("update lecturer -> ", m);
+
+        setInitData((prev: any) => {
+            const data = {
+                ...prev,
+                avatar: m?.avatar,
+                name: m?.name,
+                gender: m?.gender,
+                email: m?.email,
+                phoneNumber: m?.phoneNumber,
+                degree: m?.degree,
+            };
+            return data;
+        });
+    };
+
     return (
         <div className={cls("teacher_management")}>
+            <ToastContainer />
             <div className={cls("function")}>
-                <Select
-                    style={{ width: 120 }}
-                    onChange={(value) => {
-                        setTermSelect(value);
-                    }}
-                    options={term.map((val) => {
-                        return {
-                            value: val.id,
-                            label: val.name,
-                        };
-                    })}
-                />
-                <div>
-                    <Button
+
+                <Row justify={"space-around"}>
+                    <Col>  <Button
                         type="dashed"
                         icon={<PlusOutlined />}
                         size="large"
@@ -170,35 +293,47 @@ const TeacherManagement = () => {
                             animation: "none",
                             color: "rgb(80, 72, 229)",
                         }}
+                        onClick={showModal}
                     >
                         Tạo
-                    </Button>
-                    <Upload {...props}>
-                        <Button
-                            type="dashed"
-                            icon={<UploadOutlined />}
-                            size="large"
-                            style={{
-                                animation: "none",
-                                color: "rgb(80, 72, 229)",
-                            }}
-                        >
-                            Tải lên
-                        </Button>
-                    </Upload>
-                    <Button
-                        type="primary"
-                        onClick={handleUpload}
-                        disabled={fileList.length === 0}
-                        loading={uploading}
-                        style={{
-                            animation: "none",
-                            marginLeft: 10,
-                        }}
-                    >
-                        {uploading ? "Uploading" : "Start Upload"}
-                    </Button>
-                </div>
+                    </Button></Col>
+                    <Col >
+
+                        <div className={cls("content_button_upload")}>
+                            <Upload {...props} >
+                                <Button
+                                    type="dashed"
+                                    icon={<UploadOutlined />}
+                                    size="large"
+                                    style={{
+                                        animation: "none",
+                                        color: "rgb(80, 72, 229)",
+                                    }}
+                                >
+                                    Tải lên
+                                </Button>
+                            </Upload>
+                            <div className={cls("btn_loading")}>
+                                <Button
+                                    type="primary"
+                                    onClick={handleUpload}
+                                    disabled={fileList.length === 0}
+                                    loading={uploading}
+                                    style={{
+                                        animation: "none",
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    {uploading ? "Uploading" : "Start Upload"}
+                                </Button>
+                            </div>
+                        </div>
+
+                    </Col>
+                </Row>
+
+
+
                 <ColumnSetting
                     setColumnVisible={setColumnVisible}
                     columns={baseColumns}
@@ -206,6 +341,113 @@ const TeacherManagement = () => {
                 />
             </div>
             <Table dataSource={lecturer} columns={columnVisible} />
+
+            <div className={cls('modal')}>
+                <Modal
+                    title="Thêm Giảng Viên"
+                    open={open}
+
+                    confirmLoading={confirmLoading}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            Hủy
+                        </Button>,
+                    ]}
+                    width={'50%'}
+                >
+                    <Form
+                        labelCol={{ span: 6 }}
+                        wrapperCol={{ span: 18 }}
+                        layout="horizontal"
+                        onFinish={onFinish}
+                        initialValues={status === 'insert' ? {} : initData}
+
+                        size="large"
+                    >
+                        <Row justify={'space-between'}>
+                            <Col span={24}>
+                                <Row justify={'center'} style={{ marginBottom: '20px' }} >
+                                    <Col>  <p>Chọn ảnh đại diện</p></Col>
+                                    <Col offset={1}>
+                                        <Upload
+                                            accept={"image/png, image/jpeg"}
+                                            listType="picture"
+                                            fileList={fileListImage}
+                                            beforeUpload={beforeUploadImage}
+                                            onChange={onChangeImage}
+                                            action={handleUploadImage}
+                                            maxCount={1}
+                                        >
+
+                                            <div className={cls('btn_upload')}>
+                                                <Button icon={<UploadOutlined />} style={{ borderRadius: 16 }}>Tải thêm ảnh</Button>
+                                                <p>{error ?? ''}</p>
+                                            </div>
+                                        </Upload>
+                                    </Col>
+                                </Row>
+                                <Row justify={'space-between'}>
+                                    <Col span={24}>
+                                        <Form.Item name="name" label="Tên Giảng Viên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
+                                            <Input />
+                                        </Form.Item>
+
+                                        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+                                            <Select
+                                                style={{ width: 120 }}
+                                                onChange={handleChangeSelectedOption}
+                                                options={[
+                                                    { value: 'MALE', label: 'Nam' },
+                                                    { value: 'FEMALE', label: 'Nữ' },
+                                                ]}
+                                            />
+
+                                        </Form.Item>
+
+                                        <Form.Item name="phoneNumber" label="Số điện thoại" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
+                                            <Input />
+                                        </Form.Item>
+
+                                        <Form.Item name="email" label="Email" rules={[{ type: 'email' }]}>
+                                            <Input />
+                                        </Form.Item>
+
+
+                                        <Form.Item name="degree" label="Trình độ" rules={[{ required: true }]}>
+                                            <Select
+                                                style={{ width: 120 }}
+                                                onChange={handleChangeSelectedOption}
+                                                options={[
+                                                    { value: 'MASTERS', label: 'Tiến sĩ' },
+                                                    { value: 'DOCTER', label: 'Thạc sĩ' },
+                                                ]}
+                                            />
+
+                                        </Form.Item>
+
+
+
+                                        <Form.Item wrapperCol={{ span: 24 }}>
+                                            <Row>
+                                                <Col span={24} offset={20}>
+                                                    <Button type="primary" htmlType="submit">
+                                                        Cập nhật
+                                                    </Button>
+                                                </Col>
+                                            </Row>
+                                        </Form.Item>
+
+                                    </Col>
+                                </Row>
+
+                            </Col>
+                        </Row>
+
+
+                    </Form>
+                </Modal>
+            </div>
         </div>
     );
 };

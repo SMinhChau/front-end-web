@@ -23,6 +23,18 @@
   }
   .lecturer {
     padding: 10px 0;
+
+    .group_of_lecture {
+      margin-left: 20px;
+      .title_group {
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding-bottom: 20px;
+        .sub_name_group {
+          font-size: 0.7rem;
+        }
+      }
+    }
   }
 
   .topic {

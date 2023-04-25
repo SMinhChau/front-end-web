@@ -7,11 +7,15 @@ interface Term {
     endDate: Date;
     endDateChooseTopic: Date;
     endDateSubmitTopic: Date;
-    name: Date;
+    name: string;
     startDate: Date;
     startDateChooseTopic: Date;
     startDateSubmitTopic: Date;
     updatedAt: Date;
+    startDateDiscussion: Date,
+    endDateDiscussion: Date,
+    startDateReport: Date,
+    endDateReport: Date,
 }
 
 export default Term;

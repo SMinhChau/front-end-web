@@ -25,7 +25,6 @@ function Login() {
     const login = (e: FormEvent) => {
         e.preventDefault();
         console.table({ username, password });
-
         dispatch(authAPI.login()({ username, password }));
     };
 

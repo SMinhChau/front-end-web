@@ -20,12 +20,21 @@ class LecturerService {
     return await axiosFormData({
       url: '/lecturer/lecturers/import-lecturer',
       data,
+      method: 'post',
     });
   }
-  async getGroupLecturers(termId: number) {
+  async getGroupLecturers(params: { termId: number; typeEvaluation: string }) {
     return await axiosAuth({
-      url: `/lecturer/group-lecturer?termId=${termId}`,
+      url: `/lecturer/group-lecturer`,
       method: 'get',
+      params: params,
+    });
+  }
+  async getAllGroupLecturers(params: { termId: number }) {
+    return await axiosAuth({
+      url: `/lecturer/group-lecturer`,
+      method: 'get',
+      params: params,
     });
   }
 
@@ -90,6 +99,14 @@ class LecturerService {
       url: `lecturer/assigns/${id}`,
       method: 'put',
       data: qs.stringify(data),
+    });
+  }
+
+  async addLecturer(data: FormData) {
+    return await axiosFormData({
+      url: '/lecturer/lecturers',
+      data,
+      method: 'post',
     });
   }
 }

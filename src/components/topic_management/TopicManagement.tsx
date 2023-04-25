@@ -21,14 +21,15 @@ interface TopicData extends Topic {
 
 const TopicManagement = () => {
   const userState = useAppSelector((state) => state.user).user;
-  const [term, setTerm] = useState<Array<Term>>([]);
+
   const [topic, setTopic] = useState<Array<TopicData>>([]);
   const [open, setOpen] = useState(false);
-  const [termSelect, setTermSelect] = useState<number | null>(null);
+
   const [status, setStatus] = useState("insert");
   const [initData, setInitData] = useState({});
   const [idUpdate, setIdUpdate] = useState<number | null>(null);
   const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
+  const termState = useAppSelector((state) => state.term);
 
   const baseColumns = [
     ...base_column,
@@ -70,21 +71,11 @@ const TopicManagement = () => {
     },
   ];
 
-  useEffect(() => {
-    termService
-      .getTerm({ majorsId: userState.majors.id })
-      .then((response) => {
-        setTerm(response.data.reverse());
-      })
-      .then((error) => {
-        console.log(error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   const getTopic = (termId: number) => {
     topicService
       .getTopic({
-        termId,
+        termId: termState.termSelected,
         lecturerId: userState.id,
       })
       .then((response) => {
@@ -101,17 +92,17 @@ const TopicManagement = () => {
         console.log(error);
       });
   };
-  useEffect(() => {
-    if (term.length > 0) getTopic(term[0].id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [term]);
 
   useEffect(() => {
-    if (termSelect) {
-      getTopic(termSelect);
+    if (termState.term.length > 0) getTopic(termState.termSelected);
+  }, [termState]);
+
+  useEffect(() => {
+    if (termState.termSelected) {
+      getTopic(termState.termSelected);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [termSelect]);
+  }, [termState]);
 
   const showModal = () => {
     setOpen(true);
@@ -121,11 +112,14 @@ const TopicManagement = () => {
     setOpen(false);
   };
   const onFinish = (value: any) => {
+
+    console.log("termState.termSelected", termState.termSelected);
+
     if (status === "insert")
       topicService
         .createTopic({
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termSelected
         })
         .then((_response) => {
           window.location.reload();
@@ -137,7 +131,7 @@ const TopicManagement = () => {
       topicService
         .updateTopic(idUpdate as number, {
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termSelected
         })
         .then((_response) => {
           window.location.reload();
@@ -154,9 +148,7 @@ const TopicManagement = () => {
           });
         });
   };
-  const handleTermChange = (value: number) => {
-    setTermSelect(value);
-  };
+
 
   const deleteTerm = (id: number) => {
     topicService
@@ -190,14 +182,7 @@ const TopicManagement = () => {
 
       <div className={cls("semester_func")}>
         <div className={cls("selectTerm")}>
-          <div>Học kì: </div>
-          <Select
-            style={{ width: 120 }}
-            onChange={handleTermChange}
-            options={term.map((val) => {
-              return { value: val.id, label: val.name };
-            })}
-          />
+
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Button
@@ -287,13 +272,13 @@ const TopicManagement = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Bình luận "
               rules={[{ required: true }]}
               name="comment"
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item label=" ">
               <Button type="primary" htmlType="submit">

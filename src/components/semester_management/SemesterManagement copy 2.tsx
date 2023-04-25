@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Modal, Form, DatePicker, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
@@ -123,9 +123,10 @@ const SemesterManagement = () => {
     const [modalUpdate, setModalUpdate] = useState(false);
 
     const [initData, setInitData] = useState({});
-    const [idUpdate, setIdUpdate] = useState<number | null>(null);
+    const [idUpdate, setIdUpdate] = useState(null);
     const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
     const user = useAppSelector((state) => state.user.user);
+    const [termNameDefault, setTermNameDefault] = useState('');
     const termState = useAppSelector((state) => state.term);
     const dispatch = useAppDispatch();
 
@@ -139,7 +140,6 @@ const SemesterManagement = () => {
                 }),
             );
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const showModal = () => {
@@ -150,6 +150,9 @@ const SemesterManagement = () => {
         setOpen(false);
     };
     const handleCancelUpdate = () => {
+
+
+
         setModalUpdate(false);
     };
 
@@ -192,33 +195,10 @@ const SemesterManagement = () => {
             });
     };
 
-    const onFinishUpdate = (values: any) => {
-        console.log("value ->", values);
-        values = {
-            ...values,
-            name: values.name,
-            majorsId: user.majors.id,
-            startDate: values.startDate.format('MM/DD/YYYY'),
-            endDate: values.endDate.format('MM/DD/YYYY'),
-
-            startDateSubmitTopic: values.startDateSubmitTopic.format('MM/DD/YYYY'),
-            endDateSubmitTopic: values.endDateSubmitTopic.format('MM/DD/YYYY'),
-
-            startDateChooseTopic: values.startDateChooseTopic.format('MM/DD/YYYY'),
-            endDateChooseTopic: values.endDateChooseTopic.format('MM/DD/YYYY'),
-
-            startDateDiscussion: values.startDateDiscussion.format('MM/DD/YYYY'),
-            endDateDiscussion: values.endDateDiscussion.format('MM/DD/YYYY'),
-            dateDiscussion: values.dateDiscussion.format('MM/DD/YYYY'),
-
-            startDateReport: values.startDateReport.format('MM/DD/YYYY'),
-            endDateReport: values.endDateReport.format('MM/DD/YYYY'),
-            dateReport: values.dateReport.format('MM/DD/YYYY'),
-        };
-
+    const onFinishUpdate = async (values: any) => {
 
         termService
-            .update(idUpdate, { majorsId: user.majors.id, ...values })
+            .update(idUpdate, values)
             .then(() => {
                 showMessage('Cập nhật học kỳ thành công', 5000);
                 window.location.reload();
@@ -242,27 +222,39 @@ const SemesterManagement = () => {
     };
 
     const getTermEditById = async (id: number) => {
-        const _term = terms.filter(v => v.id === id)[0];
-        console.log(_term);
-        console.log(_term.id);
-        setIdUpdate(_term.id)
-        setInitData({
-            name: _term.name,
-            startDate: moment(_term.startDate),
-            endDate: moment(_term.endDate),
-            startDateSubmitTopic: moment(_term.startDateSubmitTopic),
-            endDateSubmitTopic: moment(_term.endDateSubmitTopic),
-            startDateChooseTopic: moment(_term.startDateChooseTopic),
-            endDateChooseTopic: moment(_term.endDateChooseTopic),
-            startDateDiscussion: moment(_term.startDateDiscussion),
-            endDateDiscussion: moment(_term.endDateDiscussion),
-            dateDiscussion: moment(_term.dateDiscussion),
-            startDateReport: moment(_term.startDateReport),
-            endDateReport: moment(_term.endDateReport),
-            dateReport: moment(_term.dateReport),
+        await termService
+            .getTermById(id)
+            .then((result) => {
+                const data = result.data;
+                console.log(' getTermEditById', data);
+                console.log(' name', data.name);
 
-        })
-        setModalUpdate(true);
+
+                if (data) {
+                    setIdUpdate(data.id);
+                    console.log(' data ======', data);
+                    setInitData(
+                        {
+                            name: data.name,
+                            startDate: moment(data.startDate),
+                            endDate: moment(data.endDate),
+                            startDateSubmitTopic: moment(data.startDateSubmitTopic),
+                            endDateSubmitTopic: moment(data.endDateSubmitTopic),
+                            startDateChooseTopic: moment(data.startDateChooseTopic),
+                            endDateChooseTopic: moment(data.endDateChooseTopic),
+                            startDateDiscussion: moment(data.startDateDiscussion),
+                            endDateDiscussion: moment(data.endDateDiscussion),
+                            dateDiscussion: moment(data.dateDiscussion),
+                            startDateReport: moment(data.startDateReport),
+                            endDateReport: moment(data.endDateReport),
+                            dateReport: moment(data.dateReport),
+
+                        });
+
+                    setModalUpdate(true);
+                }
+            })
+            .catch((er) => console.log('er', er));
     };
 
 
@@ -280,10 +272,12 @@ const SemesterManagement = () => {
         },
     ];
 
-    const renderModalUpdate = useMemo(() => {
+    const renderModalUpdate = () => {
+        console.log("initData=========   ", initData);
+        console.log("modalUpdate=========   ", modalUpdate);
+
         return (
             <> <Modal
-                destroyOnClose
                 open={modalUpdate}
                 title="Chỉnh sửa học kỳ"
                 onCancel={handleCancelUpdate}
@@ -301,18 +295,18 @@ const SemesterManagement = () => {
                         style={{ maxWidth: 600 }}
                         layout="horizontal"
                         onFinish={onFinishUpdate}
-                        initialValues={initData}
+                        initialValues={modalUpdate === true ? initData : {}}
                     >
+
+
+
                         <Form.Item label="Tên học kỳ" rules={[{ required: true }]} name="name">
                             <Select
                                 style={{ width: '50%' }}
+
                                 onChange={handleChange}
-                                options={terms.map(value => {
-                                    return {
-                                        value: value.name,
-                                        label: value.name,
-                                    }
-                                })}
+                                optionLabelProp="label"
+                                options={data}
                             />
                         </Form.Item>
 
@@ -367,12 +361,13 @@ const SemesterManagement = () => {
                 </div>
             </Modal></>
         )
-    }, [initData, modalUpdate, onFinishUpdate, terms])
+    }
 
     return (
         <div className={cls('semester_management')}>
             <ToastContainer />
             <div className={cls('semester_func')}>
+                {/* <h4 className={cls("semester_title")}>Quản lý học kì</h4> */}
                 <Button
                     type="dashed"
                     icon={<PlusOutlined />}
@@ -432,9 +427,9 @@ const SemesterManagement = () => {
                     </div>
                 </Modal>
             </div>
-            <Table columns={baseColumns} dataSource={terms} style={{ backgroundColor: '#fff' }} />
+            <Table columns={columnVisible} dataSource={terms} style={{ backgroundColor: '#fff' }} />
 
-            {renderModalUpdate}
+            {renderModalUpdate()}
         </div>
     );
 };
