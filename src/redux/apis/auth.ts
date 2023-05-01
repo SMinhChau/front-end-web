@@ -19,9 +19,7 @@ class AuthAPI {
   updateInfo() {
     return createAsyncThunk('user/update-info', async (data: FormData, thunkAPI) => {
       try {
-        console.log('Update data ========================', data);
         const result = await authService.updateInfo(data);
-        console.log('Update User Ìno', result);
 
         if (result.status === 200) return result.data;
       } catch (error) {

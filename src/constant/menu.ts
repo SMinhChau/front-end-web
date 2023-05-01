@@ -13,16 +13,6 @@ const menus = {
       image: GiTeacher,
       url: '/teacher',
     },
-    {
-      name: 'Quản lý nhóm',
-      image: AiOutlineCalendar,
-      url: '/grading',
-    },
-    {
-      name: 'Quản lý nhóm Giảng viên',
-      image: AiOutlineCalendar,
-      url: '/group-lecturer',
-    },
   ],
   HEAD_LECTURER: [
     {
@@ -90,7 +80,7 @@ const menus = {
     {
       name: 'Quản lý Đánh giá',
       image: AiOutlineCalendar,
-      url: '/empty',
+      url: '/evaluate',
     },
     {
       name: 'Quản lý nhóm',
@@ -114,11 +104,11 @@ const menus = {
       image: AiOutlineCalendar,
       url: '/topic',
     },
-    {
-      name: 'Quản lý Đánh giá',
-      image: AiOutlineCalendar,
-      url: '/empty',
-    },
+    // {
+    //   name: 'Quản lý Đánh giá',
+    //   image: AiOutlineCalendar,
+    //   url: '/empty',
+    // },
     {
       name: 'Quản Lý Chấm Điểm',
       image: AiOutlineCalendar,

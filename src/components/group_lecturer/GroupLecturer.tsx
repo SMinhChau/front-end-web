@@ -1,9 +1,7 @@
 import classNames from "classnames/bind";
 import style from "./GroupLecturer.module.scss";
-
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
-import Term from "~/entities/term";
 import {
   Avatar,
   Badge,
@@ -24,7 +22,6 @@ import {
   Upload,
   UploadProps,
 } from "antd";
-import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
 import {
   DeleteOutlined,
@@ -32,18 +29,12 @@ import {
   GroupOutlined,
   MoreOutlined,
   PlusOutlined,
-  SnippetsOutlined,
-  UploadOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import ColumnSetting from "../column_setting/ColumnSetting";
 import lecturerService from "~/services/lecturer";
-import { log } from "console";
 import Teacher from "~/entities/teacher";
-import { ColumnsType } from "antd/es/table";
-import data from "../teacher_management/data";
 import Meta from "antd/es/card/Meta";
-import { TypeEvaluation } from "~/constant";
+import { TypeEvaluation, showMessageEror } from "~/constant";
 import { Link } from "react-router-dom";
 
 const cls = classNames.bind(style);
@@ -80,14 +71,12 @@ interface GroupLecturerTable extends GroupLecturer {
 }
 
 const GroupLecturer = () => {
-  const [term, setTerm] = useState<Array<Term>>([]);
-  const [termSelect, setTermSelect] = useState<number | null>(null);
+
   const [groupLecturers, setGroupLecturers] = useState<
     Array<GroupLecturerTable>
   >([]);
 
-  const { user } = useAppSelector((state) => state.user);
-  const [uploading, setUploading] = useState(false);
+  const [loadingListGroup, setLoadingListGroup] = useState(true);
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("insert");
   const [initData, setInitData] = useState<{
@@ -102,43 +91,39 @@ const GroupLecturer = () => {
   const [groupStudents, setGroupStudents] = useState<Array<GroupStudent>>([]);
   const [loading, setLoading] = useState(true);
   const [loadingInfoGroup, setLoadingInfoGroup] = useState(true);
+  const termState = useAppSelector((state) => state.term);
+
+
 
   useEffect(() => {
-    termService
-      .getTerm({ majorsId: user.majors.id })
-      .then((response) => {
-        setTerm(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
-  useEffect(() => {
-    if (term.length > 0) {
+
+    if (termState.term.length > 0) {
       lecturerService
-        .getGroupLecturers(termSelect !== null ? termSelect : term[0].id)
+        .getAllGroupLecturers({ termId: termState.termIndex.id })
         .then((response) => {
           const _data = response.data.map(
             (value: GroupLecturer, index: number) => {
               return { ...value, key: index };
             }
           );
+          console.log("gorup lectuirer _data -> ", _data);
+          setLoadingListGroup(false)
           setGroupLecturers(_data);
 
         });
     }
-  }, [term, termSelect]);
+  }, [termState]);
 
   useEffect(() => {
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       lecturerService
-        .getWithTerm(termSelect !== null ? termSelect : term[0].id)
+        .getWithTerm(termState.termIndex.id)
         .then((response) => {
           setListLecturer(response.data);
         });
     }
-  }, [term]);
+  }, [termState]);
 
 
 
@@ -150,26 +135,17 @@ const GroupLecturer = () => {
         window.location.reload();
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 5000)
       });
   };
 
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
-    const termId = termSelect !== null ? termSelect : term[0].id;
+    const termId = termState.termIndex.id;
     setGroupDes(m);
     setLoadingInfoGroup(false)
     setGroupIdDelete(m?.id);
     lecturerService.getGroupStudentOfLecturer(termId, Number(m?.id)).then((result) => {
-      console.log("getGroupStudentOfLecturer result", result?.data);
       setLoading(false)
       setGroupStudents(result?.data)
     })
@@ -184,7 +160,7 @@ const GroupLecturer = () => {
     setInitData((prev: any) => {
       const data = {
         ...prev,
-        termId: termSelect !== null ? termSelect : term[0].id,
+        termId: termState.termIndex.id,
         name: m.name,
         lecturerIds: m.members?.map((value) => value?.lecturer?.id),
       };
@@ -200,15 +176,8 @@ const GroupLecturer = () => {
         window.location.reload();
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 5000)
+
       });
   };
 
@@ -313,43 +282,27 @@ const GroupLecturer = () => {
       lecturerService
         .createGroupLecturer({
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termIndex.id,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
           window.location.reload();
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 5000)
         });
     else {
       lecturerService
         .updateGroupLecturer(updateId as number, {
           ...value,
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termIndex.id,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
           window.location.reload();
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 5000)
         });
     }
   };
@@ -364,8 +317,8 @@ const GroupLecturer = () => {
           {groupStudents?.map((item, index) => {
             return (<Card.Grid className={cls("item_group")} hoverable>
               <div>
-                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserSwitchOutlined />} />
-                <GroupOutlined size={30} className={cls('icon')} />
+                <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                {/* <GroupOutlined size={30} className={cls('icon')} /> */}
               </div>
               <Meta
                 title={
@@ -401,38 +354,30 @@ const GroupLecturer = () => {
     <div className={cls("group_lecturer_management")}>
       <ToastContainer />
       <Row>
-        <Col style={{ backgroundColor: "#ffff" }} span={12}>
-          <div className={cls("group_content")}>
-            <div className={cls("function")}>
-              <Select
-                style={{ width: 120 }}
-                onChange={(value) => {
-                  setTermSelect(value);
-                }}
-                options={term.map((val) => {
-                  return {
-                    value: val.id,
-                    label: val.name,
-                  };
-                })}
-              />
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                size="large"
-                style={{
-                  margin: "0 10px",
-                  animation: "none",
-                  color: "rgb(80, 72, 229)",
-                }}
-                onClick={showModal}
-              >
-                Tạo
-              </Button>
-            </div>
 
-            <Table dataSource={groupLecturers} columns={columns} />
-          </div>
+        <Col style={{ backgroundColor: "#ffff" }} span={12}>
+          <Skeleton loading={loadingListGroup} avatar active>
+            <div className={cls("group_content")}>
+              <div className={cls("function")}>
+
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  size="large"
+                  style={{
+                    margin: "0 10px",
+                    animation: "none",
+                    color: "rgb(80, 72, 229)",
+                  }}
+                  onClick={showModal}
+                >
+                  Tạo
+                </Button>
+              </div>
+
+              <Table dataSource={groupLecturers} columns={columns} />
+            </div>
+          </Skeleton>
         </Col>
 
         <Col span={12} >
@@ -533,7 +478,7 @@ const GroupLecturer = () => {
           >
             <Select
               mode="multiple"
-              defaultValue={String(term?.[0]?.id)}
+
               style={{ width: "100%" }}
               placeholder="Giảng viên"
               onChange={handleChange}
@@ -544,7 +489,7 @@ const GroupLecturer = () => {
                   <>
                     <Option value={value.id} label={value.name}>
                       <Space>
-                        <span>{value.name}</span>
+                        <span>{value.name} - Mã GV: {value.username}</span>
                       </Space>
                     </Option>
                   </>
