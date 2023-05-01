@@ -4,7 +4,7 @@ import style from "./TopicManagement.module.scss";
 import Term from "~/entities/term";
 import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
-import { Select, Table, Button, Modal, Form, Input } from "antd";
+import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import topicService from "~/services/topic";
 import Topic from "~/entities/topic";
@@ -12,6 +12,7 @@ import { default as base_column } from "./column";
 import { toast, ToastContainer } from "react-toastify";
 import Config from "~/utils/config";
 import ColumnSetting from "../column_setting/ColumnSetting";
+import TextArea from "antd/es/input/TextArea";
 
 const cls = classNames.bind(style);
 
@@ -41,7 +42,7 @@ const TopicManagement = () => {
           style={{
             padding: "5px 10px",
             color: "#fff",
-            backgroundColor: status === "PE" ? "#29CC57" : "#FEC400",
+            backgroundColor: status === "PEDING" ? "#29CC57" : "#FEC400",
             fontSize: "11px",
             borderRadius: "100px",
             fontWeight: "600",
@@ -63,11 +64,13 @@ const TopicManagement = () => {
     {
       title: "",
       dataIndex: "id",
-      render: (id: any) => (
-        <Button onClick={() => showEditModal(id)}>
+      render: (id: any) => {
+        console.log("id", id);
+
+        return (<Button onClick={() => showEditModal(id)}>
           <EditOutlined style={{ color: "#30a3f1" }} />
-        </Button>
-      ),
+        </Button>)
+      },
     },
   ];
 
@@ -75,7 +78,7 @@ const TopicManagement = () => {
   const getTopic = (termId: number) => {
     topicService
       .getTopic({
-        termId: termState.termSelected,
+        termId,
         lecturerId: userState.id,
       })
       .then((response) => {
@@ -94,12 +97,12 @@ const TopicManagement = () => {
   };
 
   useEffect(() => {
-    if (termState.term.length > 0) getTopic(termState.termSelected);
+    if (termState.term.length > 0) getTopic(termState.termIndex.id);
   }, [termState]);
 
   useEffect(() => {
-    if (termState.termSelected) {
-      getTopic(termState.termSelected);
+    if (termState.termIndex.id) {
+      getTopic(termState.termIndex.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [termState]);
@@ -113,13 +116,11 @@ const TopicManagement = () => {
   };
   const onFinish = (value: any) => {
 
-    console.log("termState.termSelected", termState.termSelected);
-
     if (status === "insert")
       topicService
         .createTopic({
           ...value,
-          termId: termState.termSelected
+          termId: termState.termIndex.id
         })
         .then((_response) => {
           window.location.reload();
@@ -131,7 +132,7 @@ const TopicManagement = () => {
       topicService
         .updateTopic(idUpdate as number, {
           ...value,
-          termId: termState.termSelected
+          termId: termState.termIndex.id
         })
         .then((_response) => {
           window.location.reload();
@@ -172,7 +173,13 @@ const TopicManagement = () => {
     setOpen(true);
     setStatus("update");
     setIdUpdate(id);
+    // if (topic.length === 0) {
+    //   getTopic(termState.termIndex.id)
+    // }
     const t = topic.filter((value) => value.id === id)[0];
+    console.log("topic", topic);
+    console.log("t", t);
+
     setInitData(t);
   };
 
@@ -210,69 +217,75 @@ const TopicManagement = () => {
         <Modal
           destroyOnClose
           open={open}
-          title="Title"
+          title="Tạo đề tài"
           onCancel={handleCancel}
           footer={[
             <Button key="back" onClick={handleCancel}>
-              Cancel
+              Hủy
             </Button>,
           ]}
+
         >
           <Form
-            labelCol={{ span: 10 }}
-            wrapperCol={{ span: 14 }}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 15 }}
             layout="horizontal"
             onFinish={onFinish}
+            size="large"
             style={{ maxWidth: 600 }}
             initialValues={initData}
           >
-            <Form.Item label="Tên" rules={[{ required: true }]} name="name">
-              <Input />
-            </Form.Item>
 
-            <Form.Item
-              label="Số lượng"
-              rules={[{ required: true }]}
-              name="quantityGroupMax"
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Mô tả"
-              rules={[{ required: true }]}
-              name="description"
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Ghi chú" rules={[{ required: true }]} name="note">
-              <Input />
-            </Form.Item>
+            <Row justify={'space-between'} style={{ width: '100%' }}>
+              <Col span={24}>
+                <Form.Item label="Tên" rules={[{ required: true, message: "Vui lòng nhập tên" }]} name="name">
+                  <Input />
+                </Form.Item>
 
-            <Form.Item
-              label="Mục tiêu"
-              rules={[{ required: true }]}
-              name="target"
-            >
-              <Input />
-            </Form.Item>
+                <Form.Item
+                  label="Số lượng"
+                  rules={[{ required: true, message: "Vui lòng nhập số lượng sinh viên " }]}
+                  name="quantityGroupMax"
+                >
+                  <InputNumber min={1} max={10}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Mô tả"
+                  rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+                  name="description"
+                >
+                  <TextArea rows={2} />
+                </Form.Item>
+                <Form.Item label="Ghi chú" rules={[{ required: true, message: "Vui lòng nhập ghi chú" }]} name="note">
+                  <TextArea rows={2} />
+                </Form.Item>
 
-            <Form.Item
-              label="Chuẩn đầu ra"
-              rules={[{ required: true }]}
-              name="standradOutput"
-            >
-              <Input />
-            </Form.Item>
+                <Form.Item
+                  label="Mục tiêu"
+                  rules={[{ required: true, message: "Vui lòng nhập mục tiêu" }]}
+                  name="target"
+                >
+                  <TextArea rows={2} />
+                </Form.Item>
 
-            <Form.Item
-              label="Yêu cầu đầu vào"
-              rules={[{ required: true }]}
-              name="requireInput"
-            >
-              <Input />
-            </Form.Item>
+                <Form.Item
+                  label="Chuẩn đầu ra"
+                  rules={[{ required: true, message: "Vui lòng nhập chuẩn đầu ra" }]}
+                  name="standradOutput"
+                >
+                  <TextArea rows={2} />
+                </Form.Item>
 
-            {/* <Form.Item
+                <Form.Item
+                  label="Yêu cầu đầu vào"
+                  rules={[{ required: true, message: "Vui lòng nhập chuẩn đầu vào" }]}
+                  name="requireInput"
+                >
+                  <TextArea rows={2} />
+                </Form.Item>
+
+                {/* <Form.Item
               label="Bình luận "
               rules={[{ required: true }]}
               name="comment"
@@ -280,11 +293,14 @@ const TopicManagement = () => {
               <Input />
             </Form.Item> */}
 
-            <Form.Item label=" ">
-              <Button type="primary" htmlType="submit">
-                Lưu
-              </Button>
-            </Form.Item>
+                <Form.Item label=" ">
+                  <Button type="primary" htmlType="submit">
+                    Tạo
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+
           </Form>
         </Modal>
       </div>

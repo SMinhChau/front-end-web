@@ -41,7 +41,7 @@ const EvaluateManagement = () => {
     if (termState.term.length > 0) {
       evaluateService
         .getEvaluate({
-          termId: termState.termSelected,
+          termId: termState.termIndex.id,
           type,
         })
         .then((response) => {
@@ -81,7 +81,7 @@ const EvaluateManagement = () => {
     const data = {
       ...value,
       type,
-      termId: termState.termSelected,
+      termId: termState.termIndex.id,
     };
     evaluateService.insert(data).then((_response) => {
       showMessage("Tạo thành công", 5000)
@@ -138,7 +138,7 @@ const EvaluateManagement = () => {
           onCancel={handleCancel}
           footer={[
             <Button key="back" onClick={handleCancel}>
-              Cancel
+              Hủy
             </Button>,
           ]}
         >
@@ -149,29 +149,31 @@ const EvaluateManagement = () => {
             onFinish={onFinish}
             size="middle"
           >
-            <Form.Item label="Tên" rules={[{ required: true }]} name="name">
+            <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
               <Input />
             </Form.Item>
             <Form.Item
               label="Mô tả"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
               name="description"
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Điểm"
-              rules={[{ required: true, min: 0, max: 10 }]}
+              rules={[{ required: true, min: 0, max: 10, message: 'Vui lòng nhập điểm' }]}
               name="gradeMax"
             >
               <Input type="number" />
             </Form.Item>
 
-            <Form.Item label=" ">
-              <Button type="primary" htmlType="submit">
-                Lưu
-              </Button>
-            </Form.Item>
+            <Row justify={"end"}>
+              <Form.Item label="">
+                <Button type="primary" htmlType="submit">
+                  Tạo
+                </Button>
+              </Form.Item>
+            </Row>
           </Form>
         </Modal>
       </div>

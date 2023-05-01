@@ -50,3 +50,8 @@ export const checkTypeTraining = (value: string) => {
   if (value === 'UNIVERSITY') return 'Đại Học';
   if (value === 'COLLEGE') return 'Cao Đẳng';
 };
+
+export const checkString = (str: string) => {
+  var regex = /^[a-zA-Z0-9]*$/;
+  return regex.test(str);
+};

@@ -102,11 +102,20 @@ class LecturerService {
     });
   }
 
-  async addLecturer(data: FormData) {
-    return await axiosFormData({
+  async addLecturer(data: {
+    majorsId: number;
+    termId: number;
+    username: string;
+    name: string;
+    gender: string;
+    email: string;
+    phoneNumber: string;
+    degree: string;
+  }) {
+    return await axiosAuth({
       url: '/lecturer/lecturers',
-      data,
       method: 'post',
+      data: qs.stringify(data),
     });
   }
 }

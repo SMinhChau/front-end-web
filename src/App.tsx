@@ -24,6 +24,8 @@ import GroupLecturer from "./pages/group_lecturer/GroupLecturer";
 import UserInfo from "./pages/user_info/UserInfo";
 import GroupEvaluation from "./pages/group_evaluation/GroupEvaluation";
 import ListGroupOfLecturer from "./pages/evaluation_of_lecturer/ListGroupOfLecturer";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import Notification from "./components/notification/Notification";
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -139,7 +141,16 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
+        <Route
+          path="/notification"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Notification />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>

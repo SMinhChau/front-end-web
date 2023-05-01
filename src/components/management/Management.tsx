@@ -32,6 +32,7 @@ const Management = () => {
       .then((response) => {
         setTerm(response.data);
         dispatch(setTermSlice(response.data))
+
       })
       .catch((err) => {
         console.log(err);
@@ -39,9 +40,14 @@ const Management = () => {
   }, []);
 
   useEffect(() => {
-    const t = termState.term.filter((value) => value.id === termState.termSelected)[0]
-    dispatch(setTermIndex(t))
-  }, [termState.termSelected])
+    if (termState.termSelected) {
+      const t = termState.term.filter((value) => value.id === termState.termSelected)[0]
+      dispatch(setTermIndex(t))
+    } else {
+      dispatch(setTermIndex(termState.term[0]))
+    }
+
+  }, [termState])
 
   const onchangeValue = (value: any) => {
     setTermSelect(value);

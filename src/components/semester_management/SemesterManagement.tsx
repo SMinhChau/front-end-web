@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
-import { Table, Button, Modal, Form, DatePicker, Select } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { Table, Button, Modal, Form, DatePicker, Select, Row, Col } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import style from './SemesterManagement.module.scss';
 import termService from '~/services/term';
 import moment from 'moment';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Term from '~/entities/term';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import Config from '~/utils/config';
@@ -193,7 +193,7 @@ const SemesterManagement = () => {
     };
 
     const onFinishUpdate = (values: any) => {
-        console.log("value ->", values);
+
         values = {
             ...values,
             name: values.name,
@@ -225,7 +225,7 @@ const SemesterManagement = () => {
             })
             .catch((err) => {
                 showMessageEror(err.response.data.error, 5000);
-                console.log('err.response.data.error', err.response.data.error);
+
             });
     };
 
@@ -243,8 +243,7 @@ const SemesterManagement = () => {
 
     const getTermEditById = async (id: number) => {
         const _term = terms.filter(v => v.id === id)[0];
-        console.log(_term);
-        console.log(_term.id);
+
         setIdUpdate(_term.id)
         setInitData({
             name: _term.name,
@@ -305,6 +304,7 @@ const SemesterManagement = () => {
                     >
                         <Form.Item label="Tên học kỳ" rules={[{ required: true }]} name="name">
                             <Select
+                                disabled
                                 style={{ width: '50%' }}
                                 onChange={handleChange}
                                 options={terms.map(value => {
@@ -402,7 +402,7 @@ const SemesterManagement = () => {
                 >
                     <div className={cls('form_content')}>
                         <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} style={{ maxWidth: 600 }} layout="horizontal" onFinish={onFinish}>
-                            <Form.Item label="Tên học kỳ" rules={[{ required: true }]} name="name">
+                            <Form.Item label="Tên học kỳ" rules={[{ required: true, message: 'Vui lòng chọn tên' }]} name="name">
                                 <Select
                                     style={{ width: '50%' }}
                                     placeholder={'Tên học kỳ'}
@@ -414,25 +414,29 @@ const SemesterManagement = () => {
 
                             <Form.Item
                                 name="startDate"
-                                getValueFromEvent={(onChange) => moment(onChange).format('MM/DD/YYYY')}
-                                label="Ngày bắt đầu" rules={[{ required: true }]} >
+                                // getValueFromEvent={(onChange) => moment(onChange).format('MM/DD/YYYY')}
+                                label="Ngày bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]} >
                                 <DatePicker format="MM/DD/YYYY" />
                             </Form.Item>
 
-                            <Form.Item label="Ngày kết thúc" rules={[{ required: true }]} name="endDate">
+                            <Form.Item label="Ngày kết thúc" rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]} name="endDate">
                                 <DatePicker format="MM/DD/YYYY" />
                             </Form.Item>
 
-                            <Form.Item label=" ">
-                                <Button type="primary" htmlType="submit">
-                                    Lưu
-                                </Button>
-                            </Form.Item>
+                            <Row justify={'end'}>
+                                <Form.Item
+
+                                    label="">
+                                    <Button type="primary" htmlType="submit">
+                                        Tạo
+                                    </Button>
+                                </Form.Item>
+                            </Row>
                         </Form>
                     </div>
                 </Modal>
             </div>
-            <Table columns={baseColumns} dataSource={terms} style={{ backgroundColor: '#fff' }} />
+            <Table columns={columnVisible} dataSource={terms} style={{ backgroundColor: '#fff' }} />
 
             {renderModalUpdate}
         </div>

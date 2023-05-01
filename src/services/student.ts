@@ -1,5 +1,5 @@
 import { axiosAuth, axiosFormData } from '~/utils/axiosConfig';
-
+import qs from 'qs';
 class StudentService {
   getStudent(filter: { majorsId?: number }) {
     return axiosAuth({
@@ -33,6 +33,31 @@ class StudentService {
   async getGroupLecturerOfStudentByType(groupId?: number, termId?: number, type?: string) {
     return await axiosAuth({
       url: `lecturer/assigns?groupId=${groupId}&termId=${termId}&type=${type}`,
+      method: 'get',
+    });
+  }
+
+  async addStudent(data: {
+    majorsId: number;
+    termId: number;
+    username: string;
+    name: string;
+    gender: string;
+    email: string;
+    phoneNumber: string;
+    typeTraining: string;
+  }) {
+    return await axiosAuth({
+      url: '/lecturer/students',
+      data: qs.stringify(data),
+      method: 'post',
+    });
+  }
+
+  async getTranscriptsSummary(studentId: number, termId: number) {
+    return await axiosAuth({
+      url: `/lecturer/transcripts/summary?studentId=${studentId}&termId=${termId}`,
+
       method: 'get',
     });
   }

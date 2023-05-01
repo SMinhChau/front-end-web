@@ -107,7 +107,7 @@ const StudentManagement = () => {
     const handleUpload = () => {
         const formData = new FormData();
         formData.append('majorsId', userState.user.majors.id + '');
-        formData.append("termId", String(termState.termSelected));
+        formData.append("termId", String(termState.termIndex.id));
         formData.append('file', fileList[0] as RcFile);
 
         setUploading(true);
@@ -202,6 +202,30 @@ const StudentManagement = () => {
         console.log(`selected ${value}`);
     };
 
+    const onFinish = (value: any) => {
+
+        studentService.addStudent({
+            ...value, majorsId: userState.user.majors.id,
+            termId: termState.termIndex.id,
+            username: value?.username,
+            name: value?.name,
+            gender: value?.gender,
+            email: value?.email,
+            phoneNumber: value?.phoneNumber,
+            typeTraining: value?.typeTraining,
+        }).then((result) => {
+
+            setOpen(false);
+            showMessage("Đã thêm Sinh Viên", 5000);
+            window.location.reload();
+        }).catch((er) => {
+
+            setOpen(false);
+            showMessageEror(er.response.data.error, 5000);
+        })
+
+    };
+
     return (
         <div className={cls('student')}>
             <ToastContainer />
@@ -279,19 +303,26 @@ const StudentManagement = () => {
                 </Row>
 
                 <div className={cls('modal')}>
-                    <Modal title="Thêm Giảng Viên" open={open} onCancel={handleCancel} width={'50%'}>
+                    <Modal title="Thêm Giảng Viên" open={open} onCancel={handleCancel}
+
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                                Hủy
+                            </Button>,
+                        ]}
+                        width={'50%'}>
                         <Form
                             labelCol={{ span: 6 }}
                             wrapperCol={{ span: 18 }}
                             layout="horizontal"
-                            // onFinish={onFinish}
-                            // initialValues={status === 'insert' ? {} : initData}
+                            onFinish={onFinish}
+                            initialValues={initData}
 
                             size="large"
                         >
                             <Row justify={'space-between'}>
                                 <Col span={24}>
-                                    <Row justify={'center'} style={{ marginBottom: '20px' }}>
+                                    {/* <Row justify={'center'} style={{ marginBottom: '20px' }}>
                                         <Col>
 
                                             <p>Chọn ảnh đại diện</p>
@@ -314,14 +345,17 @@ const StudentManagement = () => {
                                                 </div>
                                             </Upload>
                                         </Col>
-                                    </Row>
+                                    </Row> */}
                                     <Row justify={'space-between'}>
                                         <Col span={24}>
-                                            <Form.Item name="name" label="Tên Giảng Viên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
+                                            <Form.Item name="username" label="Mã Sinh Viên" rules={[{ required: true, message: 'Vui lòng nhập mã' }]}>
+                                                <Input />
+                                            </Form.Item>
+                                            <Form.Item name="name" label="Tên Sinh Viên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
                                                 <Input />
                                             </Form.Item>
 
-                                            <Form.Item name="gender" label="Gioiws tinhs" rules={[{ required: true }]}>
+                                            <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}>
                                                 <Select
                                                     style={{ width: 120 }}
                                                     onChange={handleChangeSelectedOption}
@@ -340,11 +374,11 @@ const StudentManagement = () => {
                                                 <Input />
                                             </Form.Item>
 
-                                            <Form.Item name="email" label="Email" rules={[{ type: 'email' }]}>
+                                            <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
                                                 <Input />
                                             </Form.Item>
 
-                                            <Form.Item name="degree" label="Loại đào tạo" rules={[{ required: true }]}>
+                                            <Form.Item name="degree" label="Loại đào tạo" rules={[{ required: true, message: 'Vui lòng chọn loại đào tạo' }]}>
                                                 <Select
                                                     style={{ width: 120 }}
                                                     onChange={handleChangeSelectedOption}
@@ -354,6 +388,18 @@ const StudentManagement = () => {
                                                     ]}
                                                 />
                                             </Form.Item>
+
+
+                                            <Form.Item wrapperCol={{ span: 24 }}>
+                                                <Row>
+                                                    <Col span={24} offset={20}>
+                                                        <Button type="primary" htmlType="submit">
+                                                            Cập nhật
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                            </Form.Item>
+
                                         </Col>
                                     </Row>
                                 </Col>
@@ -393,14 +439,14 @@ const StudentManagement = () => {
                                             <div className={cls('card_top')}>
                                                 <Image width={160} style={{ resize: 'block' }} src={value.avatar} />
 
-                                                <div className={cls('card_func')}>
+                                                {/* <div className={cls('card_func')}>
                                                     <Button>
                                                         <DeleteOutlined style={{ color: 'red' }} />
                                                     </Button>
                                                     <Button>
                                                         <EditOutlined style={{ color: '#30a3f1' }} />
                                                     </Button>
-                                                </div>
+                                                </div> */}
                                             </div>
 
                                             <div className={cls('content')}>

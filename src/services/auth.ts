@@ -23,6 +23,14 @@ class AuthService {
       data,
     });
   }
+
+  forgotPassword(data: { username: string }) {
+    return axiosNotAuth({
+      url: '/lecturer/auth/send-mail-forgot-password',
+      method: 'post',
+      data,
+    });
+  }
 }
 
 const authService = new AuthService();

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GroupDetail.module.scss';
-import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Select, Skeleton, Space, TreeSelect, Typography } from 'antd';
+import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Select, Skeleton, Space, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
 import studentService from '~/services/student';
 import GroupStudent from '~/entities/group_student';
@@ -79,14 +79,14 @@ const GroupDetail = () => {
         .catch((errr) => console.log('erre', errr));
 
       studentService
-        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termSelected, 'REVIEWER')
+        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termIndex.id, 'REVIEWER')
         .then((resutl) => {
           setGroupAssignRieview(resutl?.data);
         })
         .catch((error) => console.log('error REVIEWER', error));
 
       studentService
-        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termSelected, 'SESSION_HOST')
+        .getGroupLecturerOfStudentByType(Number(idGroup), termState.termIndex.id, 'SESSION_HOST')
         .then((resutl) => {
           setGroupAssignSessionHost(resutl?.data);
         })
@@ -119,13 +119,13 @@ const GroupDetail = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       lecturerService
-        .getGroupLecturers({ termId: termState.termSelected, typeEvaluation: 'REVIEWER' })
+        .getGroupLecturers({ termId: termState.termIndex.id, typeEvaluation: 'REVIEWER' })
         .then((resutl) => {
           setGroupLecturerReview(resutl?.data);
         })
         .catch((er) => console.log('getGroupLecturers REVIEW', er));
       lecturerService
-        .getGroupLecturers({ termId: termState.termSelected, typeEvaluation: 'SESSION_HOST' })
+        .getGroupLecturers({ termId: termState.termIndex.id, typeEvaluation: 'SESSION_HOST' })
         .then((resutl) => {
           setGroupLecturerHost(resutl?.data);
         })
@@ -430,6 +430,11 @@ const GroupDetail = () => {
         <div className={cls('group_of_lecture')}>
           {nameOfLecturerReview.length > 0 ? (
             <>
+              <Divider plain className={cls('title')} >
+                <Text strong type="secondary" className={cls('title')}>
+                  Thông tin nhóm Giảng viên
+                </Text>
+              </Divider>
               <Row align={'middle'}>
                 <Col span={8}>
                   <Text strong className={cls('title_group')}>{`${nameOfLecturerReview.length} Giảng Viên: `}</Text>
@@ -515,6 +520,11 @@ const GroupDetail = () => {
 
           {nameOfLecturerHost.length > 0 ? (
             <>
+              <Divider plain className={cls('title')} >
+                <Text strong type="secondary" className={cls('title')}>
+                  Thông tin nhóm Giảng viên
+                </Text>
+              </Divider>
               <Row align={'middle'} >
 
                 <Col span={8}>
@@ -575,10 +585,17 @@ const GroupDetail = () => {
             }
             size="default"
           >
+            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
+              Thông tin Sinh Viên
+            </Text></Divider>
             <div className={cls('group_member')}>{genderMemberForGroup}</div>
-            <Divider orientation="left"></Divider>
+            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
+              Thông tin Đề Tài
+            </Text></Divider>
             <div className={cls('topic')}>{renderTopic}</div>
-            <Divider orientation="left"></Divider>
+            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
+              Thông tin Giảng Viên Hướng Dẫn
+            </Text></Divider>
             <div className={cls('lecturer')}>{renderLecturerForGroup}</div>
             <Divider orientation="left"></Divider>
 

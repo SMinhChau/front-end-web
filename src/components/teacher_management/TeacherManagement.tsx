@@ -72,15 +72,6 @@ const TeacherManagement = () => {
             render: (text: string) =>
                 checkGender(text)
         },
-        {
-            title: "Sửa",
-            dataIndex: "id",
-            render: (id: any) => (
-                <Button onClick={() => showEditModal(id)}>
-                    <EditOutlined style={{ color: "#30a3f1" }} />
-                </Button>
-            ),
-        },
     ];
 
     const [lecturer, setLecturer] = useState<Array<LecturerTable>>([]);
@@ -106,12 +97,12 @@ const TeacherManagement = () => {
 
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [modalText, setModalText] = useState('Content of the modal');
+
 
     useEffect(() => {
-        if (termState.termSelected) {
+        if (termState.termIndex.id) {
             lecturerService
-                .getWithTerm(termState.termSelected)
+                .getWithTerm(termState.termIndex.id)
                 .then((response) => {
                     const _data = response.data.map(
                         (value: Teacher, index: number) => {
@@ -134,7 +125,7 @@ const TeacherManagement = () => {
     const handleUpload = () => {
         const formData = new FormData();
         formData.append("majorsId", user.majors.id + "");
-        formData.append("termId", String(termState.termSelected));
+        formData.append("termId", String(termState.termIndex.id));
         formData.append("file", fileList[0] as RcFile);
 
 
@@ -142,10 +133,10 @@ const TeacherManagement = () => {
         console.log("formdata== ", formData);
 
         setUploading(true);
+
         lecturerService
             .import(formData)
             .then((result) => {
-                console.log("result", result);
                 setFileList([]);
                 showMessage("Tải file thành công", 3000)
             })
@@ -157,6 +148,7 @@ const TeacherManagement = () => {
                 setUploading(false);
             });
     };
+
     const props: UploadProps = {
         onRemove: (file) => {
             const index = fileList.indexOf(file);
@@ -226,26 +218,43 @@ const TeacherManagement = () => {
     }
 
     const onFinish = (value: any) => {
-        var bodyFormData = new FormData();
-        console.log("value 1", value);
+        // var bodyFormData = new FormData();
+        // console.log("value 1", value);
 
 
-        if (fileImage) {
-            console.log('file -> ', fileImage)
-            bodyFormData.append('avatar', fileImage)
-        } else {
-            bodyFormData.append('avatar', user?.avatar)
-        }
+        // if (fileImage) {
+        //     console.log('file -> ', fileImage)
+        //     bodyFormData.append('avatar', fileImage)
+        // } else {
+        //     bodyFormData.append('avatar', user?.avatar)
+        // }
 
-        bodyFormData.append("name", value?.name);
-        bodyFormData.append("gender", value?.gender);
-        bodyFormData.append("email", value?.email);
-        bodyFormData.append("phoneNumber", value?.phoneNumber);
-        bodyFormData.append("degree", value?.degree);
+        // bodyFormData.append("name", value?.name);
+        // bodyFormData.append("gender", value?.gender);
+        // bodyFormData.append("email", value?.email);
+        // bodyFormData.append("phoneNumber", value?.phoneNumber);
+        // bodyFormData.append("degree", value?.degree);
 
 
-        console.log("bodyFormData", bodyFormData);
+        lecturerService.addLecturer({
+            ...value, majorsId: user.majors.id,
+            termId: termState.termIndex.id,
+            username: value?.username,
+            name: value?.name,
+            gender: value?.gender,
+            email: value?.email,
+            phoneNumber: value?.phoneNumber,
+            degree: value?.degree,
+        }).then((result) => {
 
+            setOpen(false);
+            showMessage("Đã thêm Giảng Viên", 5000);
+            window.location.reload();
+        }).catch((er) => {
+
+            setOpen(false);
+            showMessageEror(er.response.data.error, 5000);
+        })
 
     };
 
@@ -262,8 +271,6 @@ const TeacherManagement = () => {
         setOpen(true);
         setStatus("update");
         const m = lecturer.filter((value) => value.id === id)[0];
-        console.log("update lecturer -> ", m);
-
         setInitData((prev: any) => {
             const data = {
                 ...prev,
@@ -367,7 +374,7 @@ const TeacherManagement = () => {
                     >
                         <Row justify={'space-between'}>
                             <Col span={24}>
-                                <Row justify={'center'} style={{ marginBottom: '20px' }} >
+                                {/* <Row justify={'center'} style={{ marginBottom: '20px' }} >
                                     <Col>  <p>Chọn ảnh đại diện</p></Col>
                                     <Col offset={1}>
                                         <Upload
@@ -386,14 +393,17 @@ const TeacherManagement = () => {
                                             </div>
                                         </Upload>
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 <Row justify={'space-between'}>
                                     <Col span={24}>
+                                        <Form.Item name="username" label="Mã Giảng Viên" rules={[{ required: true, message: 'Vui lòng nhập mã' }]}>
+                                            <Input />
+                                        </Form.Item>
                                         <Form.Item name="name" label="Tên Giảng Viên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
                                             <Input />
                                         </Form.Item>
 
-                                        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+                                        <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}>
                                             <Select
                                                 style={{ width: 120 }}
                                                 onChange={handleChangeSelectedOption}
@@ -409,12 +419,12 @@ const TeacherManagement = () => {
                                             <Input />
                                         </Form.Item>
 
-                                        <Form.Item name="email" label="Email" rules={[{ type: 'email' }]}>
+                                        <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
                                             <Input />
                                         </Form.Item>
 
 
-                                        <Form.Item name="degree" label="Trình độ" rules={[{ required: true }]}>
+                                        <Form.Item name="degree" label="Trình độ" rules={[{ required: true, message: 'Vui lòng chọn giới trình độ' }]}>
                                             <Select
                                                 style={{ width: 120 }}
                                                 onChange={handleChangeSelectedOption}

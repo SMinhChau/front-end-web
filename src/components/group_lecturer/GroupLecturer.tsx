@@ -96,9 +96,11 @@ const GroupLecturer = () => {
 
 
   useEffect(() => {
+
+
     if (termState.term.length > 0) {
       lecturerService
-        .getAllGroupLecturers({ termId: termState.termSelected })
+        .getAllGroupLecturers({ termId: termState.termIndex.id })
         .then((response) => {
           const _data = response.data.map(
             (value: GroupLecturer, index: number) => {
@@ -116,7 +118,7 @@ const GroupLecturer = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       lecturerService
-        .getWithTerm(termState.termSelected)
+        .getWithTerm(termState.termIndex.id)
         .then((response) => {
           setListLecturer(response.data);
         });
@@ -139,7 +141,7 @@ const GroupLecturer = () => {
 
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
-    const termId = termState.termSelected;
+    const termId = termState.termIndex.id;
     setGroupDes(m);
     setLoadingInfoGroup(false)
     setGroupIdDelete(m?.id);
@@ -158,7 +160,7 @@ const GroupLecturer = () => {
     setInitData((prev: any) => {
       const data = {
         ...prev,
-        termId: termState.termSelected,
+        termId: termState.termIndex.id,
         name: m.name,
         lecturerIds: m.members?.map((value) => value?.lecturer?.id),
       };
@@ -280,7 +282,7 @@ const GroupLecturer = () => {
       lecturerService
         .createGroupLecturer({
           ...value,
-          termId: termState.termSelected,
+          termId: termState.termIndex.id,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
@@ -293,7 +295,7 @@ const GroupLecturer = () => {
       lecturerService
         .updateGroupLecturer(updateId as number, {
           ...value,
-          termId: termState.termSelected,
+          termId: termState.termIndex.id,
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
@@ -315,8 +317,8 @@ const GroupLecturer = () => {
           {groupStudents?.map((item, index) => {
             return (<Card.Grid className={cls("item_group")} hoverable>
               <div>
-                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserSwitchOutlined />} />
-                <GroupOutlined size={30} className={cls('icon')} />
+                <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                {/* <GroupOutlined size={30} className={cls('icon')} /> */}
               </div>
               <Meta
                 title={
@@ -487,7 +489,7 @@ const GroupLecturer = () => {
                   <>
                     <Option value={value.id} label={value.name}>
                       <Space>
-                        <span>{value.name}</span>
+                        <span>{value.name} - Mã GV: {value.username}</span>
                       </Space>
                     </Option>
                   </>

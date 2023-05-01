@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import style from "./TopicManagement.module.scss";
-import Term from "~/entities/term";
-import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
-import { Select, Table, Button, Modal, Form, Input } from "antd";
+import { Table, Button, Modal, Form, Input, Row } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import topicService from "~/services/topic";
 import Topic from "~/entities/topic";
@@ -21,8 +19,6 @@ interface TopicData extends Topic {
 }
 
 const HEADTopicManagement = () => {
-    const userState = useAppSelector((state) => state.user).user;
-
     const [topic, setTopic] = useState<Array<TopicData>>([]);
     const [open, setOpen] = useState(false);
 
@@ -83,9 +79,9 @@ const HEADTopicManagement = () => {
 
 
     useEffect(() => {
-        if (termState.termSelected) {
+        if (termState.termIndex.id) {
             topicService
-                .getTopic({ termId: termState.termSelected })
+                .getTopic({ termId: termState.termIndex.id })
                 .then((response) => {
                     setTopic(
                         response.data.map((value: Topic) => {
@@ -149,14 +145,15 @@ const HEADTopicManagement = () => {
                     />
                 </div>
 
+
                 <Modal
                     destroyOnClose
                     open={open}
-                    title="Title"
+                    title={<div className={cls("modal")}>Ghi chú</div>}
                     onCancel={handleCancel}
                     footer={[
                         <Button key="back" onClick={handleCancel}>
-                            Cancel
+                            Hủy
                         </Button>,
                     ]}
                 >
@@ -165,17 +162,20 @@ const HEADTopicManagement = () => {
                         onFinish={onFinish}
                         style={{ maxWidth: 600 }}
                     >
-                        <Form.Item name="comment" label="Comment">
+                        <Form.Item name="comment" label="Nội dung">
                             <TextArea rows={4} />
                         </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Cập nhật
-                            </Button>
-                        </Form.Item>
+                        <Row justify={"end"}>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit">
+                                    Xác nhận
+                                </Button>
+                            </Form.Item>
+                        </Row>
                     </Form>
                 </Modal>
             </div>
+
             <Table columns={columnVisible} dataSource={topic} />
         </div>
     );
