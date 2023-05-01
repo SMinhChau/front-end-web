@@ -20,19 +20,25 @@ class LecturerService {
     return await axiosFormData({
       url: '/lecturer/lecturers/import-lecturer',
       data,
+      method: 'post',
     });
   }
-  async getGroupLecturers(termId: number) {
+  async getGroupLecturers(params: { termId: number; typeEvaluation: string }) {
     return await axiosAuth({
-      url: `/lecturer/group-lecturer?termId=${termId}`,
+      url: `/lecturer/group-lecturer`,
       method: 'get',
+      params: params,
+    });
+  }
+  async getAllGroupLecturers(params: { termId: number }) {
+    return await axiosAuth({
+      url: `/lecturer/group-lecturer`,
+      method: 'get',
+      params: params,
     });
   }
 
   async createGroupLecturer(data: { termId: number; name: string; lecturerIds: string }) {
-    console.log('createGroupLecturer============', data);
-    // return axiosAuth.postForm("/lecturer/group-lecturer", data, {headers: {'content-type': 'application/x-www-form-urlencoded'}})
-
     return await axiosAuth({
       url: '/lecturer/group-lecturer',
       method: 'post',
@@ -78,6 +84,38 @@ class LecturerService {
     return await axiosAuth({
       url: `lecturer/assigns/lecturers/:${groupLecturerId}?termId=${termId}`,
       method: 'get',
+    });
+  }
+
+  async createAssignGroupLecturer(data: { typeEvaluation: string; groupLecturerId: number; groupId: number }) {
+    return await axiosAuth({
+      url: '/lecturer/assigns',
+      method: 'post',
+      data: qs.stringify(data),
+    });
+  }
+  async updateAssignGroupLecturer(id: number, data: { typeEvaluation: string; groupLecturerId: number; groupId: number }) {
+    return await axiosAuth({
+      url: `lecturer/assigns/${id}`,
+      method: 'put',
+      data: qs.stringify(data),
+    });
+  }
+
+  async addLecturer(data: {
+    majorsId: number;
+    termId: number;
+    username: string;
+    name: string;
+    gender: string;
+    email: string;
+    phoneNumber: string;
+    degree: string;
+  }) {
+    return await axiosAuth({
+      url: '/lecturer/lecturers',
+      method: 'post',
+      data: qs.stringify(data),
     });
   }
 }

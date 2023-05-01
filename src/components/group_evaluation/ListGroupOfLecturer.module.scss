@@ -3,6 +3,15 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  .type_evalution {
+    background-color: white;
+    width: 98%;
+    text-align: center;
+    padding: 20px 0;
+    .btn_radio {
+      text-transform: uppercase;
+    }
+  }
 
   .title_group {
     width: 98%;
@@ -56,7 +65,7 @@
     }
     .group {
       margin: 30px;
-      width: 46%;
+      width: 45%;
 
       .group_name {
         font-size: 1.1rem;

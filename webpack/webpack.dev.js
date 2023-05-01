@@ -1,22 +1,22 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require("webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
-  entry: "./src/index.tsx",
-  mode: "development",
-  devtool: "source-map",
+  entry: './src/index.tsx',
+  mode: 'development',
+  devtool: 'source-map',
   devServer: {
     static: {
-      directory: "./public",
+      directory: './public',
     },
     historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
+      template: './public/index.html',
     }),
     new webpack.ProvidePlugin({
-      process: "process/browser",
-      React: "react",
+      process: 'process/browser',
+      React: 'react',
     }),
   ],
   module: {
@@ -25,23 +25,23 @@ module.exports = {
         test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
         },
       },
       {
         test: /\.(png|svg|jpg|gif|webp)$/,
         exclude: /node_modules/,
-        use: "file-loader?name=assets/[name].[ext]",
+        use: 'file-loader?name=assets/[name].[ext]',
       },
       {
         test: /\.s?css$/,
         // exclude: /node_modules/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js"],
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
   },
 
   performance: {

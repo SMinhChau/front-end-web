@@ -1,4 +1,6 @@
-export const URL = 'https://manage-graduation-thesis-iuh.herokuapp.com/api';
+import { toast } from 'react-toastify';
+
+export const URL = 'https://graduation-thesis-iuh.top/api';
 
 export const checkGender = (value: string) => {
   if (value === 'MALE') return 'Nam';
@@ -20,3 +22,36 @@ export interface TypeEvaluation {
   REVIEWER: string;
   SESSION_HO: string;
 }
+
+export const showMessage = (mess: any, timeShow: number) => {
+  return toast.success(mess, {
+    position: 'top-center',
+    autoClose: timeShow,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+export const showMessageEror = (mess: any, timeShow: number) => {
+  return toast.error(mess, {
+    position: 'top-center',
+    autoClose: timeShow,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
+export const checkTypeTraining = (value: string) => {
+  if (value === 'UNIVERSITY') return 'Đại Học';
+  if (value === 'COLLEGE') return 'Cao Đẳng';
+};
+
+export const checkString = (str: string) => {
+  var regex = /^[a-zA-Z0-9]*$/;
+  return regex.test(str);
+};

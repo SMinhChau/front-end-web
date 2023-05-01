@@ -9,6 +9,8 @@ import Evaluate from "~/entities/evaluate";
 import evaluateService from "~/services/evaluate";
 import Table, { ColumnsType } from "antd/es/table";
 import { PlusOutlined } from "@ant-design/icons";
+import { ToastContainer } from "react-toastify";
+import { showMessage, showMessageEror } from "~/constant";
 
 interface EvaluateTableType extends Evaluate {
   key: number;
@@ -17,14 +19,14 @@ interface EvaluateTableType extends Evaluate {
 const cls = classNames.bind(style);
 
 const EvaluateManagement = () => {
-  const [term, setTerm] = useState<Array<Term>>([]);
-  const { user } = useAppSelector((state) => state.user);
+
   const [type, setType] = useState<"ADVISOR" | "REVIEWER" | "SESSION_HOST">(
     "ADVISOR"
   );
-  const [termSelect, setTermSelect] = useState<number | null>(null);
   const [evaluate, setEvaluate] = useState<Array<EvaluateTableType>>([]);
   const [open, setOpen] = useState(false);
+  const termState = useAppSelector((state) => state.term);
+
   const showModal = () => {
     setOpen(true);
   };
@@ -32,25 +34,14 @@ const EvaluateManagement = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    termService
-      .getTerm({ majorsId: user.majors.id })
-      .then((response) => {
-        setTerm(response.data);
-        setTermSelect(response.data[0].id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   useEffect(() => {
-    if (term.length > 0) {
+    if (termState.term.length > 0) {
       evaluateService
         .getEvaluate({
-          termId: termSelect ? termSelect : term[0].id,
+          termId: termState.termIndex.id,
           type,
         })
         .then((response) => {
@@ -60,15 +51,13 @@ const EvaluateManagement = () => {
           setEvaluate(_cp_data);
         });
     }
-  }, [termSelect, term, type]);
+  }, [termState, type]);
 
   const handleTypeChange = (value: "ADVISOR" | "REVIEWER" | "SESSION_HOST") => {
     setType(value);
   };
 
-  const handleTermChange = (value: number) => {
-    setTermSelect(value);
-  };
+
 
   const baseColumns: ColumnsType<any> = [
     {
@@ -92,119 +81,99 @@ const EvaluateManagement = () => {
     const data = {
       ...value,
       type,
-      termId: termSelect,
+      termId: termState.termIndex.id,
     };
     evaluateService.insert(data).then((_response) => {
+      showMessage("Tạo thành công", 5000)
       window.location.reload();
-    });
+    }).catch(() => showMessageEror("Tạo thất bại! Vui lòng kiểm tra lại", 3000))
   };
 
   return (
     <div className={cls("avaluate")}>
-      <div>
-        <Row justify="space-between" align="middle">
-          <Col span={12}>
-            <div className="filter_func">
-              <Row>
-                <Col span={12}>
-                  <div>
-                    <span>Học kì: </span>
-                    {term.length > 0 && (
-                      <Select
-                        defaultValue={term[0].id}
-                        style={{ width: 120 }}
-                        onChange={handleTermChange}
-                        options={term.map((val) => {
-                          return {
-                            value: val.id,
-                            label: val.name,
-                          };
-                        })}
-                      />
-                    )}
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <div>
-                    <span>Loại: </span>
-                    <Select
-                      defaultValue="ADVISOR"
-                      style={{ width: 120 }}
-                      onChange={handleTypeChange}
-                      options={[
-                        { value: "ADVISOR", label: "Hướng Dẫn" },
-                        { value: "REVIEWER", label: "Phản biện" },
-                        { value: "SESSION_HOST", label: "Hội Đồng" },
-                      ]}
-                    />
-                  </div>
-                </Col>
-              </Row>
+      <ToastContainer />
+      <div className={cls("function")}>
+        <Row justify="space-between" align="middle" style={
+          { width: '100%' }
+        }>
+          <Col >
+            <div>
+              <span>Loại: </span>
+              <Select
+                defaultValue="ADVISOR"
+                style={{ width: 120 }}
+                onChange={handleTypeChange}
+                options={[
+                  { value: "ADVISOR", label: "Hướng Dẫn" },
+                  { value: "REVIEWER", label: "Phản biện" },
+                  { value: "SESSION_HOST", label: "Hội Đồng" },
+                ]}
+              />
+            </div>
+          </Col>
+          <Col>
+            <div className={cls("content_button_upload")}>
+              <Button
+                type="dashed"
+                icon={<PlusOutlined />}
+                size="large"
+                style={{
+
+                  animation: "none",
+                  color: "rgb(80, 72, 229)",
+                  fontWeight: "600",
+                }}
+                onClick={showModal}
+              >
+                Tạo
+              </Button>
             </div>
           </Col>
 
-          <Col span={12}>
-            <Row justify={"end"}>
-              <Col>
-                <Button
-                  type="dashed"
-                  icon={<PlusOutlined />}
-                  size="large"
-                  style={{
-                    marginBottom: "10px",
-                    animation: "none",
-                    color: "rgb(80, 72, 229)",
-                    fontWeight: "600",
-                  }}
-                  onClick={showModal}
-                >
-                  Tạo
-                </Button>
-              </Col>
-            </Row>
-          </Col>
         </Row>
         <Modal
           destroyOnClose
           open={open}
-          title="Title"
+          title="Tạo tiêu chí chấm điểm"
           onCancel={handleCancel}
           footer={[
             <Button key="back" onClick={handleCancel}>
-              Cancel
+              Hủy
             </Button>,
           ]}
         >
           <Form
-            labelCol={{ span: 10 }}
-            wrapperCol={{ span: 14 }}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
             layout="horizontal"
             onFinish={onFinish}
-            style={{ maxWidth: 600 }}
+            size="middle"
           >
-            <Form.Item label="Tên" rules={[{ required: true }]} name="name">
+            <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
               <Input />
             </Form.Item>
             <Form.Item
               label="Mô tả"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
               name="description"
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Điểm"
-              rules={[{ required: true, min: 0, max: 10 }]}
+              rules={[{ required: true, min: 0, max: 10, message: 'Vui lòng nhập điểm' }]}
               name="gradeMax"
             >
               <Input type="number" />
             </Form.Item>
 
-            <Form.Item label=" ">
-              <Button type="primary" htmlType="submit">
-                Lưu
-              </Button>
-            </Form.Item>
+            <Row justify={"end"}>
+              <Form.Item label="">
+                <Button type="primary" htmlType="submit">
+                  Tạo
+                </Button>
+              </Form.Item>
+            </Row>
           </Form>
         </Modal>
       </div>

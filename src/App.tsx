@@ -6,7 +6,7 @@ import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import NoMatch from "./pages/404/NoMatch";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router, } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 import Login from "./pages/login/Login";
 import Semester from "./pages/semester/Semester";
@@ -24,6 +24,8 @@ import GroupLecturer from "./pages/group_lecturer/GroupLecturer";
 import UserInfo from "./pages/user_info/UserInfo";
 import GroupEvaluation from "./pages/group_evaluation/GroupEvaluation";
 import ListGroupOfLecturer from "./pages/evaluation_of_lecturer/ListGroupOfLecturer";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import Notification from "./components/notification/Notification";
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -38,7 +40,7 @@ function App() {
 
   return (
     <Router>
-      <Routes>
+      <Routes >
         <Route path="/" element={<Home />} />
         <Route
           path="/term"
@@ -139,7 +141,16 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
+        <Route
+          path="/notification"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <Notification />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>
