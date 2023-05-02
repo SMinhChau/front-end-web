@@ -10,6 +10,7 @@ import { default as base_column } from "./column";
 import { ToastContainer } from "react-toastify";
 import Config from "~/utils/config";
 import ColumnSetting from "../column_setting/ColumnSetting";
+import { showMessage } from "~/constant";
 const { TextArea } = Input;
 
 const cls = classNames.bind(style);
@@ -79,6 +80,10 @@ const HEADTopicManagement = () => {
 
 
     useEffect(() => {
+        getListOfTopic()
+    }, [termState]);
+
+    const getListOfTopic = () => {
         if (termState.termIndex.id) {
             topicService
                 .getTopic({ termId: termState.termIndex.id })
@@ -91,30 +96,28 @@ const HEADTopicManagement = () => {
                             };
                         })
                     );
-
-
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         }
-    }, [termState]);
+    }
 
-
-    console.log("topiv", topic);
     const showModal = () => {
         setOpen(true);
     };
     const handleCancel = () => {
         setOpen(false);
     };
+
     const onFinish = (value: any) => {
         const data = {
             status,
             ...value,
         };
         topicService.updateTopic(idUpdate as number, data).then(() => {
-            window.location.reload();
+            showMessage("Đã duyệt đề tài", 3000)
+            getListOfTopic()
         });
     };
 
@@ -137,12 +140,7 @@ const HEADTopicManagement = () => {
             <div className={cls("semester_func")}>
                 <div className={cls("selectTerm")}></div>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <ColumnSetting
-                        setColumnVisible={setColumnVisible}
-                        columns={baseColumns}
-                        cacheKey={Config.TOPIC_CACHE_KEY}
-                        style={{ marginLeft: 20 }}
-                    />
+
                 </div>
 
 
@@ -162,7 +160,7 @@ const HEADTopicManagement = () => {
                         onFinish={onFinish}
                         style={{ maxWidth: 600 }}
                     >
-                        <Form.Item name="comment" label="Nội dung">
+                        <Form.Item name="comment" label="Nội dung" rules={[{ required: true, message: 'Vui lòng nhập nội dung' }]} >
                             <TextArea rows={4} />
                         </Form.Item>
                         <Row justify={"end"}>
@@ -176,7 +174,7 @@ const HEADTopicManagement = () => {
                 </Modal>
             </div>
 
-            <Table columns={columnVisible} dataSource={topic} />
+            <Table columns={baseColumns} dataSource={topic} />
         </div>
     );
 };

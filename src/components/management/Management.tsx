@@ -10,6 +10,7 @@ import Term from '~/entities/term';
 import termService from '~/services/term';
 import { TermSlices, setTermIndex, setTermSlice } from '~/redux/slices/term_slice';
 const cls = classNames.bind(style);
+import avatarDefault from "~/assets/avatars/avatarDefault.png";
 
 const Management = () => {
   const { Text } = Typography;
@@ -88,7 +89,7 @@ const Management = () => {
       <div className={cls('menu')} id="menu">
         <div className={cls('empty')}>
           <Link to="/user-info">
-            <img src={userState.user.avatar} alt="" />
+            <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
           </Link>
           <div className={cls('username')}>{userState.user.name}
           </div>

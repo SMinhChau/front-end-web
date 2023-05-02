@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import style from "./EvaluateManagement.module.scss";
 import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
-import Term from "~/entities/term";
-import termService from "~/services/term";
 import { useAppSelector } from "~/redux/hooks";
 import Evaluate from "~/entities/evaluate";
 import evaluateService from "~/services/evaluate";
 import Table, { ColumnsType } from "antd/es/table";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ToastContainer } from "react-toastify";
-import { showMessage, showMessageEror } from "~/constant";
+import { checkPoint, showMessage, showMessageEror } from "~/constant";
 
 interface EvaluateTableType extends Evaluate {
   key: number;
@@ -26,18 +24,37 @@ const EvaluateManagement = () => {
   const [evaluate, setEvaluate] = useState<Array<EvaluateTableType>>([]);
   const [open, setOpen] = useState(false);
   const termState = useAppSelector((state) => state.term);
+  const [status, setStatus] = useState("insert");
+  const [updateId, setUpdateId] = useState<number | null>(null);
+  const [initData, setInitData] = useState<
+    {
+      type: string,
+      termId: number,
+      name: string,
+      gradeMax: number,
+      description: string
+    }
+  >({
+    type: '',
+    termId: NaN,
+    name: '',
+    gradeMax: NaN,
+    description: ''
+  });
 
   const showModal = () => {
     setOpen(true);
+    setStatus("insert");
   };
   const handleCancel = () => {
     setOpen(false);
   };
 
-
-
-
   useEffect(() => {
+    getListOfEvaluate()
+  }, [termState, type]);
+
+  const getListOfEvaluate = () => {
     if (termState.term.length > 0) {
       evaluateService
         .getEvaluate({
@@ -51,7 +68,7 @@ const EvaluateManagement = () => {
           setEvaluate(_cp_data);
         });
     }
-  }, [termState, type]);
+  }
 
   const handleTypeChange = (value: "ADVISOR" | "REVIEWER" | "SESSION_HOST") => {
     setType(value);
@@ -75,18 +92,107 @@ const EvaluateManagement = () => {
       dataIndex: "gradeMax",
       key: "gradeMax",
     },
+    {
+      title: 'Xóa',
+      dataIndex: 'id',
+      render: (id: any) => (
+        <Button onClick={() => deleteItem(id)}>
+          <DeleteOutlined style={{ color: 'red' }} />
+        </Button>
+      ),
+      width: 100,
+    },
+    {
+      title: 'Sửa',
+      dataIndex: 'id',
+      render: (id: any) => (
+        <Button
+          onClick={() => showEditModal(id)}
+        >
+          <EditOutlined style={{ color: '#30a3f1' }} />
+        </Button>
+      ),
+      width: 100,
+    },
   ];
+  const showEditModal = (id: number) => {
+    setUpdateId(id);
+    setOpen(true);
+    setStatus("update");
+    const m = evaluate.filter((value) => value.id === id)[0];
+
+    setInitData((prev: any) => {
+      const data = {
+        ...prev,
+        type: type,
+        termId: termState.termIndex.id,
+        name: String(m.name),
+        gradeMax: Number(m.gradeMax),
+        description: m.description
+      };
+
+      return data;
+    });
+  };
+
+
+  const deleteItem = (id: number) => {
+    evaluateService
+      .deleteTerm(id)
+      .then(() => {
+        showMessage('Xóa thành công', 3000);
+        getListOfEvaluate()
+      })
+      .catch((err) => {
+        showMessageEror(err.response.data.error, 3000);
+      });
+  };
 
   const onFinish = (value: any) => {
-    const data = {
-      ...value,
-      type,
-      termId: termState.termIndex.id,
-    };
-    evaluateService.insert(data).then((_response) => {
-      showMessage("Tạo thành công", 5000)
-      window.location.reload();
-    }).catch(() => showMessageEror("Tạo thất bại! Vui lòng kiểm tra lại", 3000))
+    const inpuNumber = checkPoint(value.gradeMax);
+
+    if (status === 'insert') {
+      if (inpuNumber === true) {
+        const data = {
+          ...value,
+          type,
+          termId: termState.termIndex.id,
+        };
+        evaluateService.insert(data).then((_response) => {
+          setOpen(false);
+          showMessage("Tạo thành công", 3000)
+          getListOfEvaluate()
+        }).catch(() => showMessageEror("Tạo thất bại! Vui lòng kiểm tra lại", 3000))
+      }
+      else {
+        showMessageEror("Vui lòng nhập điểm đúng định dạng", 2000)
+      }
+
+
+    } else {
+      if (inpuNumber === true) {
+        evaluateService
+          .update(updateId as number, {
+            ...value,
+            type,
+            termId: termState.termIndex.id,
+            name: value.name,
+            gradeMax: Number(value.gradeMax),
+            description: value.description
+          })
+          .then((result) => {
+            showMessage('Cập nhật thành công', 2000)
+            getListOfEvaluate()
+            setOpen(false);
+          })
+          .catch((error) => {
+            showMessageEror(error.response.data.error, 2000)
+          });
+      } else {
+        showMessageEror("Vui lòng nhập điểm đúng định dạng", 2000)
+      }
+
+    }
   };
 
   return (
@@ -147,6 +253,7 @@ const EvaluateManagement = () => {
             wrapperCol={{ span: 18 }}
             layout="horizontal"
             onFinish={onFinish}
+            initialValues={status === "insert" ? {} : initData}
             size="middle"
           >
             <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
@@ -161,8 +268,8 @@ const EvaluateManagement = () => {
             </Form.Item>
             <Form.Item
               label="Điểm"
-              rules={[{ required: true, min: 0, max: 10, message: 'Vui lòng nhập điểm' }]}
               name="gradeMax"
+              rules={[{ required: true, message: 'Vui lòng nhập điểm' }]}
             >
               <Input type="number" />
             </Form.Item>
