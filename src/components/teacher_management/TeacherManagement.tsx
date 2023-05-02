@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import classNames from "classnames/bind";
 import style from "./TeacherManagement.module.scss";
 import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { EditOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import Config from "~/utils/config";
 import ColumnSetting from "../column_setting/ColumnSetting";
-import Term from "~/entities/term";
 import Teacher from "~/entities/teacher";
 import { useAppSelector } from "~/redux/hooks";
 import type { UploadProps, UploadFile, RcFile } from "antd/es/upload/interface";
-
-import termService from "~/services/term";
 import lecturerService from "~/services/lecturer";
-import { EnumGender } from "~/enum";
 import { checkDegree, checkGender, showMessage, showMessageEror } from "~/constant";
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
-import authAPI from "~/redux/apis/auth";
+
 import { ToastContainer } from "react-toastify";
+import avatarDefault from "~/assets/avatars/avatarDefault.png";
+
 const cls = classNames.bind(style);
+
 
 interface LecturerTable extends Teacher {
     key: number;
@@ -31,8 +30,9 @@ const TeacherManagement = () => {
             dataIndex: "avatar",
             key: "avatar",
             render: (url) => (
+
                 <Avatar
-                    src={url}
+                    src={url ? url : avatarDefault}
                     alt=""
                     size={{ xs: 24, sm: 32, md: 40, lg: 54, xl: 60, xxl: 80 }}
                 />
@@ -100,10 +100,16 @@ const TeacherManagement = () => {
 
 
     useEffect(() => {
+        getListLecturer()
+    }, [termState]);
+
+    const getListLecturer = () => {
         if (termState.termIndex.id) {
             lecturerService
                 .getWithTerm(termState.termIndex.id)
                 .then((response) => {
+                    console.log("response setLecturer", response);
+
                     const _data = response.data.map(
                         (value: Teacher, index: number) => {
                             return { ...value, key: index };
@@ -114,9 +120,7 @@ const TeacherManagement = () => {
 
                 });
         }
-    }, [termState]);
-
-
+    }
 
     const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
 
@@ -139,6 +143,7 @@ const TeacherManagement = () => {
             .then((result) => {
                 setFileList([]);
                 showMessage("Tải file thành công", 3000)
+                getListLecturer()
             })
             .catch((error) => {
                 setFileList([]);
@@ -248,10 +253,11 @@ const TeacherManagement = () => {
         }).then((result) => {
 
             setOpen(false);
+            getListLecturer()
             showMessage("Đã thêm Giảng Viên", 5000);
-            window.location.reload();
+            console.log("result add ", result);
+            // window.location.reload();
         }).catch((er) => {
-
             setOpen(false);
             showMessageEror(er.response.data.error, 5000);
         })
@@ -284,6 +290,12 @@ const TeacherManagement = () => {
             return data;
         });
     };
+
+    const renderTableLecturer = useMemo(() => {
+        return (
+            <Table dataSource={lecturer} columns={baseColumns} scroll={{ y: 570 }} />
+        )
+    }, [lecturer, baseColumns])
 
     return (
         <div className={cls("teacher_management")}>
@@ -341,13 +353,14 @@ const TeacherManagement = () => {
 
 
 
-                <ColumnSetting
+                {/* <ColumnSetting
                     setColumnVisible={setColumnVisible}
                     columns={baseColumns}
                     cacheKey={Config.TEACHER_CACHE_KEY}
-                />
+                /> */}
             </div>
-            <Table dataSource={lecturer} columns={columnVisible} />
+
+            {renderTableLecturer}
 
             <div className={cls('modal')}>
                 <Modal
@@ -361,7 +374,7 @@ const TeacherManagement = () => {
                             Hủy
                         </Button>,
                     ]}
-                    width={'50%'}
+
                 >
                     <Form
                         labelCol={{ span: 6 }}
@@ -433,14 +446,11 @@ const TeacherManagement = () => {
                                                     { value: 'DOCTER', label: 'Thạc sĩ' },
                                                 ]}
                                             />
-
                                         </Form.Item>
-
-
 
                                         <Form.Item wrapperCol={{ span: 24 }}>
                                             <Row>
-                                                <Col span={24} offset={20}>
+                                                <Col span={24} offset={19}>
                                                     <Button type="primary" htmlType="submit">
                                                         Cập nhật
                                                     </Button>

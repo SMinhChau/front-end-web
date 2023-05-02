@@ -108,6 +108,8 @@ const GroupEvaluation = () => {
     const param: any = useParams()
     const termState = useAppSelector((state) => state.term);
 
+    const [sumAvg,]
+
     useEffect(() => {
         groupService
             .getGroupById(param.id)
@@ -122,7 +124,6 @@ const GroupEvaluation = () => {
 
 
     const getTranscriptsSummaryBhyStudentId = (_id: number) => {
-
         studentService.getTranscriptsSummary(
             _id,
             termState.termIndex.id

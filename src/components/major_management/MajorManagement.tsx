@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Select } from "antd";
+import { Table, Button, Modal, Form, Input, Select, Row, Col } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import classNames from "classnames/bind";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import style from "./MajorManagement.module.scss";
 import type { ColumnsType } from "antd/es/table";
 import headOfLecturerService from "~/services/lecturer";
 import majorService from "~/services/major";
+import { showMessage, showMessageEror } from "~/constant";
 
 const cls = classNames.bind(style);
 
@@ -35,22 +36,24 @@ const MajorManagement = () => {
       key: "headName",
     },
     {
-      title: "",
+      title: "Xóa",
       dataIndex: "id",
       render: (id: any) => (
         <Button onClick={() => deleteMajor(id)}>
           <DeleteOutlined style={{ color: "red" }} />
         </Button>
       ),
+      width: 200,
     },
     {
-      title: "",
+      title: "Sửa",
       dataIndex: "id",
       render: (id: any) => (
         <Button onClick={() => showEditModal(id)}>
           <EditOutlined style={{ color: "#30a3f1" }} />
         </Button>
       ),
+      width: 200,
     },
   ];
 
@@ -78,6 +81,10 @@ const MajorManagement = () => {
   }, []);
 
   useEffect(() => {
+    getListOfMajor()
+  }, []);
+
+  const getListOfMajor = () => {
     majorService.getMajor().then((result) => {
       setMajor(
         result.data.map((value: any) => {
@@ -91,7 +98,7 @@ const MajorManagement = () => {
         })
       );
     });
-  }, []);
+  }
 
   const showModal = () => {
     setOpen(true);
@@ -110,18 +117,12 @@ const MajorManagement = () => {
     majorService
       .deleteMajor(id)
       .then(() => {
-        window.location.reload();
+        showMessage("Đã xóa", 3000)
+        getListOfMajor()
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 3000)
+
       });
   };
 
@@ -140,35 +141,21 @@ const MajorManagement = () => {
       majorService
         .createMajor(value)
         .then(() => {
-          window.location.reload();
+          showMessage("Thêm thành công", 3000)
+          getListOfMajor()
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 3000)
         });
     else {
       majorService
         .updateMajor(updateId as number, value)
         .then(() => {
-          window.location.reload();
+          showMessage("Cập nhật thành công", 3000)
+          getListOfMajor()
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 3000)
         });
     }
   };
@@ -243,7 +230,7 @@ const MajorManagement = () => {
 
             <Form.Item label=" ">
               <Button type="primary" htmlType="submit">
-                Lưu
+                Tạo
               </Button>
             </Form.Item>
           </Form>

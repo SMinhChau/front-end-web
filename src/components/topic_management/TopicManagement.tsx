@@ -1,18 +1,19 @@
-import { useState, useEffect } from "react";
-import classNames from "classnames/bind";
-import style from "./TopicManagement.module.scss";
-import Term from "~/entities/term";
-import termService from "~/services/term";
-import { useAppSelector } from "~/redux/hooks";
-import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col } from "antd";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import topicService from "~/services/topic";
-import Topic from "~/entities/topic";
-import { default as base_column } from "./column";
-import { toast, ToastContainer } from "react-toastify";
-import Config from "~/utils/config";
-import ColumnSetting from "../column_setting/ColumnSetting";
-import TextArea from "antd/es/input/TextArea";
+import { useState, useEffect } from 'react';
+import classNames from 'classnames/bind';
+import style from './TopicManagement.module.scss';
+import Term from '~/entities/term';
+import termService from '~/services/term';
+import { useAppSelector } from '~/redux/hooks';
+import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col } from 'antd';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import topicService from '~/services/topic';
+import Topic from '~/entities/topic';
+import { default as base_column } from './column';
+import { toast, ToastContainer } from 'react-toastify';
+import Config from '~/utils/config';
+import ColumnSetting from '../column_setting/ColumnSetting';
+import TextArea from 'antd/es/input/TextArea';
+import { showMessage, showMessageEror } from '~/constant';
 
 const cls = classNames.bind(style);
 
@@ -26,7 +27,7 @@ const TopicManagement = () => {
   const [topic, setTopic] = useState<Array<TopicData>>([]);
   const [open, setOpen] = useState(false);
 
-  const [status, setStatus] = useState("insert");
+  const [status, setStatus] = useState('insert');
   const [initData, setInitData] = useState({});
   const [idUpdate, setIdUpdate] = useState<number | null>(null);
   const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
@@ -35,17 +36,17 @@ const TopicManagement = () => {
   const baseColumns = [
     ...base_column,
     {
-      title: "Trạng thái",
-      dataIndex: "status",
+      title: 'Trạng thái',
+      dataIndex: 'status',
       render: (status: any) => (
         <span
           style={{
-            padding: "5px 10px",
-            color: "#fff",
-            backgroundColor: status === "PEDING" ? "#29CC57" : "#FEC400",
-            fontSize: "11px",
-            borderRadius: "100px",
-            fontWeight: "600",
+            padding: '5px 10px',
+            color: '#fff',
+            backgroundColor: status === 'PEDING' ? '#29CC57' : '#FEC400',
+            fontSize: '11px',
+            borderRadius: '100px',
+            fontWeight: '600',
           }}
         >
           {status}
@@ -53,27 +54,28 @@ const TopicManagement = () => {
       ),
     },
     {
-      title: "",
-      dataIndex: "id",
+      title: '',
+      dataIndex: 'id',
       render: (id: any) => (
         <Button onClick={() => deleteTerm(id)}>
-          <DeleteOutlined style={{ color: "red" }} />
+          <DeleteOutlined style={{ color: 'red' }} />
         </Button>
       ),
     },
     {
-      title: "",
-      dataIndex: "id",
+      title: '',
+      dataIndex: 'id',
       render: (id: any) => {
-        console.log("id", id);
 
-        return (<Button onClick={() => showEditModal(id)}>
-          <EditOutlined style={{ color: "#30a3f1" }} />
-        </Button>)
+
+        return (
+          <Button onClick={() => showEditModal(id)}>
+            <EditOutlined style={{ color: '#30a3f1' }} />
+          </Button>
+        );
       },
     },
   ];
-
 
   const getTopic = (termId: number) => {
     topicService
@@ -88,7 +90,7 @@ const TopicManagement = () => {
               ...value,
               key: value.id,
             };
-          })
+          }),
         );
       })
       .catch((error) => {
@@ -104,26 +106,26 @@ const TopicManagement = () => {
     if (termState.termIndex.id) {
       getTopic(termState.termIndex.id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [termState]);
 
   const showModal = () => {
     setOpen(true);
-    setStatus("insert");
+    setStatus('insert');
   };
   const handleCancel = () => {
     setOpen(false);
   };
   const onFinish = (value: any) => {
-
-    if (status === "insert")
+    if (status === 'insert')
       topicService
         .createTopic({
           ...value,
-          termId: termState.termIndex.id
+          termId: termState.termIndex.id,
         })
         .then((_response) => {
-          window.location.reload();
+          showMessage('Tạo thành công', 5000);
+          getTopic(termState.termIndex.id)
+
         })
         .catch((error) => {
           console.log(error);
@@ -132,86 +134,62 @@ const TopicManagement = () => {
       topicService
         .updateTopic(idUpdate as number, {
           ...value,
-          termId: termState.termIndex.id
+          termId: termState.termIndex.id,
         })
         .then((_response) => {
-          window.location.reload();
+          showMessage('Cập nhật thành công', 5000);
+          getTopic(termState.termIndex.id)
         })
         .catch((error) => {
-          toast.info(error.response.data.error, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessageEror(error.response.data.error, 5000);
         });
   };
-
 
   const deleteTerm = (id: number) => {
     topicService
       .deleteTopic(id)
       .then(() => {
-        window.location.reload();
+        showMessage('Đã xóa', 5000);
+        getTopic(termState.termIndex.id)
       })
       .catch((error) => {
-        toast.info(error.response.data.error, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        showMessageEror(error.response.data.error, 5000);
       });
   };
   const showEditModal = (id: number) => {
     setOpen(true);
-    setStatus("update");
+    setStatus('update');
     setIdUpdate(id);
-    // if (topic.length === 0) {
-    //   getTopic(termState.termIndex.id)
-    // }
     const t = topic.filter((value) => value.id === id)[0];
-    console.log("topic", topic);
-    console.log("t", t);
-
     setInitData(t);
   };
 
   return (
-    <div className={cls("topic_management")}>
+    <div className={cls('topic_management')}>
       <ToastContainer />
-
-      <div className={cls("semester_func")}>
-        <div className={cls("selectTerm")}>
-
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+      <div className={cls('semester_func')}>
+        <div className={cls('selectTerm')}></div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
             type="dashed"
             icon={<PlusOutlined />}
             size="large"
             style={{
-              marginBottom: "10px",
-              animation: "none",
-              color: "rgb(80, 72, 229)",
-              fontWeight: "600",
+              marginBottom: '10px',
+              animation: 'none',
+              color: 'rgb(80, 72, 229)',
+              fontWeight: '600',
             }}
             onClick={showModal}
           >
             Tạo
           </Button>
-          <ColumnSetting
+          {/* <ColumnSetting
             setColumnVisible={setColumnVisible}
             columns={baseColumns}
             cacheKey={Config.TOPIC_CACHE_KEY}
             style={{ marginLeft: 20 }}
-          />
+          /> */}
         </div>
 
         <Modal
@@ -224,7 +202,6 @@ const TopicManagement = () => {
               Hủy
             </Button>,
           ]}
-
         >
           <Form
             labelCol={{ span: 6 }}
@@ -235,76 +212,50 @@ const TopicManagement = () => {
             style={{ maxWidth: 600 }}
             initialValues={initData}
           >
-
             <Row justify={'space-between'} style={{ width: '100%' }}>
               <Col span={24}>
-                <Form.Item label="Tên" rules={[{ required: true, message: "Vui lòng nhập tên" }]} name="name">
+                <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   label="Số lượng"
-                  rules={[{ required: true, message: "Vui lòng nhập số lượng sinh viên " }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập số lượng sinh viên ' }]}
                   name="quantityGroupMax"
                 >
-                  <InputNumber min={1} max={10}
-                  />
+                  <InputNumber min={1} max={10} />
                 </Form.Item>
-                <Form.Item
-                  label="Mô tả"
-                  rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
-                  name="description"
-                >
+                <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
                   <TextArea rows={2} />
                 </Form.Item>
-                <Form.Item label="Ghi chú" rules={[{ required: true, message: "Vui lòng nhập ghi chú" }]} name="note">
+                <Form.Item label="Ghi chú" rules={[{ required: true, message: 'Vui lòng nhập ghi chú' }]} name="note">
                   <TextArea rows={2} />
                 </Form.Item>
 
-                <Form.Item
-                  label="Mục tiêu"
-                  rules={[{ required: true, message: "Vui lòng nhập mục tiêu" }]}
-                  name="target"
-                >
+                <Form.Item label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu' }]} name="target">
                   <TextArea rows={2} />
                 </Form.Item>
 
-                <Form.Item
-                  label="Chuẩn đầu ra"
-                  rules={[{ required: true, message: "Vui lòng nhập chuẩn đầu ra" }]}
-                  name="standradOutput"
-                >
+                <Form.Item label="Chuẩn đầu ra" rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu ra' }]} name="standradOutput">
                   <TextArea rows={2} />
                 </Form.Item>
 
-                <Form.Item
-                  label="Yêu cầu đầu vào"
-                  rules={[{ required: true, message: "Vui lòng nhập chuẩn đầu vào" }]}
-                  name="requireInput"
-                >
+                <Form.Item label="Yêu cầu đầu vào" rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu vào' }]} name="requireInput">
                   <TextArea rows={2} />
                 </Form.Item>
-
-                {/* <Form.Item
-              label="Bình luận "
-              rules={[{ required: true }]}
-              name="comment"
-            >
-              <Input />
-            </Form.Item> */}
-
-                <Form.Item label=" ">
-                  <Button type="primary" htmlType="submit">
-                    Tạo
-                  </Button>
-                </Form.Item>
+                <Row justify={'end'}>
+                  <Form.Item label=" ">
+                    <Button type="primary" htmlType="submit">
+                      Tạo
+                    </Button>
+                  </Form.Item>
+                </Row>
               </Col>
             </Row>
-
           </Form>
         </Modal>
       </div>
-      <Table columns={columnVisible} dataSource={topic} />
+      <Table columns={baseColumns} dataSource={topic} />
     </div>
   );
 };
