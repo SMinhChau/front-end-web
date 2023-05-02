@@ -16,11 +16,10 @@ import {
     Col,
     Image,
     Descriptions,
-    Dropdown,
     Space,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { DeleteOutlined, PlusOutlined, UploadOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, EditOutlined } from '@ant-design/icons';
 import studentService from '~/services/student';
 import Student from '~/entities/student';
 import { ToastContainer, toast } from 'react-toastify';
@@ -30,6 +29,7 @@ import Config from '~/utils/config';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import { checkGender, checkTypeTraining, showMessage, showMessageEror } from '~/constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
+import avatarDefault from "~/assets/avatars/avatarDefault.png";
 
 const cls = classNames.bind(style);
 
@@ -43,7 +43,7 @@ const StudentManagement = () => {
             title: '',
             dataIndex: 'avatar',
             key: 'avatar',
-            render: (url) => <Avatar src={url} alt="" size={{ xs: 24, sm: 32, md: 40, lg: 54, xl: 60, xxl: 80 }} />,
+            render: (url) => <Avatar src={url ? url : avatarDefault} alt="" size={{ xs: 24, sm: 32, md: 40, lg: 54, xl: 60, xxl: 80 }} />,
         },
 
         {
@@ -116,6 +116,7 @@ const StudentManagement = () => {
             .then(() => {
                 setFileList([]);
                 showMessage('Tải file thành công', 3000);
+                getListOfStudent()
             })
             .catch((error) => {
                 setFileList([]);
@@ -129,6 +130,11 @@ const StudentManagement = () => {
     };
 
     useEffect(() => {
+        getListOfStudent()
+    }, []);
+
+
+    const getListOfStudent = () => {
         studentService
             .getStudent({})
             .then((result) => {
@@ -141,7 +147,7 @@ const StudentManagement = () => {
             .catch((error) => {
                 showMessageEror(error.response.data.error, 5000);
             });
-    }, []);
+    }
 
     const props: UploadProps = {
         onRemove: (file) => {
@@ -217,7 +223,7 @@ const StudentManagement = () => {
 
             setOpen(false);
             showMessage("Đã thêm Sinh Viên", 5000);
-            window.location.reload();
+            getListOfStudent()
         }).catch((er) => {
 
             setOpen(false);
@@ -291,14 +297,14 @@ const StudentManagement = () => {
                     </Col>
                     <Col>
 
-                        {viewType === 'table' && (
+                        {/* {viewType === 'table' && (
                             <ColumnSetting
                                 setColumnVisible={setColumnVisible}
                                 columns={baseColumns}
                                 cacheKey={Config.STUDENT_CACHE_KEY}
                                 style={{ marginLeft: 20 }}
                             />
-                        )}
+                        )} */}
                     </Col>
                 </Row>
 
@@ -310,7 +316,7 @@ const StudentManagement = () => {
                                 Hủy
                             </Button>,
                         ]}
-                        width={'50%'}>
+                    >
                         <Form
                             labelCol={{ span: 6 }}
                             wrapperCol={{ span: 18 }}
@@ -378,7 +384,7 @@ const StudentManagement = () => {
                                                 <Input />
                                             </Form.Item>
 
-                                            <Form.Item name="degree" label="Loại đào tạo" rules={[{ required: true, message: 'Vui lòng chọn loại đào tạo' }]}>
+                                            <Form.Item name="typeTraining" label="Loại đào tạo" rules={[{ required: true, message: 'Vui lòng chọn loại đào tạo' }]}>
                                                 <Select
                                                     style={{ width: 120 }}
                                                     onChange={handleChangeSelectedOption}
@@ -392,7 +398,7 @@ const StudentManagement = () => {
 
                                             <Form.Item wrapperCol={{ span: 24 }}>
                                                 <Row>
-                                                    <Col span={24} offset={20}>
+                                                    <Col span={24} offset={19}>
                                                         <Button type="primary" htmlType="submit">
                                                             Cập nhật
                                                         </Button>
@@ -409,7 +415,7 @@ const StudentManagement = () => {
                 </div>
             </div>
             {viewType === 'table' ? (
-                <Table dataSource={student} columns={columnVisible} scroll={{ y: 600 }} />
+                <Table dataSource={student} columns={baseColumns} scroll={{ y: 600 }} />
             ) : (
                 <div className={cls('card_view')}>
                     <Row>
@@ -437,16 +443,7 @@ const StudentManagement = () => {
                                     <Card className={cls('card_item')} key={value.id}>
                                         <div className={cls('card_body')}>
                                             <div className={cls('card_top')}>
-                                                <Image width={160} style={{ resize: 'block' }} src={value.avatar} />
-
-                                                {/* <div className={cls('card_func')}>
-                                                    <Button>
-                                                        <DeleteOutlined style={{ color: 'red' }} />
-                                                    </Button>
-                                                    <Button>
-                                                        <EditOutlined style={{ color: '#30a3f1' }} />
-                                                    </Button>
-                                                </div> */}
+                                                <Image width={150} style={{ resize: 'block' }} src={value.avatar ? value.avatar : avatarDefault} />
                                             </div>
 
                                             <div className={cls('content')}>

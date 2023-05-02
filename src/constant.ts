@@ -55,3 +55,8 @@ export const checkString = (str: string) => {
   var regex = /^[a-zA-Z0-9]*$/;
   return regex.test(str);
 };
+
+export const checkPoint = (str: string) => {
+  const regex = /^([0-9](\.[0-9])?|10(\.0)?)|0\.5$/;
+  return regex.test(str);
+};

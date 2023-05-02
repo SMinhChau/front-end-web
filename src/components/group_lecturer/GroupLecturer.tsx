@@ -34,7 +34,7 @@ import {
 import lecturerService from "~/services/lecturer";
 import Teacher from "~/entities/teacher";
 import Meta from "antd/es/card/Meta";
-import { TypeEvaluation, showMessageEror } from "~/constant";
+import { TypeEvaluation, showMessage, showMessageEror } from "~/constant";
 import { Link } from "react-router-dom";
 
 const cls = classNames.bind(style);
@@ -96,23 +96,7 @@ const GroupLecturer = () => {
 
 
   useEffect(() => {
-
-
-    if (termState.term.length > 0) {
-      lecturerService
-        .getAllGroupLecturers({ termId: termState.termIndex.id })
-        .then((response) => {
-          const _data = response.data.map(
-            (value: GroupLecturer, index: number) => {
-              return { ...value, key: index };
-            }
-          );
-          console.log("gorup lectuirer _data -> ", _data);
-          setLoadingListGroup(false)
-          setGroupLecturers(_data);
-
-        });
-    }
+    getGroupLecturer()
   }, [termState]);
 
   useEffect(() => {
@@ -125,17 +109,33 @@ const GroupLecturer = () => {
     }
   }, [termState]);
 
+  const getGroupLecturer = () => {
+    if (termState.term.length > 0) {
+      lecturerService
+        .getAllGroupLecturers({ termId: termState.termIndex.id })
+        .then((response) => {
+          const _data = response.data.map(
+            (value: GroupLecturer, index: number) => {
+              return { ...value, key: index };
+            }
+          );
+          setLoadingListGroup(false)
+          setGroupLecturers(_data);
 
+        });
+    }
+  }
 
 
   const deleteGroupLecturer = (id: number) => {
     lecturerService
       .deleteGroupLecturer(id)
       .then(() => {
-        window.location.reload();
+        showMessage('Xóa thành công', 3000)
+        getGroupLecturer()
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 5000)
+        showMessageEror(error.response.data.error, 3000)
       });
   };
 
@@ -214,7 +214,6 @@ const GroupLecturer = () => {
       title: "",
       dataIndex: "id",
       render: (id: any) => (
-
         <Button onClick={() => setInfoGroupLecturer(id)}>
           <MoreOutlined style={{ color: "#30a3f1" }} />
         </Button>
@@ -286,10 +285,13 @@ const GroupLecturer = () => {
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
-          window.location.reload();
+          showMessage('Tạo thành công', 5000)
+          getGroupLecturer()
+          setOpen(false);
         })
         .catch((error) => {
           showMessageEror(error.response.data.error, 5000)
+          setOpen(false);
         });
     else {
       lecturerService
@@ -299,10 +301,14 @@ const GroupLecturer = () => {
           lecturerIds: `[${value.lecturerIds}]`,
         })
         .then((result) => {
-          window.location.reload();
+          showMessage('Cập nhật thành công', 2000)
+          getGroupLecturer()
+          setOpen(false);
+          // window.location.reload();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 5000)
+          showMessageEror(error.response.data.error, 2000)
+          setOpen(false);
         });
     }
   };
@@ -349,6 +355,11 @@ const GroupLecturer = () => {
     )
   }, [groupStudents, groupDes])
 
+  const renderTable = useMemo(() => {
+    return (
+      <Table dataSource={groupLecturers} columns={columns} scroll={{ x: 400 }} />
+    )
+  }, [groupLecturers, columns, lecturer])
 
   return (
     <div className={cls("group_lecturer_management")}>
@@ -375,7 +386,7 @@ const GroupLecturer = () => {
                 </Button>
               </div>
 
-              <Table dataSource={groupLecturers} columns={columns} />
+              {renderTable}
             </div>
           </Skeleton>
         </Col>
@@ -424,6 +435,7 @@ const GroupLecturer = () => {
                       };
                     })}
                     columns={columnsLecturer}
+                    scroll={{ x: 400 }}
                   />
                 </Skeleton>
               </div>

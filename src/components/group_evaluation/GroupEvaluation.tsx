@@ -12,6 +12,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Student from '~/pages/student/Student';
 import { showMessage, showMessageEror } from '~/constant';
 import studentService from '~/services/student';
+import TranscriptSumMary from '~/entities/transcript';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
@@ -73,7 +74,7 @@ interface GroupLecturerTable extends GroupLecturer {
 }
 
 interface ListAvg {
-    grade: number
+    grade: number;
 }
 const GroupEvaluation = () => {
     const [grades, setGrades] = useState<Array<Grade>>([]);
@@ -92,6 +93,8 @@ const GroupEvaluation = () => {
 
     const [listAvgGrader, setListAvgGrader] = useState<Array<ListAvg>>([]);
     const [avgGrader, setAvgGrader] = useState(0);
+    const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
+    const [avgSummary, setAvgSummary] = useState<number | null>(null);
 
     useEffect(() => {
         groupService
@@ -109,18 +112,30 @@ const GroupEvaluation = () => {
         studentService
             .getTranscriptsSummary(_id, termState.termIndex.id)
             .then((result) => {
-
+                console.log('getTranscriptsSummary -> result', result.data);
+                setTranscriptsSummary(result.data);
             })
             .catch((er) => console.log('er', er));
     };
 
     useEffect(() => {
+        switch (searchParams.get('type')) {
+            case 'ADVISOR':
+                return setAvgSummary(Number(transcriptsSummary?.ADVISOR.avgGrader))
+            case 'REVIEWER':
+                return setAvgSummary(Number(transcriptsSummary?.REVIEWER.avgGrader))
+            case 'SESSION_HOST':
+                return setAvgSummary(Number(transcriptsSummary?.SESSION_HOST.avgGrader))
+        }
+    }, [transcriptsSummary, listAvgGrader])
+
+    useEffect(() => {
         let sum = 0;
-        listAvgGrader.forEach(i => {
+        listAvgGrader.forEach((i) => {
             sum += i.grade;
-            setAvgGrader(sum)
-        })
-    }, [listAvgGrader])
+            setAvgGrader(sum);
+        });
+    }, [listAvgGrader]);
 
 
 
@@ -130,8 +145,7 @@ const GroupEvaluation = () => {
         setLoadingTranscript(true);
         setGrades([]);
         setStudentIdSelect(id);
-
-
+        getTranscriptsSummaryBhyStudentId(id);
         transcriptService
             .getTranscripts(param.id, userState?.id, id, searchParams.get('type')!)
             .then((result) => {
@@ -147,14 +161,13 @@ const GroupEvaluation = () => {
                 );
                 setListAvgGrader(
                     result?.data.map((i: any) => {
-                        return (
-                            { grade: i.grade }
-                        )
-                    })
-                )
+                        return { grade: i.grade };
+                    }),
+                );
 
                 const member = group?.members.find((e) => e.student.id == id);
                 setStudentTranscript(member?.student);
+
                 setLoadingTranscript(false);
             })
 
@@ -167,14 +180,12 @@ const GroupEvaluation = () => {
         return grades.find((e: Grade) => e?.idEvaluation === id);
     };
 
-
     const handlerChangeGrade = (id: number, grade: number) => {
         grades.find((e: Grade) => {
             if (e.idEvaluation === id) {
                 e.grade = grade;
             }
         });
-
     };
     const getEvalutionName = () => {
         switch (searchParams.get('type')) {
@@ -186,6 +197,7 @@ const GroupEvaluation = () => {
                 return 'Hội đồng';
         }
     };
+
     const handlerSubmitTranscript = () => {
         if (grades.length == 0 || !studentIdSelect) {
             return;
@@ -202,15 +214,14 @@ const GroupEvaluation = () => {
         transcriptService
             .postTranscripts(data)
             .then((result) => {
+                getTranscriptsSummaryBhyStudentId(studentIdSelect)
                 showMessage('Chấm điểm thành công', 3000);
                 setLoadingTranscript(false);
                 setListAvgGrader(
                     result?.data.map((i: any) => {
-                        return (
-                            { grade: i.grade }
-                        )
-                    })
-                )
+                        return { grade: i.grade };
+                    }),
+                );
             })
             .catch((error) => {
                 showMessageEror(JSON.stringify(error.response.data.error) || 'Chấm điểm thất bại', 5000);
@@ -277,15 +288,36 @@ const GroupEvaluation = () => {
         },
     ];
 
-
     const getPointAvg = useMemo(() => {
-
         return (
             <Text mark strong type="danger" className={cls('title_point_avg')}>
                 {avgGrader}
             </Text>
-        )
-    }, [avgGrader,])
+        );
+    }, [avgGrader]);
+
+    const renderAvgSumTranscript = useMemo(() => {
+        return (
+            <>
+                {avgGrader !== null ?
+                    <>
+                        <Col style={{ marginRight: '10px' }}>
+                            <Text strong type="danger" className={cls('title_point')} >
+                                Điểm trung bình:
+                            </Text>
+                        </Col>
+                        <Col>
+                            <Text strong type="danger" className={cls('title_point')}>
+                                {avgSummary}
+                            </Text>
+                        </Col></> : null
+                }
+            </>
+        );
+    }, [avgSummary, transcriptsSummary, listAvgGrader]);
+
+
+
 
     return (
         <div className={cls('group_evaluation')}>
@@ -340,28 +372,38 @@ const GroupEvaluation = () => {
                             <Table dataSource={transcripts} columns={columns} pagination={false} />
                         </div>
 
-                        {studentIdSelect && <Row
-                            justify={'start'}
-                            style={{
-                                marginTop: '20px',
-                            }}
-                        >
-                            <Col span={7} offset={11} >
+                        {studentIdSelect && (
+                            <>
+                                <Row
+                                    justify={'start'}
+                                    style={{
+                                        marginTop: '20px',
+                                    }}
+                                >
+                                    <Col span={7} offset={11}>
+                                        <Text mark strong type="danger" className={cls('title_point')}>
+                                            Tổng điểm:
+                                        </Text>
+                                    </Col>
+                                    <Col>{getPointAvg}</Col>
+                                </Row>
 
-                                <Text mark strong type="danger" className={cls('title_point')}>
-                                    Tổng điểm:
-                                </Text>
-                            </Col>
-                            <Col>
-                                {getPointAvg}
-                            </Col>
-                        </Row>}
+                                <div className={cls('submit-grade')}>
+                                    <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
+                                        <div className={cls('avg_content')}>
 
-                        <div className={cls('submit-grade')}>
-                            <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
-                                Chấm điểm
-                            </Button>
-                        </div>
+                                            {renderAvgSumTranscript}
+
+                                        </div>
+                                        <Col>
+                                            <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
+                                                Chấm điểm
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </>
+                        )}
                     </Spin>
                 </Col>
             </Row>

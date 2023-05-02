@@ -20,6 +20,7 @@ const SemesterManagement = () => {
             title: 'Tên',
             dataIndex: 'name',
             key: 'name',
+            width: 100,
         },
         {
             title: 'Bắt đầu',
@@ -131,6 +132,12 @@ const SemesterManagement = () => {
 
 
     useEffect(() => {
+        getListOfTerm()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
+
+
+    const getListOfTerm = () => {
         termService.getTerm({ majorsId: user.majors.id }).then((result) => {
             dispatch(setTermSlice(result.data));
             setTerms(
@@ -139,8 +146,7 @@ const SemesterManagement = () => {
                 }),
             );
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user]);
+    }
 
     const showModal = () => {
         setOpen(true);
@@ -179,12 +185,12 @@ const SemesterManagement = () => {
             dateReport: values.startDate.add(6, 'months').add(1, 'weeks').format('MM/DD/YYYY'),
         };
 
-        console.log('valuues 1', values);
         termService
             .createTerm({ ...values })
             .then(() => {
                 showMessage('Tạo học kỳ thành công', 3000);
-                window.location.reload();
+                setOpen(false);
+                getListOfTerm()
             })
             .catch((err) => {
                 console.log('err', err);
@@ -220,12 +226,14 @@ const SemesterManagement = () => {
         termService
             .update(idUpdate, { majorsId: user.majors.id, ...values })
             .then(() => {
-                showMessage('Cập nhật học kỳ thành công', 5000);
-                window.location.reload();
+                getListOfTerm()
+                showMessage('Cập nhật học kỳ thành công', 3000);
+                setModalUpdate(false);
+
             })
             .catch((err) => {
-                showMessageEror(err.response.data.error, 5000);
-
+                showMessageEror(err.response.data.error, 3000);
+                setModalUpdate(false);
             });
     };
 
@@ -233,11 +241,11 @@ const SemesterManagement = () => {
         termService
             .deleteTerm(id)
             .then(() => {
-                showMessage('Xóa thành công', 300);
-                window.location.reload();
+                showMessage('Xóa thành công', 3000);
+                getListOfTerm()
             })
             .catch((err) => {
-                showMessageEror(err.response.data.error, 5000);
+                showMessageEror(err.response.data.error, 3000);
             });
     };
 
@@ -436,7 +444,7 @@ const SemesterManagement = () => {
                     </div>
                 </Modal>
             </div>
-            <Table columns={columnVisible} dataSource={terms} style={{ backgroundColor: '#fff' }} />
+            <Table columns={baseColumns} dataSource={terms} style={{ backgroundColor: '#fff' }} scroll={{ x: 1300 }} />
 
             {renderModalUpdate}
         </div>

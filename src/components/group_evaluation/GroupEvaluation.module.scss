@@ -93,6 +93,16 @@
       margin: 40px;
       display: flex;
       justify-content: end;
+      .avg_content {
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(214, 255, 235);
+        border-radius: 5px;
+        border-color: '#fae1dd';
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+      }
     }
     .title_info_student {
     }
