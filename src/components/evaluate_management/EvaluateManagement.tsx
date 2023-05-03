@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import classNames from "classnames/bind";
-import style from "./EvaluateManagement.module.scss";
-import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
-import { useAppSelector } from "src/redux/hooks";
-import Evaluate from "src/entities/evaluate";
-import evaluateService from "src/services/evaluate";
-import Table, { ColumnsType } from "antd/es/table";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { ToastContainer } from "react-toastify";
-import { checkPoint, showMessage, showMessageEror } from "../../constant";
+import { useState, useEffect } from 'react';
+import classNames from 'classnames/bind';
+import style from './EvaluateManagement.module.scss';
+import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { useAppSelector } from 'src/redux/hooks';
+import Evaluate from 'src/entities/evaluate';
+import evaluateService from 'src/services/evaluate';
+import Table, { ColumnsType } from 'antd/es/table';
+import { DeleteOutlined, EditOutlined, ExportOutlined, PlusOutlined } from '@ant-design/icons';
+import { ToastContainer } from 'react-toastify';
+import { checkPoint, showMessage, showMessageEror } from '../../constant';
 
 interface EvaluateTableType extends Evaluate {
   key: number;
@@ -17,41 +17,36 @@ interface EvaluateTableType extends Evaluate {
 const cls = classNames.bind(style);
 
 const EvaluateManagement = () => {
-
-  const [type, setType] = useState<"ADVISOR" | "REVIEWER" | "SESSION_HOST">(
-    "ADVISOR"
-  );
+  const [type, setType] = useState<'ADVISOR' | 'REVIEWER' | 'SESSION_HOST'>('ADVISOR');
   const [evaluate, setEvaluate] = useState<Array<EvaluateTableType>>([]);
   const [open, setOpen] = useState(false);
   const termState = useAppSelector((state) => state.term);
-  const [status, setStatus] = useState("insert");
+  const [status, setStatus] = useState('insert');
   const [updateId, setUpdateId] = useState<number | null>(null);
-  const [initData, setInitData] = useState<
-    {
-      type: string,
-      termId: number,
-      name: string,
-      gradeMax: number,
-      description: string
-    }
-  >({
+  const [initData, setInitData] = useState<{
+    type: string;
+    termId: number;
+    name: string;
+    gradeMax: number;
+    description: string;
+  }>({
     type: '',
     termId: NaN,
     name: '',
     gradeMax: NaN,
-    description: ''
+    description: '',
   });
 
   const showModal = () => {
     setOpen(true);
-    setStatus("insert");
+    setStatus('insert');
   };
   const handleCancel = () => {
     setOpen(false);
   };
 
   useEffect(() => {
-    getListOfEvaluate()
+    getListOfEvaluate();
   }, [termState, type]);
 
   const getListOfEvaluate = () => {
@@ -68,29 +63,27 @@ const EvaluateManagement = () => {
           setEvaluate(_cp_data);
         });
     }
-  }
+  };
 
-  const handleTypeChange = (value: "ADVISOR" | "REVIEWER" | "SESSION_HOST") => {
+  const handleTypeChange = (value: 'ADVISOR' | 'REVIEWER' | 'SESSION_HOST') => {
     setType(value);
   };
 
-
-
   const baseColumns: ColumnsType<any> = [
     {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
+      title: 'Mô tả',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: "Điểm tối đa",
-      dataIndex: "gradeMax",
-      key: "gradeMax",
+      title: 'Điểm tối đa',
+      dataIndex: 'gradeMax',
+      key: 'gradeMax',
     },
     {
       title: 'Xóa',
@@ -106,9 +99,7 @@ const EvaluateManagement = () => {
       title: 'Sửa',
       dataIndex: 'id',
       render: (id: any) => (
-        <Button
-          onClick={() => showEditModal(id)}
-        >
+        <Button onClick={() => showEditModal(id)}>
           <EditOutlined style={{ color: '#30a3f1' }} />
         </Button>
       ),
@@ -118,7 +109,7 @@ const EvaluateManagement = () => {
   const showEditModal = (id: number) => {
     setUpdateId(id);
     setOpen(true);
-    setStatus("update");
+    setStatus('update');
     const m = evaluate.filter((value) => value.id === id)[0];
 
     setInitData((prev: any) => {
@@ -128,20 +119,19 @@ const EvaluateManagement = () => {
         termId: termState.termIndex.id,
         name: String(m.name),
         gradeMax: Number(m.gradeMax),
-        description: m.description
+        description: m.description,
       };
 
       return data;
     });
   };
 
-
   const deleteItem = (id: number) => {
     evaluateService
       .deleteTerm(id)
       .then(() => {
         showMessage('Xóa thành công', 3000);
-        getListOfEvaluate()
+        getListOfEvaluate();
       })
       .catch((err) => {
         showMessageEror(err.response.data.error, 3000);
@@ -158,17 +148,17 @@ const EvaluateManagement = () => {
           type,
           termId: termState.termIndex.id,
         };
-        evaluateService.insert(data).then((_response) => {
-          setOpen(false);
-          showMessage("Tạo thành công", 3000)
-          getListOfEvaluate()
-        }).catch(() => showMessageEror("Tạo thất bại! Vui lòng kiểm tra lại", 3000))
+        evaluateService
+          .insert(data)
+          .then((_response) => {
+            setOpen(false);
+            showMessage('Tạo thành công', 3000);
+            getListOfEvaluate();
+          })
+          .catch(() => showMessageEror('Tạo thất bại! Vui lòng kiểm tra lại', 3000));
+      } else {
+        showMessageEror('Vui lòng nhập điểm đúng định dạng', 2000);
       }
-      else {
-        showMessageEror("Vui lòng nhập điểm đúng định dạng", 2000)
-      }
-
-
     } else {
       if (inpuNumber === true) {
         evaluateService
@@ -178,31 +168,54 @@ const EvaluateManagement = () => {
             termId: termState.termIndex.id,
             name: value.name,
             gradeMax: Number(value.gradeMax),
-            description: value.description
+            description: value.description,
           })
           .then((result) => {
-            showMessage('Cập nhật thành công', 2000)
-            getListOfEvaluate()
+            showMessage('Cập nhật thành công', 2000);
+            getListOfEvaluate();
             setOpen(false);
           })
           .catch((error) => {
-            showMessageEror(error.response.data.error, 2000)
+            showMessageEror(error.response.data.error, 2000);
           });
       } else {
-        showMessageEror("Vui lòng nhập điểm đúng định dạng", 2000)
+        showMessageEror('Vui lòng nhập điểm đúng định dạng', 2000);
       }
-
     }
   };
 
+  const handleDownload = () => {
+    evaluateService
+      .exportFile(termState.termIndex.id, type)
+      .then((result) => {
+        console.log('result', result);
+
+        // const url = window.URL.createObjectURL(new Blob([result.data]));
+        let url = window.URL.createObjectURL(new Blob([result.data]));
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = 'dowload.pdf';
+        a.click();
+      })
+      .catch((er) => {
+        console.log('er ->', er);
+      });
+
+    // const url = 'https://example.com/myfile.pdf'; // replace with your file URL
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', 'myfile.pdf'); // set the filename for the downloaded file
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+  };
+
   return (
-    <div className={cls("avaluate")}>
+    <div className={cls('avaluate')}>
       <ToastContainer />
-      <div className={cls("function")}>
-        <Row justify="space-between" align="middle" style={
-          { width: '100%' }
-        }>
-          <Col >
+      <div className={cls('function')}>
+        <Row justify="space-between" align="middle" style={{ width: '100%' }}>
+          <Col>
             <div>
               <span>Loại: </span>
               <Select
@@ -210,24 +223,40 @@ const EvaluateManagement = () => {
                 style={{ width: 120 }}
                 onChange={handleTypeChange}
                 options={[
-                  { value: "ADVISOR", label: "Hướng Dẫn" },
-                  { value: "REVIEWER", label: "Phản biện" },
-                  { value: "SESSION_HOST", label: "Hội Đồng" },
+                  { value: 'ADVISOR', label: 'Hướng Dẫn' },
+                  { value: 'REVIEWER', label: 'Phản biện' },
+                  { value: 'SESSION_HOST', label: 'Hội Đồng' },
                 ]}
               />
             </div>
           </Col>
           <Col>
-            <div className={cls("content_button_upload")}>
+            <div className={cls('content_button_upload')}>
+              <Button
+                type="dashed"
+                icon={<ExportOutlined />}
+                size="large"
+                style={{
+                  animation: 'none',
+                  color: 'rgb(80, 72, 229)',
+                  fontWeight: '600',
+                }}
+                onClick={handleDownload}
+              >
+                Xuất phiếu chấm
+              </Button>
+            </div>
+          </Col>
+          <Col>
+            <div className={cls('content_button_upload')}>
               <Button
                 type="dashed"
                 icon={<PlusOutlined />}
                 size="large"
                 style={{
-
-                  animation: "none",
-                  color: "rgb(80, 72, 229)",
-                  fontWeight: "600",
+                  animation: 'none',
+                  color: 'rgb(80, 72, 229)',
+                  fontWeight: '600',
                 }}
                 onClick={showModal}
               >
@@ -235,7 +264,6 @@ const EvaluateManagement = () => {
               </Button>
             </div>
           </Col>
-
         </Row>
         <Modal
           destroyOnClose
@@ -253,28 +281,20 @@ const EvaluateManagement = () => {
             wrapperCol={{ span: 18 }}
             layout="horizontal"
             onFinish={onFinish}
-            initialValues={status === "insert" ? {} : initData}
+            initialValues={status === 'insert' ? {} : initData}
             size="middle"
           >
             <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Mô tả"
-              rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
-              name="description"
-            >
+            <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Điểm"
-              name="gradeMax"
-              rules={[{ required: true, message: 'Vui lòng nhập điểm' }]}
-            >
+            <Form.Item label="Điểm" name="gradeMax" rules={[{ required: true, message: 'Vui lòng nhập điểm' }]}>
               <Input type="number" />
             </Form.Item>
 
-            <Row justify={"end"}>
+            <Row justify={'end'}>
               <Form.Item label="">
                 <Button type="primary" htmlType="submit">
                   Tạo
@@ -284,7 +304,7 @@ const EvaluateManagement = () => {
           </Form>
         </Modal>
       </div>
-      <Table dataSource={evaluate} columns={baseColumns} />
+      <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} />
     </div>
   );
 };

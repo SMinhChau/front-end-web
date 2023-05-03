@@ -29,6 +29,12 @@ class EvaluateService {
       data: qs.stringify(data),
     });
   }
+  async exportFile(termId: number, type: string) {
+    return await axiosAuth({
+      url: `/lecturer/evaluations/pdf/download?termId=${termId}&type=${type}`,
+      method: 'get',
+    });
+  }
 }
 
 const evaluateService = new EvaluateService();

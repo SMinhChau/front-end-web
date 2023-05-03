@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Select, Row, Col } from "antd";
-import { ToastContainer, toast } from "react-toastify";
-import classNames from "classnames/bind";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import style from "./MajorManagement.module.scss";
-import type { ColumnsType } from "antd/es/table";
-import headOfLecturerService from "../../services/lecturer";
-import majorService from "../../services/major";
-import { showMessage, showMessageEror } from "../../constant";
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Modal, Form, Input, Select, Row, Col } from 'antd';
+import { ToastContainer, toast } from 'react-toastify';
+import classNames from 'classnames/bind';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import style from './MajorManagement.module.scss';
+import type { ColumnsType } from 'antd/es/table';
+import headOfLecturerService from '../../services/lecturer';
+import majorService from '../../services/major';
+import { showMessage, showMessageEror } from '../../constant';
 
 const cls = classNames.bind(style);
 
@@ -26,31 +26,31 @@ interface HeadLecturer {
 const MajorManagement = () => {
   const columns: ColumnsType<any> = [
     {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Chủ nhiệm ngành",
-      dataIndex: "headName",
-      key: "headName",
+      title: 'Chủ nhiệm ngành',
+      dataIndex: 'headName',
+      key: 'headName',
     },
     {
-      title: "Xóa",
-      dataIndex: "id",
+      title: 'Xóa',
+      dataIndex: 'id',
       render: (id: any) => (
         <Button onClick={() => deleteMajor(id)}>
-          <DeleteOutlined style={{ color: "red" }} />
+          <DeleteOutlined style={{ color: 'red' }} />
         </Button>
       ),
       width: 200,
     },
     {
-      title: "Sửa",
-      dataIndex: "id",
+      title: 'Sửa',
+      dataIndex: 'id',
       render: (id: any) => (
         <Button onClick={() => showEditModal(id)}>
-          <EditOutlined style={{ color: "#30a3f1" }} />
+          <EditOutlined style={{ color: '#30a3f1' }} />
         </Button>
       ),
       width: 200,
@@ -60,11 +60,11 @@ const MajorManagement = () => {
   const [headLecture, setHeadLecture] = useState<Array<HeadLecturer>>([]);
   const [major, setMajor] = useState<Array<Major>>([]);
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState("insert");
+  const [status, setStatus] = useState('insert');
   const [initData, setInitData] = useState<{
     name: string;
     headLecturerId: number | null;
-  }>({ name: "", headLecturerId: null });
+  }>({ name: '', headLecturerId: null });
   const [updateId, setUpdateId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -75,13 +75,13 @@ const MajorManagement = () => {
             value: value.id,
             label: value.name,
           };
-        })
+        }),
       );
     });
   }, []);
 
   useEffect(() => {
-    getListOfMajor()
+    getListOfMajor();
   }, []);
 
   const getListOfMajor = () => {
@@ -95,20 +95,20 @@ const MajorManagement = () => {
             headName: value.headLecturer?.name,
             headID: value.headLecturer?.id,
           };
-        })
+        }),
       );
     });
-  }
+  };
 
   const showModal = () => {
     setOpen(true);
-    setStatus("insert");
+    setStatus('insert');
   };
 
   const handleCancel = () => {
     setOpen(false);
     setInitData({
-      name: "",
+      name: '',
       headLecturerId: null,
     });
   };
@@ -117,19 +117,18 @@ const MajorManagement = () => {
     majorService
       .deleteMajor(id)
       .then(() => {
-        showMessage("Đã xóa", 3000)
-        getListOfMajor()
+        showMessage('Đã xóa', 3000);
+        getListOfMajor();
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 3000)
-
+        showMessageEror(error.response.data.error, 3000);
       });
   };
 
   const showEditModal = (id: number) => {
     setUpdateId(id);
     setOpen(true);
-    setStatus("update");
+    setStatus('update');
     const m = major.filter((value) => value.id === id)[0];
     setInitData((prev: any) => {
       return { ...prev, name: m.name, headLecturerId: m.headID };
@@ -137,43 +136,43 @@ const MajorManagement = () => {
   };
 
   const onFinish = (value: { name: string; headLecturerId: number }) => {
-    if (status === "insert")
+    if (status === 'insert')
       majorService
         .createMajor(value)
         .then(() => {
-          showMessage("Thêm thành công", 3000)
-          getListOfMajor()
+          showMessage('Thêm thành công', 3000);
+          getListOfMajor();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     else {
       majorService
         .updateMajor(updateId as number, value)
         .then(() => {
-          showMessage("Cập nhật thành công", 3000)
-          getListOfMajor()
+          showMessage('Cập nhật thành công', 3000);
+          getListOfMajor();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000)
+          showMessageEror(error.response.data.error, 3000);
         });
     }
   };
 
   return (
-    <div className={cls("major_management")}>
+    <div className={cls('major_management')}>
       <ToastContainer />
-      <div className={cls("major_func")}>
-        <h4 className={cls("major_title")}>Quản lý chuyên ngành</h4>
+      <div className={cls('major_func')}>
+        <h4 className={cls('major_title')}>Quản lý chuyên ngành</h4>
         <Button
           type="dashed"
           icon={<PlusOutlined />}
           size="large"
           style={{
-            marginBottom: "10px",
-            animation: "none",
-            color: "rgb(80, 72, 229)",
-            fontWeight: "600",
+            marginBottom: '10px',
+            animation: 'none',
+            color: 'rgb(80, 72, 229)',
+            fontWeight: '600',
           }}
           onClick={showModal}
         >
@@ -196,32 +195,20 @@ const MajorManagement = () => {
             layout="horizontal"
             onFinish={onFinish}
             style={{ maxWidth: 600 }}
-            initialValues={status === "insert" ? {} : initData}
+            initialValues={status === 'insert' ? {} : initData}
           >
-            <Form.Item
-              label="Tên chuyên ngành"
-              rules={[{ required: true }]}
-              name="name"
-            >
+            <Form.Item label="Tên chuyên ngành" rules={[{ required: true }]} name="name">
               <Input />
             </Form.Item>
-            {status === "update" && (
-              <Form.Item
-                label="Head Lecturer"
-                rules={[{ required: true }]}
-                name="headLecturerId"
-              >
+            {status === 'update' && (
+              <Form.Item label="Head Lecturer" rules={[{ required: true }]} name="headLecturerId">
                 <Select
                   showSearch
                   placeholder="Chọn"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "").includes(input)
-                  }
+                  filterOption={(input, option) => (option?.label ?? '').includes(input)}
                   filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                   }
                   options={headLecture}
                 />
@@ -236,7 +223,7 @@ const MajorManagement = () => {
           </Form>
         </Modal>
       </div>
-      <Table dataSource={major} columns={columns} />
+      <Table dataSource={major} columns={columns} scroll={{ y: 450 }} />
     </div>
   );
 };
