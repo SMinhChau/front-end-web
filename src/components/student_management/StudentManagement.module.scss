@@ -1,0 +1,59 @@
+.function {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+
+  h4 {
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.375;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    margin: 8px;
+  }
+
+  .upload_group_btn {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.card_view {
+  overflow-y: scroll;
+  height: 500px;
+
+  .card_item {
+    transition: transform 0.2s;
+    &:hover {
+      transform: scale(1.1);
+    }
+    background-color: transparent;
+  }
+  .card_body {
+    background-color: #fff;
+    padding: 20px 5px 20px 20px;
+    display: flex;
+    flex-direction: row;
+    .group_name {
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+    .card_top {
+      display: flex;
+      flex-direction: column;
+      .card_func {
+        margin-top: 10px;
+        button {
+          margin-right: 10px;
+        }
+      }
+    }
+    .content {
+      margin-left: 10px;
+      p {
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+    }
+  }
+}

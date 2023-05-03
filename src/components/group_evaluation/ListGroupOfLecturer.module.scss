@@ -1,0 +1,92 @@
+.list_evaluation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  .type_evalution {
+    background-color: white;
+    width: 98%;
+    text-align: center;
+    padding: 20px 0;
+    .btn_radio {
+      text-transform: uppercase;
+    }
+  }
+
+  .title_group {
+    width: 98%;
+    background-color: white;
+    text-align: center;
+    padding: 20px 0;
+    text-transform: uppercase;
+    color: gray;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .title_info {
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .scroll {
+    height: calc(100vh - 100px);
+    overflow-x: scroll;
+  }
+  .filter_term {
+    width: 98%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    padding: 20px;
+  }
+  .list_group {
+    width: 98%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: calc(100vh - 200px);
+    overflow-x: scroll;
+    // margin-right: 20px;
+    // margin-left: 20px;
+    .icon {
+      font-size: 50px;
+      color: rgb(13, 72, 139);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+    .icon_evaluation {
+      font-size: 1.3rem;
+      color: rgb(119, 113, 5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .group {
+      margin: 30px;
+      width: 45%;
+
+      .group_name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        .name_info {
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+      }
+      .group_more {
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        margin-top: 20px;
+        .evalaution_content {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

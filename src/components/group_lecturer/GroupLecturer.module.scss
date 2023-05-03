@@ -1,0 +1,83 @@
+.group_lecturer_management {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+
+  .group_content {
+    .function {
+      padding: 20px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .info_item_des {
+    margin-left: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    .title_info {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .name_group {
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .title_info_lecturer {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .des_item {
+      width: 100%;
+    }
+    .tearch_name {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  .info_group_student {
+    margin-top: 30px;
+    margin-left: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    .title_info {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .scroll {
+      height: calc(100vh - 600px);
+      overflow-x: scroll;
+    }
+    .item_group {
+      margin: 10px 14px;
+      width: 28%;
+
+      display: flex;
+      flex-direction: column;
+
+      .icon {
+        font-size: 50px;
+        color: rgb(13, 72, 139);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .group_more {
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        margin-top: 20px;
+      }
+    }
+  }
+}

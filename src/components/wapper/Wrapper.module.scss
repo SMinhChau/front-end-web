@@ -1,0 +1,19 @@
+@import '../../Variables.scss';
+
+.wrapper {
+  display: flex;
+  width: 100vw;
+}
+.menu_left {
+  width: 15%;
+  overflow-y: auto;
+}
+.menu_right {
+  width: 85%;
+
+  .content {
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: calc(100vh - $headerHeight);
+  }
+}
