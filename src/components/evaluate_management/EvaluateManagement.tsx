@@ -191,11 +191,15 @@ const EvaluateManagement = () => {
         console.log('result', result);
 
         // const url = window.URL.createObjectURL(new Blob([result.data]));
-        let url = window.URL.createObjectURL(new Blob([result.data]));
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = 'dowload.pdf';
-        a.click();
+
+        const url = window.URL.createObjectURL(new Blob([result.data], { type: 'application/pdf' }));
+        const link = document.createElement('a');
+        link.href = url;
+        const fileName = `${+new Date()}.pdf`; // whatever your file name .
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.remove(); // you need to remove that elelment which is created before.
       })
       .catch((er) => {
         console.log('er ->', er);
