@@ -33,6 +33,7 @@ class EvaluateService {
     return await axiosAuth({
       url: `/lecturer/evaluations/pdf/download?termId=${termId}&type=${type}`,
       method: 'get',
+      responseType: 'blob', // Important
     });
   }
 }

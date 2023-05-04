@@ -121,19 +121,28 @@ const GroupLecturer = () => {
       });
   };
 
-  const setInfoGroupLecturer = (id: number) => {
-    const m = groupLecturers.filter((value) => value.id === id)[0];
-    const termId = termState.termIndex.id;
-    setGroupDes(m);
-    setLoadingInfoGroup(false);
-    setGroupIdDelete(m?.id);
+  const getGroupStudentOfLecturer = (_id: number) => {
+    setLoading(true);
     lecturerService
-      .getGroupStudentOfLecturer(termId, Number(m?.id))
+      .getGroupStudentOfLecturer(termState.termIndex.id, _id)
       .then((result) => {
         setLoading(false);
         setGroupStudents(result?.data);
       })
-      .catch((er) => setLoading(false));
+      .catch((er) => {
+        console.log('er', er);
+        setLoading(false);
+        setGroupStudents([]);
+      });
+  };
+
+  const setInfoGroupLecturer = (id: number) => {
+    const m = groupLecturers.filter((value) => value.id === id)[0];
+
+    setGroupDes(m);
+    setLoadingInfoGroup(false);
+    setGroupIdDelete(m?.id);
+    getGroupStudentOfLecturer(Number(m?.id));
   };
 
   const showEditModal = (id: number) => {
@@ -304,11 +313,10 @@ const GroupLecturer = () => {
   };
 
   const renderGroupStudent = useMemo(() => {
-    const number = groupStudents?.length;
     return (
       <>
         <Skeleton loading={loading} avatar active>
-          {number > 0 ? (
+          {groupStudents?.length > 0 ? (
             <>
               <Card className={cls('scroll')}>
                 {groupStudents?.map((item, index) => {
@@ -343,7 +351,7 @@ const GroupLecturer = () => {
         </Skeleton>
       </>
     );
-  }, [groupStudents, groupDes, loading]);
+  }, [groupStudents, groupDes, loading, groupLecturers]);
 
   const renderTable = useMemo(() => {
     return <Table dataSource={groupLecturers} columns={columns} scroll={{ x: 400 }} />;
@@ -435,7 +443,7 @@ const GroupLecturer = () => {
       <Modal
         destroyOnClose
         open={open}
-        title="Tạo nhóm Giảng viên"
+        title={status === 'insert' ? 'Tạo nhóm Giảng viên' : 'Cập nhật nhóm Giảng viên'}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
@@ -451,11 +459,11 @@ const GroupLecturer = () => {
           initialValues={status === 'insert' ? {} : initData}
           style={{ maxWidth: 600 }}
         >
-          <Form.Item label="Tên nhóm" rules={[{ required: true }]} name="name">
+          <Form.Item label="Tên nhóm" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Giảng viên" rules={[{ required: true }]} name="lecturerIds">
+          <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]} name="lecturerIds">
             <Select mode="multiple" style={{ width: '100%' }} placeholder="Giảng viên" onChange={handleChange} optionLabelProp="label">
               {lecturer.map((value) => {
                 return (

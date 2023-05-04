@@ -21,7 +21,7 @@ class MajorService {
     });
   }
 
-  async updateMajor(majorId: number, data: { name: string; headLecturerId: number }) {
+  async updateMajor(majorId: number, data: { name: string }) {
     return await axiosAuth({
       url: '/lecturer/majors/' + majorId,
       method: 'put',
@@ -32,6 +32,14 @@ class MajorService {
     return await axiosAuth({
       url: '/lecturer/majors/' + majorId,
       method: 'get',
+    });
+  }
+
+  async updateRoleOfMajor(id: number, data: { role: string }) {
+    return await axiosAuth({
+      url: `/lecturer/lecturers/${id}/role`,
+      method: 'put',
+      data,
     });
   }
 }

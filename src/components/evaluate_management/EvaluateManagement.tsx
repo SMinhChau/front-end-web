@@ -189,29 +189,18 @@ const EvaluateManagement = () => {
       .exportFile(termState.termIndex.id, type)
       .then((result) => {
         console.log('result', result);
-
-        // const url = window.URL.createObjectURL(new Blob([result.data]));
-
         const url = window.URL.createObjectURL(new Blob([result.data], { type: 'application/pdf' }));
         const link = document.createElement('a');
         link.href = url;
-        const fileName = `${+new Date()}.pdf`; // whatever your file name .
+        const fileName = `${type}.pdf`;
         link.setAttribute('download', fileName);
         document.body.appendChild(link);
         link.click();
-        link.remove(); // you need to remove that elelment which is created before.
+        link.remove();
       })
       .catch((er) => {
         console.log('er ->', er);
       });
-
-    // const url = 'https://example.com/myfile.pdf'; // replace with your file URL
-    // const link = document.createElement('a');
-    // link.href = url;
-    // link.setAttribute('download', 'myfile.pdf'); // set the filename for the downloaded file
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
   };
 
   return (
