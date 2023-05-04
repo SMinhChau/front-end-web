@@ -118,6 +118,13 @@ class LecturerService {
       data: qs.stringify(data),
     });
   }
+
+  async getLecturerByMajor(majorsId: number, termId: number) {
+    return await axiosAuth({
+      url: `/lecturer/lecturers?majorsId=${majorsId}&termId=${termId}`,
+      method: 'get',
+    });
+  }
 }
 
 const lecturerService = new LecturerService();
