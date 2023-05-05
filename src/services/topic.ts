@@ -1,5 +1,5 @@
 import { axiosAuth } from '../utils/axiosConfig';
-
+import qs from 'qs';
 class TopicService {
   createTopic(data: any) {
     return axiosAuth({
@@ -10,9 +10,9 @@ class TopicService {
   }
   updateTopic(id: number, data: any) {
     return axiosAuth({
-      url: '/lecturer/topics/' + id + '/review',
+      url: '/lecturer/topics/' + id,
       method: 'put',
-      data,
+      data: qs.stringify(data),
     });
   }
   getTopic(query: { lecturerId?: number; termId: number }) {
@@ -32,6 +32,13 @@ class TopicService {
     return axiosAuth({
       url: '/lecturer/topics/' + id,
       method: 'delete',
+    });
+  }
+  updateTopicStatus(id: number, data: any) {
+    return axiosAuth({
+      url: '/lecturer/topics/' + id + '/review',
+      method: 'put',
+      data,
     });
   }
 }

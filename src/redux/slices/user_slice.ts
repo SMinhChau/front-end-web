@@ -13,6 +13,7 @@ interface StateType {
   error: boolean;
   is_login: boolean;
   update: boolean;
+  allow: boolean;
 }
 
 const initialState = {
@@ -34,13 +35,17 @@ const initialState = {
   functions: [] as any,
   is_login: tokenService.getRefreshToken() !== null,
   update: false,
+  allow: false,
 } as StateType;
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    //
+    setAllow: (state, action) => {
+      console.log('-> setAllow', action);
+      state.allow = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(authAPI.login().fulfilled, (state, action) => {
@@ -95,3 +100,5 @@ export const userSlice = createSlice({
     });
   },
 });
+
+export const { setAllow } = userSlice.actions;

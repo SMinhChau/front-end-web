@@ -5,13 +5,17 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import tokenService from '../../services/token';
 import { BiLogOutCircle } from 'react-icons/bi';
-import { Select, Typography } from 'antd';
+import { Col, Row, Select, Typography } from 'antd';
 import Term from '../../entities/term';
 import termService from '../../services/term';
 import { TermSlices, setTermIndex, setTermSlice } from '../../redux/slices/term_slice';
+import { setAllow } from 'src/redux/slices/user_slice';
+import { EnumRole } from 'src/enum';
+import Notification from '../notification/Notification';
+import RejectUserLogin from '../notification/RejectUserLogin';
 const cls = classNames.bind(style);
 
-const avatarDefault = '/assets/avatars/avatarDefault.png'
+const avatarDefault = '/assets/avatars/avatarDefault.png';
 
 const Management = () => {
   const { Text } = Typography;
@@ -27,14 +31,14 @@ const Management = () => {
   const [termSelect, setTermSelect] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   const termState = useAppSelector((state) => state.term);
+  const navigate = useNavigate();
 
   useEffect(() => {
     termService
       .getTerm({ majorsId: userState.user.majors.id })
       .then((response) => {
         setTerm(response.data);
-        dispatch(setTermSlice(response.data))
-
+        dispatch(setTermSlice(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -43,89 +47,126 @@ const Management = () => {
 
   useEffect(() => {
     if (termState.termSelected) {
-      const t = termState.term.filter((value) => value.id === termState.termSelected)[0]
-      dispatch(setTermIndex(t))
+      const t = termState.term.filter((value) => value.id === termState.termSelected)[0];
+      dispatch(setTermIndex(t));
     } else {
-      dispatch(setTermIndex(termState.term[0]))
+      termService
+        .getTermNow({ majorsId: userState.user.majors.id })
+        .then((result) => {
+          dispatch(setTermIndex(result.data.term));
+          dispatch(setAllow(result.data.allow));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-
-  }, [termState])
+  }, [termState.termSelected]);
 
   const onchangeValue = (value: any) => {
     setTermSelect(value);
-    dispatch(TermSlices.actions.setTermSelected(value))
-  }
+    dispatch(TermSlices.actions.setTermSelected(value));
+  };
 
   const router = useLocation();
-  console.log(router)
+  console.log(router);
 
   const renderTerm = useMemo(() => {
     return (
-      <>{
+      <>
         <div className={cls('filter_term')}>
-
-          <Text style={{ paddingBottom: '8px', textTransform: 'uppercase' }} type="secondary">Học kỳ</Text>
-          <Select
-            size={"large"}
-            style={{ width: '80%' }}
-            placeholder={termState?.termIndex?.name ? termState?.termIndex?.name : termState.term[0].name}
-            onChange={(value: any) =>
-              onchangeValue(value)
-            }
-            disabled={router.pathname !== '/term' ? true : false}
-            options={term.map((val) => {
-              return {
-                value: val.id,
-                label: val.name,
-              };
-            })}
-          />
+          {router.pathname !== '/term' ? (
+            <>
+              <Row justify={'start'} style={{ width: '80%' }} align={'middle'}>
+                <Col span={10}>
+                  <Text type="success" className={cls('name_term')}>
+                    Học kỳ:
+                  </Text>
+                </Col>
+                <Col span={14}>
+                  <Text type="success" className={cls('name_term')}>
+                    {termState?.termIndex?.name}
+                  </Text>
+                </Col>
+              </Row>
+            </>
+          ) : (
+            <>
+              <Select
+                size={'middle'}
+                style={{ width: '70%' }}
+                placeholder={termState?.termIndex?.name ? termState?.termIndex?.name : termState.term[0].name}
+                onChange={(value: any) => onchangeValue(value)}
+                disabled={router.pathname !== '/term' ? true : false}
+                options={term.map((val) => {
+                  return {
+                    value: val.id,
+                    label: val.name,
+                  };
+                })}
+              />
+            </>
+          )}
         </div>
-      }</>
-    )
-  }, [term, termSelect])
+      </>
+    );
+  }, [term, termSelect, termState]);
+
+  useEffect(() => {
+    replaceRouter();
+  }, [userState.allow, termState.termIndex, navigate]);
+
+  const replaceRouter = () => {
+    if (userState.user.role === EnumRole.LECTURER && userState.allow === false) return navigate('/disaccepted-user', { replace: true });
+  };
 
   return (
-    <div className={cls('management')}>
-      <div className={cls('menu')} id="menu">
-        <div className={cls('empty')}>
-          <Link to="/user-info">
-            <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
-          </Link>
-          <div className={cls('username')}>{userState.user.name}
+    <>
+      {userState.user.role === EnumRole.LECTURER && userState.allow === false ? (
+        <>
+          <div style={{ backgroundColor: '##f0f2f5' }}></div>
+        </>
+      ) : (
+        <div className={cls('management')}>
+          <div className={cls('menu')} id="menu">
+            <div className={cls('empty')}>
+              <Link to="/user-info">
+                <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
+              </Link>
+              <div className={cls('username')}>{userState.user.name}</div>
+            </div>
+            {renderTerm}
+            <hr />
+
+            {userState.functions.map(({ name, image: Image, url }, index) => {
+              return (
+                <Link
+                  to={url + ''}
+                  className={cls('menu_item')}
+                  key={index}
+                  style={
+                    pathRef.current === url
+                      ? {
+                          color: 'rgb(24, 144, 255)',
+                          background: '#e6f7ff',
+                          borderRight: '3px solid rgb(24, 144, 255)',
+                        }
+                      : {}
+                  }
+                >
+                  <Image style={{ fontSize: 22, marginRight: 10 }} />
+                  <p>{name}</p>
+                </Link>
+              );
+            })}
+            <hr style={{ marginTop: 100 }} />
+            <div className={cls('menu_item')} onClick={logout}>
+              <BiLogOutCircle style={{ fontSize: 22, marginRight: 10 }} />
+              <p>Đăng xuất</p>
+            </div>
           </div>
         </div>
-        {renderTerm}
-        <hr />
-
-        {userState.functions.map(({ name, image: Image, url }, index) => {
-          return (
-            <Link
-              to={url + ''}
-              className={cls('menu_item')}
-              key={index}
-              style={
-                pathRef.current === url
-                  ? {
-                    color: 'rgb(24, 144, 255)',
-                    background: '#e6f7ff',
-                    borderRight: '3px solid rgb(24, 144, 255)',
-                  }
-                  : {}
-              }
-            >
-              <Image style={{ fontSize: 22, marginRight: 10 }} />
-              <p>{name}</p>
-            </Link>
-          );
-        })}
-        <hr style={{ marginTop: 100 }} />
-        <div className={cls('menu_item')} onClick={logout}>
-          <BiLogOutCircle style={{ fontSize: 22, marginRight: 10 }} />
-          <p>Đăng xuất</p>
-        </div>
-      </div>
-    </div >
+      )}
+    </>
   );
 };
 

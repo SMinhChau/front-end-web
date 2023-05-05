@@ -35,6 +35,13 @@ class TermService {
       method: 'get',
     });
   }
+  async getTermNow(params: { majorsId: number }) {
+    return await axiosAuth({
+      url: `lecturer/terms/now`,
+      method: 'get',
+      params,
+    });
+  }
 }
 
 const termService = new TermService();
