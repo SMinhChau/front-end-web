@@ -1,38 +1,39 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import { Navigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "antd/dist/reset.css";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import { Navigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'antd/dist/reset.css';
+import 'react-toastify/dist/ReactToastify.css';
 
-import NoMatch from "./pages/404/NoMatch";
-import { Routes, Route, BrowserRouter as Router, } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "./redux/hooks";
-import Login from "./pages/login/Login";
-import Semester from "./pages/semester/Semester";
-import Teacher from "./pages/teacher/Teacher";
-import Student from "./pages/student/Student";
-import Evaludate from "./pages/evaluate/Evaludate";
-import Major from "./pages/major/Major";
-import tokenService from "./services/token";
-import authAPI from "./redux/apis/auth";
-import Topic from "./pages/topic/Topic";
-import Home from "./pages/home/Home";
-import GradingAssigment from "./pages/grading_assigment/GradingAssigment";
-import GroupDetail from "./pages/group_detail/GroupDetail";
-import GroupLecturer from "./pages/group_lecturer/GroupLecturer";
-import UserInfo from "./pages/user_info/UserInfo";
-import GroupEvaluation from "./pages/group_evaluation/GroupEvaluation";
-import ListGroupOfLecturer from "./pages/evaluation_of_lecturer/ListGroupOfLecturer";
-import ForgotPassword from "./pages/login/ForgotPassword";
-import Notification from "./components/notification/Notification";
+import NoMatch from './pages/404/NoMatch';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from './redux/hooks';
+import Login from './pages/login/Login';
+import Semester from './pages/semester/Semester';
+import Teacher from './pages/teacher/Teacher';
+import Student from './pages/student/Student';
+import Evaludate from './pages/evaluate/Evaludate';
+import Major from './pages/major/Major';
+import tokenService from './services/token';
+import authAPI from './redux/apis/auth';
+import Topic from './pages/topic/Topic';
+import Home from './pages/home/Home';
+import GradingAssigment from './pages/grading_assigment/GradingAssigment';
+import GroupDetail from './pages/group_detail/GroupDetail';
+import GroupLecturer from './pages/group_lecturer/GroupLecturer';
+import UserInfo from './pages/user_info/UserInfo';
+import GroupEvaluation from './pages/group_evaluation/GroupEvaluation';
+import ListGroupOfLecturer from './pages/evaluation_of_lecturer/ListGroupOfLecturer';
+import ForgotPassword from './pages/login/ForgotPassword';
+import Notification from './components/notification/Notification';
+import RejectUserLogin from './components/notification/RejectUserLogin';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (tokenService.getRefreshToken() && userState.user.username === "") {
+    if (tokenService.getRefreshToken() && userState.user.username === '') {
       dispatch(authAPI.getInfo()());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,7 +41,7 @@ function App() {
 
   return (
     <Router>
-      <Routes >
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/term"
@@ -151,21 +152,26 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/disaccepted-user"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <RejectUserLogin />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>
   );
 }
 
-export const PrivateRoute = (props: {
-  children: JSX.Element;
-  isLogin: boolean;
-}) => {
+export const PrivateRoute = (props: { children: JSX.Element; isLogin: boolean }) => {
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
     if (!props.isLogin) {
-      toast.info("Bạn vui lòng đăng nhập để sử dụng!", {
-        position: "top-center",
+      toast.info('Bạn vui lòng đăng nhập để sử dụng!', {
+        position: 'top-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

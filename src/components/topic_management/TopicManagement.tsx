@@ -14,6 +14,8 @@ import Config from '../../utils/config';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import TextArea from 'antd/es/input/TextArea';
 import { showMessage, showMessageEror } from '../../constant';
+import { EnumRole } from 'src/enum';
+import RejectUserLogin from '../notification/RejectUserLogin';
 
 const cls = classNames.bind(style);
 
@@ -23,6 +25,7 @@ interface TopicData extends Topic {
 
 const TopicManagement = () => {
   const userState = useAppSelector((state) => state.user).user;
+  const _userState = useAppSelector((state) => state.user);
 
   const [topic, setTopic] = useState<Array<TopicData>>([]);
   const [open, setOpen] = useState(false);
@@ -66,8 +69,6 @@ const TopicManagement = () => {
       title: '',
       dataIndex: 'id',
       render: (id: any) => {
-
-
         return (
           <Button onClick={() => showEditModal(id)}>
             <EditOutlined style={{ color: '#30a3f1' }} />
@@ -114,6 +115,7 @@ const TopicManagement = () => {
   };
   const handleCancel = () => {
     setOpen(false);
+    setInitData({});
   };
   const onFinish = (value: any) => {
     if (status === 'insert')
@@ -124,8 +126,8 @@ const TopicManagement = () => {
         })
         .then((_response) => {
           showMessage('Tạo thành công', 5000);
-          getTopic(termState.termIndex.id)
-
+          setOpen(false);
+          getTopic(termState.termIndex.id);
         })
         .catch((error) => {
           console.log(error);
@@ -138,7 +140,8 @@ const TopicManagement = () => {
         })
         .then((_response) => {
           showMessage('Cập nhật thành công', 5000);
-          getTopic(termState.termIndex.id)
+          setOpen(false);
+          getTopic(termState.termIndex.id);
         })
         .catch((error) => {
           showMessageEror(error.response.data.error, 5000);
@@ -150,7 +153,7 @@ const TopicManagement = () => {
       .deleteTopic(id)
       .then(() => {
         showMessage('Đã xóa', 5000);
-        getTopic(termState.termIndex.id)
+        getTopic(termState.termIndex.id);
       })
       .catch((error) => {
         showMessageEror(error.response.data.error, 5000);
@@ -165,98 +168,104 @@ const TopicManagement = () => {
   };
 
   return (
-    <div className={cls('topic_management')}>
-      <ToastContainer />
-      <div className={cls('semester_func')}>
-        <div className={cls('selectTerm')}></div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Button
-            type="dashed"
-            icon={<PlusOutlined />}
-            size="large"
-            style={{
-              marginBottom: '10px',
-              animation: 'none',
-              color: 'rgb(80, 72, 229)',
-              fontWeight: '600',
-            }}
-            onClick={showModal}
+    <>
+      <div className={cls('topic_management')}>
+        <ToastContainer />
+        <div className={cls('semester_func')}>
+          <div className={cls('selectTerm')}></div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              type="dashed"
+              icon={<PlusOutlined />}
+              size="large"
+              style={{
+                marginBottom: '10px',
+                animation: 'none',
+                color: 'rgb(80, 72, 229)',
+                fontWeight: '600',
+              }}
+              onClick={showModal}
+            >
+              Tạo
+            </Button>
+            {/* <ColumnSetting
+          setColumnVisible={setColumnVisible}
+          columns={baseColumns}
+          cacheKey={Config.TOPIC_CACHE_KEY}
+          style={{ marginLeft: 20 }}
+        /> */}
+          </div>
+
+          <Modal
+            destroyOnClose
+            open={open}
+            title={status === 'insert' ? 'Tạo đề tài' : 'Cập nhật đề tài'}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Hủy
+              </Button>,
+            ]}
           >
-            Tạo
-          </Button>
-          {/* <ColumnSetting
-            setColumnVisible={setColumnVisible}
-            columns={baseColumns}
-            cacheKey={Config.TOPIC_CACHE_KEY}
-            style={{ marginLeft: 20 }}
-          /> */}
-        </div>
-
-        <Modal
-          destroyOnClose
-          open={open}
-          title="Tạo đề tài"
-          onCancel={handleCancel}
-          footer={[
-            <Button key="back" onClick={handleCancel}>
-              Hủy
-            </Button>,
-          ]}
-        >
-          <Form
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 15 }}
-            layout="horizontal"
-            onFinish={onFinish}
-            size="large"
-            style={{ maxWidth: 600 }}
-            initialValues={initData}
-          >
-            <Row justify={'space-between'} style={{ width: '100%' }}>
-              <Col span={24}>
-                <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
-                  <Input />
-                </Form.Item>
-
-                <Form.Item
-                  label="Số lượng"
-                  rules={[{ required: true, message: 'Vui lòng nhập số lượng sinh viên ' }]}
-                  name="quantityGroupMax"
-                >
-                  <InputNumber min={1} max={10} />
-                </Form.Item>
-                <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
-                  <TextArea rows={2} />
-                </Form.Item>
-                <Form.Item label="Ghi chú" rules={[{ required: true, message: 'Vui lòng nhập ghi chú' }]} name="note">
-                  <TextArea rows={2} />
-                </Form.Item>
-
-                <Form.Item label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu' }]} name="target">
-                  <TextArea rows={2} />
-                </Form.Item>
-
-                <Form.Item label="Chuẩn đầu ra" rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu ra' }]} name="standradOutput">
-                  <TextArea rows={2} />
-                </Form.Item>
-
-                <Form.Item label="Yêu cầu đầu vào" rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu vào' }]} name="requireInput">
-                  <TextArea rows={2} />
-                </Form.Item>
-                <Row justify={'end'}>
-                  <Form.Item label=" ">
-                    <Button type="primary" htmlType="submit">
-                      Tạo
-                    </Button>
+            <Form
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 15 }}
+              layout="horizontal"
+              onFinish={onFinish}
+              size="large"
+              style={{ maxWidth: 600 }}
+              initialValues={initData}
+            >
+              <Row justify={'space-between'} style={{ width: '100%' }}>
+                <Col span={24}>
+                  <Form.Item label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
+                    <Input />
                   </Form.Item>
-                </Row>
-              </Col>
-            </Row>
-          </Form>
-        </Modal>
+
+                  <Form.Item
+                    label="Số lượng"
+                    rules={[{ required: true, message: 'Vui lòng nhập số lượng sinh viên ' }]}
+                    name="quantityGroupMax"
+                  >
+                    <InputNumber min={1} max={10} />
+                  </Form.Item>
+                  <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
+                    <TextArea rows={2} />
+                  </Form.Item>
+                  <Form.Item label="Ghi chú" rules={[{ required: true, message: 'Vui lòng nhập ghi chú' }]} name="note">
+                    <TextArea rows={2} />
+                  </Form.Item>
+
+                  <Form.Item label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu' }]} name="target">
+                    <TextArea rows={2} />
+                  </Form.Item>
+
+                  <Form.Item label="Chuẩn đầu ra" rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu ra' }]} name="standradOutput">
+                    <TextArea rows={2} />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Yêu cầu đầu vào"
+                    rules={[{ required: true, message: 'Vui lòng nhập chuẩn đầu vào' }]}
+                    name="requireInput"
+                  >
+                    <TextArea rows={2} />
+                  </Form.Item>
+                  <Row justify={'end'}>
+                    <Form.Item label=" ">
+                      <Button type="primary" htmlType="submit">
+                        Tạo
+                      </Button>
+                    </Form.Item>
+                  </Row>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+        </div>
+        <Table columns={baseColumns} dataSource={topic} />
       </div>
-      <Table columns={baseColumns} dataSource={topic} />
-    </div>
+    </>
   );
 };
 

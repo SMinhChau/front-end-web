@@ -63,7 +63,7 @@ const MajorManagement = () => {
       width: 200,
     },
     {
-      title: 'Đổi chủ nhiêm ngành',
+      title: 'Đổi chủ nhiệm ngành',
       dataIndex: 'id',
       render: (id: any) => (
         <Button
