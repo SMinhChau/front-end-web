@@ -28,7 +28,9 @@ function Login() {
 
     if (check === false) {
       showMessageEror('Tên không chứa ký tự đặt biệt', 3000);
-    } else dispatch(authAPI.login()({ username: values.username, password: values.password }));
+    } else {
+      dispatch(authAPI.login()({ username: values.username, password: values.password }));
+    }
   };
 
   useEffect(() => {
@@ -45,7 +47,7 @@ function Login() {
   return (
     <div className={cls('login_container')}>
       <ToastContainer />
-      <img src={bgImg} alt="" id="bg_login" className={cls('bg')} />
+      {/* <img src={bgImg} alt="" id="bg_login" className={cls('bg')} /> */}
       <Form action="" labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} onFinish={login} size="large">
         <img src={logo} alt="" />
         <div className={cls('form_header')}>Đăng nhập</div>
@@ -55,7 +57,7 @@ function Login() {
               <Input />
             </Form.Item>
 
-            <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', max: 6 }]}>
+            <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}>
               <Input.Password />
             </Form.Item>
 
@@ -68,6 +70,19 @@ function Login() {
           </Col>
         </Row>
       </Form>
+
+      <ul className={cls('circles')}>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </div>
   );
 }

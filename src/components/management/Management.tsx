@@ -13,9 +13,12 @@ import { setAllow } from 'src/redux/slices/user_slice';
 import { EnumRole } from 'src/enum';
 import Notification from '../notification/Notification';
 import RejectUserLogin from '../notification/RejectUserLogin';
+import { IconBase, IconContext } from 'react-icons';
+import { IconMap } from 'antd/es/result';
 const cls = classNames.bind(style);
 
 const avatarDefault = '/assets/avatars/avatarDefault.png';
+const logo = 'assets/Logo_IUH.png';
 
 const Management = () => {
   const { Text } = Typography;
@@ -76,13 +79,13 @@ const Management = () => {
         <div className={cls('filter_term')}>
           {router.pathname !== '/term' ? (
             <>
-              <Row justify={'start'} style={{ width: '80%' }} align={'middle'}>
-                <Col span={10}>
-                  <Text type="success" className={cls('name_term')}>
+              <Row justify={'center'} style={{ width: '100%' }} align={'middle'}>
+                <Col>
+                  <Text type="success" style={{ paddingRight: '10px' }} className={cls('name_term')}>
                     Học kỳ:
                   </Text>
                 </Col>
-                <Col span={14}>
+                <Col>
                   <Text type="success" className={cls('name_term')}>
                     {termState?.termIndex?.name}
                   </Text>
@@ -119,6 +122,13 @@ const Management = () => {
     if (userState.user.role === EnumRole.LECTURER && userState.allow === false) return navigate('/disaccepted-user', { replace: true });
   };
 
+  const render = () => {
+    console.log('userState.functions', userState.functions);
+
+    const temap = userState.functions.forEach((i) => {});
+    // console.log('userState.functions', userState.functions);
+  };
+  render();
   return (
     <>
       {userState.user.role === EnumRole.LECTURER && userState.allow === false ? (
@@ -127,16 +137,25 @@ const Management = () => {
         </>
       ) : (
         <div className={cls('management')}>
-          <div className={cls('menu')} id="menu">
-            <div className={cls('empty')}>
-              <Link to="/user-info">
-                <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
-              </Link>
-              <div className={cls('username')}>{userState.user.name}</div>
-            </div>
-            {renderTerm}
-            <hr />
+          <Row justify={'start'} style={{ width: '100%' }}>
+            <Col span={24} offset={1}>
+              <div className={cls('logo')}>
+                <img src={logo} alt="" style={{ width: '100px' }} />
+              </div>
+            </Col>
+          </Row>
 
+          <div className={cls('empty')}>
+            <Link to="/user-info">
+              <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
+            </Link>
+            <div className={cls('username')}>{userState.user.name}</div>
+          </div>
+
+          {renderTerm}
+
+          <div className={cls('menu')} id="menu">
+            <hr />
             {userState.functions.map(({ name, image: Image, url }, index) => {
               return (
                 <Link
@@ -153,16 +172,23 @@ const Management = () => {
                       : {}
                   }
                 >
-                  <Image style={{ fontSize: 22, marginRight: 10 }} />
-                  <p>{name}</p>
+                  <Image style={{ fontSize: 30, marginRight: 10 }} />
+                  <p className={cls('menu_title')}>{name}</p>
                 </Link>
               );
             })}
-            <hr style={{ marginTop: 100 }} />
-            <div className={cls('menu_item')} onClick={logout}>
-              <BiLogOutCircle style={{ fontSize: 22, marginRight: 10 }} />
-              <p>Đăng xuất</p>
-            </div>
+          </div>
+
+          <div className={cls('footer')} onClick={logout}>
+            <hr />
+            <Row justify={'center'} align={'middle'}>
+              <Col>
+                <BiLogOutCircle style={{ fontSize: 22, marginRight: 10, color: 'red' }} />
+              </Col>
+              <Col>
+                <p className={cls('menu_title_logout')}>Đăng xuất</p>
+              </Col>
+            </Row>
           </div>
         </div>
       )}

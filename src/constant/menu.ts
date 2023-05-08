@@ -1,58 +1,59 @@
 import { AiOutlineCalendar } from 'react-icons/ai';
-import { GiTeacher } from 'react-icons/gi';
+
+import { FcCalendar, FcViewDetails, FcManager, FcTodoList, FcPortraitMode, FcNews, FcReading } from 'react-icons/fc';
 
 const menus = {
   ADMIN: [
     {
       name: 'Quản lý chuyên ngành',
-      image: AiOutlineCalendar,
+      image: FcReading,
       url: '/major',
     },
     {
       name: 'Quản lý Giảng Viên',
-      image: GiTeacher,
+      image: FcManager,
       url: '/teacher',
     },
   ],
   HEAD_LECTURER: [
     {
       name: 'Quản lý Học Kỳ',
-      image: AiOutlineCalendar,
+      image: FcCalendar,
       url: '/term',
     },
     {
       name: 'Quản lý Giảng Viên',
-      image: AiOutlineCalendar,
+      image: FcManager,
       url: '/teacher',
     },
     {
       name: 'Quản lý Sinh Viên',
-      image: AiOutlineCalendar,
+      image: FcPortraitMode,
       url: '/student',
     },
     {
       name: 'Quản lý Đề tài',
-      image: AiOutlineCalendar,
+      image: FcViewDetails,
       url: '/topic',
     },
     {
       name: 'Quản lý Đánh giá',
-      image: AiOutlineCalendar,
+      image: FcTodoList,
       url: '/evaluate',
     },
     {
       name: 'Quản lý nhóm',
-      image: AiOutlineCalendar,
+      image: FcPortraitMode,
       url: '/grading',
     },
     {
       name: 'Quản lý nhóm Giảng viên',
-      image: AiOutlineCalendar,
+      image: FcManager,
       url: '/group-lecturer',
     },
     {
       name: 'Quản Lý Chấm Điểm',
-      image: AiOutlineCalendar,
+      image: FcNews,
       url: '/evaluation-group-of-lecturer',
     },
   ],
@@ -64,44 +65,44 @@ const menus = {
     },
     {
       name: 'Quản lý Giảng Viên',
-      image: AiOutlineCalendar,
+      image: FcManager,
       url: '/teacher',
     },
     {
       name: 'Quản lý Sinh Viên',
-      image: AiOutlineCalendar,
+      image: FcPortraitMode,
       url: '/student',
     },
     {
       name: 'Quản lý Đề tài',
-      image: AiOutlineCalendar,
+      image: FcViewDetails,
       url: '/topic',
     },
     {
       name: 'Quản lý Đánh giá',
-      image: AiOutlineCalendar,
+      image: FcTodoList,
       url: '/evaluate',
     },
     {
       name: 'Quản lý nhóm',
-      image: AiOutlineCalendar,
+      image: FcPortraitMode,
       url: '/grading',
     },
     {
       name: 'Quản lý nhóm Giảng viên',
-      image: AiOutlineCalendar,
+      image: FcManager,
       url: '/group-lecturer',
     },
     {
       name: 'Quản Lý Chấm Điểm',
-      image: AiOutlineCalendar,
+      image: FcNews,
       url: '/evaluation-group-of-lecturer',
     },
   ],
   LECTURER: [
     {
       name: 'Quản lý Đề tài',
-      image: AiOutlineCalendar,
+      image: FcViewDetails,
       url: '/topic',
     },
     // {
@@ -111,7 +112,7 @@ const menus = {
     // },
     {
       name: 'Quản Lý Chấm Điểm',
-      image: AiOutlineCalendar,
+      image: FcNews,
       url: '/evaluation-group-of-lecturer',
     },
   ],

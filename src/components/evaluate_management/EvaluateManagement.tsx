@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './EvaluateManagement.module.scss';
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Typography } from 'antd';
 import { useAppSelector } from 'src/redux/hooks';
 import Evaluate from 'src/entities/evaluate';
 import evaluateService from 'src/services/evaluate';
@@ -15,6 +15,7 @@ interface EvaluateTableType extends Evaluate {
 }
 
 const cls = classNames.bind(style);
+const { Text } = Typography;
 
 const EvaluateManagement = () => {
   const [type, setType] = useState<'ADVISOR' | 'REVIEWER' | 'SESSION_HOST'>('ADVISOR');
@@ -36,6 +37,8 @@ const EvaluateManagement = () => {
     gradeMax: NaN,
     description: '',
   });
+
+  const [avgGrader, setAvgGrader] = useState(0);
 
   const showModal = () => {
     setOpen(true);
@@ -68,6 +71,14 @@ const EvaluateManagement = () => {
   const handleTypeChange = (value: 'ADVISOR' | 'REVIEWER' | 'SESSION_HOST') => {
     setType(value);
   };
+
+  useEffect(() => {
+    let sum = 0;
+    evaluate.forEach((i) => {
+      sum += i.gradeMax;
+      setAvgGrader(sum);
+    });
+  }, [evaluate]);
 
   const baseColumns: ColumnsType<any> = [
     {
@@ -203,8 +214,35 @@ const EvaluateManagement = () => {
       });
   };
 
+  const getPointAvg = useMemo(() => {
+    return (
+      <Text type="success" className={cls('title_name')}>
+        {avgGrader}
+      </Text>
+    );
+  }, [avgGrader]);
+
+  const renderButtonExport = useMemo(() => {
+    return (
+      <Button
+        type="dashed"
+        icon={<ExportOutlined />}
+        size="large"
+        disabled={avgGrader < 10 ? true : false}
+        style={{
+          animation: 'none',
+          color: 'rgb(80, 72, 229)',
+          fontWeight: '600',
+        }}
+        onClick={handleDownload}
+      >
+        Xuất phiếu chấm
+      </Button>
+    );
+  }, [avgGrader]);
+
   return (
-    <div className={cls('avaluate')}>
+    <>
       <ToastContainer />
       <div className={cls('function')}>
         <Row justify="space-between" align="middle" style={{ width: '100%' }}>
@@ -224,21 +262,7 @@ const EvaluateManagement = () => {
             </div>
           </Col>
           <Col>
-            <div className={cls('content_button_upload')}>
-              <Button
-                type="dashed"
-                icon={<ExportOutlined />}
-                size="large"
-                style={{
-                  animation: 'none',
-                  color: 'rgb(80, 72, 229)',
-                  fontWeight: '600',
-                }}
-                onClick={handleDownload}
-              >
-                Xuất phiếu chấm
-              </Button>
-            </div>
+            <div className={cls('content_button_upload')}>{renderButtonExport}</div>
           </Col>
           <Col>
             <div className={cls('content_button_upload')}>
@@ -297,8 +321,30 @@ const EvaluateManagement = () => {
           </Form>
         </Modal>
       </div>
-      <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} />
-    </div>
+
+      <Row justify={'center'} style={{ width: '100%' }}>
+        <Col span={21}>
+          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} />
+        </Col>
+
+        <Col span={3}>
+          <div className={cls('left')}>
+            <Card
+              title={
+                <Text mark strong type="danger" className={cls('title_name')}>
+                  Tổng điểm
+                </Text>
+              }
+              bordered={false}
+            >
+              <Row justify={'center'} style={{ width: '100%' }}>
+                {getPointAvg}
+              </Row>
+            </Card>
+          </div>
+        </Col>
+      </Row>
+    </>
   );
 };
 

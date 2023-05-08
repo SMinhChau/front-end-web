@@ -54,8 +54,8 @@
       font-weight: 600;
     }
     .scroll {
-      height: calc(100vh - 600px);
-      overflow-x: scroll;
+   
+      overflow-x: auto;
     }
     .item_group {
       margin: 10px 14px;

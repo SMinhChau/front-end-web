@@ -40,6 +40,9 @@
     margin-top: 20px;
   }
   .memu_setting {
-    // border-top: 2px solid #00b4d8;
+    .content {
+      text-decoration: none;
+      text-transform: none;
+    }
   }
 }

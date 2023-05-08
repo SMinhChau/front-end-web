@@ -31,6 +31,14 @@ class AuthService {
       data,
     });
   }
+
+  changePassword(data: { oldPassword: string; newPassword: string }) {
+    return axiosAuth({
+      url: '/lecturer/me/password',
+      method: 'patch',
+      data,
+    });
+  }
 }
 
 const authService = new AuthService();

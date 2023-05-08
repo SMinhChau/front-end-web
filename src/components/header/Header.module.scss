@@ -2,13 +2,17 @@
 
 .header {
     height: $headerHeight;
-    width: 100%;
+width: 100%;
     display: flex;
+    position: fixed;
     align-items: center;
     justify-content: space-between;
+    z-index: 9999;
+
     background-color: $white;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     .logo {
+        position: relative;
         margin-left: 50px;
         img {
             width: 50px;
@@ -17,10 +21,8 @@
     }
     .menu {
         display: flex;
-        width: 500px;
-        align-items: center;
-        justify-content: flex-end;
-        margin-right: 50px;
+     justify-content: space-between;
+    
         .item {
             display: flex;
             align-items: center;

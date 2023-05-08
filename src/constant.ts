@@ -60,3 +60,28 @@ export const checkPoint = (str: string) => {
   const regex = /^([0-9](\.[0-9])?|10(\.0)?)|0\.5$/;
   return regex.test(str);
 };
+
+export const removeAccents = (str: string) => {
+  var AccentsMap = [
+    'aàảãáạăằẳẵắặâầẩẫấậ',
+    'AÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬ',
+    'dđ',
+    'DĐ',
+    'eèẻẽéẹêềểễếệ',
+    'EÈẺẼÉẸÊỀỂỄẾỆ',
+    'iìỉĩíị',
+    'IÌỈĨÍỊ',
+    'oòỏõóọôồổỗốộơờởỡớợ',
+    'OÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢ',
+    'uùủũúụưừửữứự',
+    'UÙỦŨÚỤƯỪỬỮỨỰ',
+    'yỳỷỹýỵ',
+    'YỲỶỸÝỴ',
+  ];
+  for (var i = 0; i < AccentsMap.length; i++) {
+    var re = new RegExp('[' + AccentsMap[i].substr(1) + ']', 'g');
+    var char = AccentsMap[i][0];
+    str = str.replace(re, char);
+  }
+  return str;
+};
