@@ -407,37 +407,33 @@ const GroupLecturer = () => {
         </Col>
 
         <Col span={12}>
-          <Row justify={'space-between'}>
-            <Col span={24}>
-              <div className={cls('info_item_des')}>
-                <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
-                <Skeleton loading={loadingInfoGroup} avatar active>
-                  <Descriptions title={<></>}>
-                    <Descriptions.Item label={<p className={cls('title_info_lecturer')}>Tên nhóm:</p>} span={1}>
-                      <h4 className={cls('name_group')}>{groupDes?.name}</h4>
-                    </Descriptions.Item>
-                  </Descriptions>
-                  <Descriptions
-                    bordered
-                    layout="horizontal"
-                    column={2}
-                    title={<h3 className={cls('title_info_lecturer')}>Thông tin giảng viên</h3>}
-                  ></Descriptions>
+          <div className={cls('info_item_des')}>
+            <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
+            <Skeleton loading={loadingInfoGroup} avatar active>
+              <Descriptions title={<></>}>
+                <Descriptions.Item label={<p className={cls('title_info_lecturer')}>Tên nhóm:</p>} span={1}>
+                  <h4 className={cls('name_group')}>{groupDes?.name}</h4>
+                </Descriptions.Item>
+              </Descriptions>
+              <Descriptions
+                bordered
+                layout="horizontal"
+                column={2}
+                title={<h3 className={cls('title_info_lecturer')}>Thông tin giảng viên</h3>}
+              ></Descriptions>
 
-                  {renderTableGroupDes}
-                </Skeleton>
-              </div>
-            </Col>
-
-            <div className={cls('info_group_student')}>
-              <Col span={24}>
-                <Descriptions title={<h3 className={cls('title_info')}>Nhóm được quản lý</h3>}></Descriptions>
-
-                {renderGroupStudent}
-              </Col>
-            </div>
-          </Row>
+              {renderTableGroupDes}
+            </Skeleton>
+          </div>
         </Col>
+
+        <div className={cls('info_group_student')}>
+          <Col span={24}>
+            <Descriptions title={<h3 className={cls('title_info')}>Nhóm được quản lý</h3>}></Descriptions>
+
+            {renderGroupStudent}
+          </Col>
+        </div>
       </Row>
 
       <Modal

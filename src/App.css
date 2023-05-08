@@ -9,7 +9,7 @@
     animation-name: myfading;
     animation-duration: 0.3s; */
 }
-body { font-family: open sans }
+body {  font-family: Arial, Helvetica, sans-serif; }
 
 @keyframes myfading {
     from {

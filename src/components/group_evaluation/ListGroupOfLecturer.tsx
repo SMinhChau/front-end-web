@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styled from './ListGroupOfLecturer.module.scss';
-import { Badge, Card, Descriptions, Radio, Result, Skeleton } from 'antd';
+import { Badge, Card, Descriptions, Radio, Result, Row, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { useAppSelector } from '../../redux/hooks';
@@ -40,26 +40,30 @@ const ListGroupOfLecturer = () => {
     setTypeEvalution(props.target.value);
   };
   return (
-    <div className={cls('list_evaluation')}>
-      <div className={cls('filter_term')}></div>
-      <h3 className={cls('title_group')}>Danh sách Nhóm sinh viên chấm điểm</h3>
+    <>
+      <div className={cls('list_evaluation')}>
+        <h3 className={cls('title_group')}>Danh sách Nhóm sinh viên chấm điểm</h3>
 
-      <div className={cls('type_evalution')}>
-        <Radio.Group defaultValue={typeEvalution} buttonStyle="solid" onChange={handlerChangeType}>
-          <Radio.Button className={cls('btn_radio')} value={TypeEvalution.ADVISOR}>
-            hướng dẫn
-          </Radio.Button>
-          <Radio.Button className={cls('btn_radio')} value={TypeEvalution.REVIEWER}>
-            Phản biện
-          </Radio.Button>
-          <Radio.Button className={cls('btn_radio')} value={TypeEvalution.SESSION_HOST}>
-            Hội đồng
-          </Radio.Button>
-        </Radio.Group>
+        <div className={cls('type_evalution')}>
+          <Radio.Group defaultValue={typeEvalution} buttonStyle="solid" onChange={handlerChangeType}>
+            <Radio.Button className={cls('btn_radio')} value={TypeEvalution.ADVISOR}>
+              hướng dẫn
+            </Radio.Button>
+            <Radio.Button className={cls('btn_radio')} value={TypeEvalution.REVIEWER}>
+              Phản biện
+            </Radio.Button>
+            <Radio.Button className={cls('btn_radio')} value={TypeEvalution.SESSION_HOST}>
+              Hội đồng
+            </Radio.Button>
+          </Radio.Group>
+        </div>
       </div>
       <Skeleton loading={loading} avatar active>
         <Card title={''} className={cls('list_group')}>
-          {listAssign.length === 0 && <Result status="warning" title="Chưa có nhóm cho học kỳ này" />}
+          <div className={cls('type_evalution')}>
+            {listAssign.length === 0 && <Result status="warning" title="Chưa có nhóm cho học kỳ này" />}
+          </div>
+
           {listAssign.map((item, index) => (
             <Card.Grid key={index} className={cls('group')} hoverable>
               <Badge.Ribbon text={<StarOutlined />} color="red">
@@ -85,7 +89,7 @@ const ListGroupOfLecturer = () => {
           ))}
         </Card>
       </Skeleton>
-    </div>
+    </>
   );
 };
 export default ListGroupOfLecturer;

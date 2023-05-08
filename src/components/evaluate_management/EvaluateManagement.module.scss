@@ -11,3 +11,17 @@
     flex-direction: row;
   }
 }
+
+.left {
+  display: flex;
+  align-items: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+
+  .title_name {
+    font-size: 1.2rem;
+font-weight: 700;
+    text-align: center;
+  }
+}

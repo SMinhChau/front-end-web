@@ -1,11 +1,13 @@
 .list_evaluation {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: space-between;
+padding-top: 30px;
   flex-direction: column;
+  flex: 1;
   .type_evalution {
     background-color: white;
-    width: 98%;
+    width: 100%;
     text-align: center;
     padding: 20px 0;
     .btn_radio {
@@ -14,7 +16,7 @@
   }
 
   .title_group {
-    width: 98%;
+    width: 100%;
     background-color: white;
     text-align: center;
     padding: 20px 0;
