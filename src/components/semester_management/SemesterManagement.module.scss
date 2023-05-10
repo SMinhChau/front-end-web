@@ -1,3 +1,4 @@
+
 .semester_management {
   margin-left: 10px;
   .semester_func {
@@ -16,5 +17,51 @@
     .col_form {
       margin: 0 20px;
     }
+    .note{
+  width: 20%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+    
+      .note_box1{
+        width: 50px;
+        height: 20px;
+        background-color: #f5cac3;
+      }
+      .note_box2{
+        width: 50px;
+        height: 20px;
+        background-color: #4cc9f0;
+      }
+      .title_name{
+        font-weight: 600;
+      font-size: 16px;     
+      }
+    }
   }
+  ::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(#333, .2);
+    border: 3px solid transparent;
+    border-radius: 4px;
+}
+.text_colum{
+  font-size: 16px;
+  color: #264653;
+}
+.text_colum_date{
+  font-size: 14px;
+  font-weight: 500;
+  color: #264653;
+}
+
 }

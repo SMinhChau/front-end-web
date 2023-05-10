@@ -61,7 +61,9 @@ const ListGroupOfLecturer = () => {
       <Skeleton loading={loading} avatar active>
         <Card title={''} className={cls('list_group')}>
           <div className={cls('type_evalution')}>
-            {listAssign.length === 0 && <Result status="warning" title="Chưa có nhóm cho học kỳ này" />}
+            {listAssign.length === 0 && (
+              <Result status="warning" style={{ fontSize: '16px', color: '#264653' }} title="Chưa có nhóm cho học kỳ này" />
+            )}
           </div>
 
           {listAssign.map((item, index) => (

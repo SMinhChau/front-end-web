@@ -17,7 +17,11 @@ class TermrAPI {
     return createAsyncThunk('term/get-term-by-id', async (id: number, thunkAPI) => {
       try {
         const result = await termService.getTermById(id);
-        if (result.status === 200) return result.data;
+        console.log('result get tẻm ', result.data.allow);
+
+        if (result.status === 200) {
+          return result.data;
+        }
       } catch (error) {
         console.log('createAsyncThunk Error!', error);
       }

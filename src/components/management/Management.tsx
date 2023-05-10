@@ -116,19 +116,12 @@ const Management = () => {
 
   useEffect(() => {
     replaceRouter();
-  }, [userState.allow, termState.termIndex, navigate]);
+  }, [userState, termState.termIndex, navigate]);
 
   const replaceRouter = () => {
     if (userState.user.role === EnumRole.LECTURER && userState.allow === false) return navigate('/disaccepted-user', { replace: true });
   };
 
-  const render = () => {
-    console.log('userState.functions', userState.functions);
-
-    const temap = userState.functions.forEach((i) => {});
-    // console.log('userState.functions', userState.functions);
-  };
-  render();
   return (
     <>
       {userState.user.role === EnumRole.LECTURER && userState.allow === false ? (
@@ -182,10 +175,10 @@ const Management = () => {
           <div className={cls('footer')} onClick={logout}>
             <hr />
             <Row justify={'center'} align={'middle'}>
-              <Col>
+              <Col className={cls('btn')}>
                 <BiLogOutCircle style={{ fontSize: 22, marginRight: 10, color: 'red' }} />
               </Col>
-              <Col>
+              <Col className={cls('btn')}>
                 <p className={cls('menu_title_logout')}>Đăng xuất</p>
               </Col>
             </Row>

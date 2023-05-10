@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './TeacherManagement.module.scss';
-import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input, Space } from 'antd';
+import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import Config from '../../utils/config';
@@ -35,33 +35,71 @@ const TeacherManagement = () => {
       title: 'Mã giảng viên',
       dataIndex: 'username',
       key: 'userame',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Tên giảng viên',
       dataIndex: 'name',
       key: 'name',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Cấp bậc',
       dataIndex: 'degree',
       key: 'degree',
-      render: (text: string) => checkDegree(text),
+      render: (text) => {
+        const _name = checkDegree(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkDegree(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
     },
     {
       title: 'SĐT',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      render: (text: string) => checkGender(text),
+      render: (text) => {
+        const _name = checkGender(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'NAM' ? 'green' : 'blue'} key={checkDegree(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
     },
   ];
 
@@ -111,14 +149,11 @@ const TeacherManagement = () => {
   const getListLecturer = () => {
     if (termState.termIndex.id) {
       lecturerService.getWithTerm(termState.termIndex.id).then((response) => {
-       
-
         const _data = response.data.map((value: Teacher, index: number) => {
           return { ...value, key: index };
         });
         setLecturer(_data);
         setData(_data);
-       
       });
     }
   };
@@ -278,7 +313,7 @@ const TeacherManagement = () => {
   };
 
   const renderTableLecturer = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} scroll={{ y: 570 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 5 }} />;
   }, [lecturer, baseColumns, data]);
 
   return (

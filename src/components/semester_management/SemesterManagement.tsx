@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Modal, Form, DatePicker, Select, Row, Col } from 'antd';
+import { Table, Button, Modal, Form, DatePicker, Select, Row, Col, Card, Typography } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import style from './SemesterManagement.module.scss';
@@ -14,109 +14,197 @@ import { setTermSlice } from '../../redux/slices/term_slice';
 import { showMessage, showMessageEror } from '../../constant';
 
 const cls = classNames.bind(style);
+const { Text } = Typography;
+
 const SemesterManagement = () => {
   const baseColumns = [
     {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
-      width: 100,
+      width: 140,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Bắt đầu',
       dataIndex: 'startDate',
       key: 'startDate',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Kết thúc',
       dataIndex: 'endDate',
       key: 'endDate',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Bắt đầu submit đề tài',
       dataIndex: 'startDateSubmitTopic',
       key: 'startDateSubmitTopic',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Kết thúc submit đề tài',
       dataIndex: 'endDateSubmitTopic',
       key: 'enendDateSubmitTopicdDate',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Bắt đầu chọn đề tài',
       dataIndex: 'startDateChooseTopic',
       key: 'startDateChooseTopic',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Kết thúc chọn đề tài',
       dataIndex: 'endDateChooseTopic',
       key: 'endDateChooseTopic',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Thời gian bắt đầu Phản biện',
       dataIndex: 'startDateDiscussion',
       key: 'startDateDiscussion',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Thời gian kết thúc Phản biện',
       dataIndex: 'endDateDiscussion',
       key: 'endDateDiscussion',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
 
     {
       title: 'Ngày phản biện',
       dataIndex: 'dateDiscussion',
       key: 'dateDiscussion',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Thời gian bắt đầu Báo cáo',
       dataIndex: 'startDateReport',
       key: 'startDateReport',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
       title: 'Thời gian kết thúc Báo cáo',
       dataIndex: 'endDateReport',
       key: 'endDateReport',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
 
     {
       title: 'Ngày báo cáo',
       dataIndex: 'dateReport',
       key: 'dateReport',
-      render: (t: Date) => moment(t).format('MM/DD/YYYY'),
+      render: (t: Date) => {
+        const col = checkDay(t) === true ? 'red' : '#0077b6';
+        return (
+          <div className={cls('text_colum_date')} style={{ color: col }}>
+            {moment(t).format('MM/DD/YYYY')}
+          </div>
+        );
+      },
     },
     {
-      title: 'Xóa',
+      title: '',
       dataIndex: 'id',
       render: (id: any) => (
-        <Button onClick={() => deleteTerm(id)}>
-          <DeleteOutlined style={{ color: 'red' }} />
-        </Button>
+        <div style={{ width: '100%', flexDirection: 'column' }}>
+          <Button onClick={() => deleteTerm(id)} style={{ marginBottom: '5px' }}>
+            <DeleteOutlined style={{ color: 'red' }} />
+          </Button>
+          <Button
+            onClick={() => {
+              getTermEditById(id);
+            }}
+          >
+            <EditOutlined style={{ color: '#30a3f1' }} />
+          </Button>
+        </div>
       ),
-    },
-    {
-      title: 'Sửa',
-      dataIndex: 'id',
-      render: (id: any) => (
-        <Button
-          onClick={() => {
-            getTermEditById(id);
-          }}
-        >
-          <EditOutlined style={{ color: '#30a3f1' }} />
-        </Button>
-      ),
+      with: '100px',
     },
   ];
   const [terms, setTerms] = useState<Array<Term>>([]);
@@ -155,6 +243,12 @@ const SemesterManagement = () => {
   };
   const handleCancelUpdate = () => {
     setModalUpdate(false);
+  };
+
+  const checkDay = (date: Date) => {
+    const today = moment();
+    const targetDate = moment(date);
+    return targetDate.isBefore(today, 'day');
   };
 
   const onFinish = async (values: any) => {
@@ -283,7 +377,6 @@ const SemesterManagement = () => {
   const renderModalUpdate = useMemo(() => {
     return (
       <>
-        {' '}
         <Modal
           destroyOnClose
           open={modalUpdate}
@@ -391,7 +484,25 @@ const SemesterManagement = () => {
         >
           Tạo
         </Button>
-        <ColumnSetting setColumnVisible={setColumnVisible} columns={baseColumns} cacheKey={Config.SEMESTER_CACHE_KEY} />
+
+        <div className={cls('note')}>
+          <Row style={{ width: '100%' }}>
+            <Col span={14}>
+              <Text className={cls('title_name')}>Trước ngày hiện tại</Text>
+            </Col>
+            <Col span={10}>
+              <div className={cls('note_box1')}></div>
+            </Col>
+          </Row>
+          <Row style={{ width: '100%' }}>
+            <Col span={14}>
+              <Text className={cls('title_name')}>Sau ngày hiện tại</Text>
+            </Col>
+            <Col span={10}>
+              <div className={cls('note_box2')}></div>
+            </Col>
+          </Row>
+        </div>
         <Modal
           destroyOnClose
           open={open}
@@ -440,7 +551,13 @@ const SemesterManagement = () => {
           </div>
         </Modal>
       </div>
-      <Table columns={baseColumns} dataSource={terms} style={{ backgroundColor: '#fff' }} scroll={{ x: 1300, y: 450 }} />
+      <Table
+        columns={baseColumns}
+        pagination={{ pageSize: 4 }}
+        dataSource={terms}
+        style={{ backgroundColor: '#fff' }}
+        scroll={{ x: 1300, y: 450 }}
+      />
 
       {renderModalUpdate}
     </div>

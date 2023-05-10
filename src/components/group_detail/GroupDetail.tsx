@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GroupDetail.module.scss';
 import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Select, Skeleton, Space, Typography } from 'antd';
@@ -14,7 +14,10 @@ import { useAppSelector } from '../../redux/hooks';
 import { ToastContainer } from 'react-toastify';
 import { checkDegree, checkGender, showMessage, showMessageEror } from '../../constant';
 import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons';
-
+import { AiOutlineBars, AiOutlineUser } from 'react-icons/ai';
+import { BiGroup } from 'react-icons/bi';
+import { MdOutlineTopic } from 'react-icons/md';
+import { removeAccents } from '../../constant';
 
 const cls = classNames.bind(style);
 interface GroupAssign {
@@ -63,6 +66,9 @@ const GroupDetail = () => {
   const [nameOfLecturerReview, setNameOfLecturerReview] = useState<Array<Teacher>>([]);
   const [nameOfLecturerHost, setNameOfLecturerHost] = useState<Array<Teacher>>([]);
 
+  const [warmingLecturerReview, setWarmingLecturerReview] = useState(false);
+  const [warmingLecturerHost, setWarmingLecturerHost] = useState(false);
+
   const { Text } = Typography;
 
   useEffect(() => {
@@ -106,14 +112,40 @@ const GroupDetail = () => {
     }
   };
 
+  const checkGroupLecturerReview = () => {
+    if (nameOfLecturerReview.length > 0) {
+      if (nameOfLecturerReview.findIndex((item) => item.id === lecturer?.id)) {
+        setWarmingLecturerReview(true);
+      } else {
+        setWarmingLecturerReview(false);
+      }
+    } else {
+      setWarmingLecturerReview(false);
+    }
+  };
+
+  const checkGroupLecturerHost = () => {
+    if (nameOfLecturerHost.length > 0) {
+      if (nameOfLecturerHost.findIndex((item) => item.id === lecturer?.id)) {
+        setWarmingLecturerHost(true);
+      } else {
+        setWarmingLecturerHost(false);
+      }
+    } else {
+      setWarmingLecturerHost(false);
+    }
+  };
+
   const handleChangeGroupReview = (value: string) => {
     const t = groupLecturerReview.filter((item) => item.id === Number(value))[0];
     setNameOfLecturerReview(t.members.map((m) => m.lecturer));
+    checkGroupLecturerReview();
   };
 
   const handleChangeGroupHost = (value: string) => {
     const t = groupLecturerHost.filter((item) => item.id === Number(value))[0];
     setNameOfLecturerHost(t.members.map((m) => m.lecturer));
+    checkGroupLecturerHost();
   };
 
   useEffect(() => {
@@ -265,18 +297,19 @@ const GroupDetail = () => {
                 },
               ];
               return (
-                <Descriptions key={index} title="">
-                  <Descriptions.Item label={'Sinh Viên'}>
-                    <Dropdown menu={{ items }}>
-                      <p onClick={(e) => e.preventDefault()}>
-                        <Space>
-                          <div className={cls('member')}>{i?.student?.name}</div>
-                          <DownOutlined />
-                        </Space>
-                      </p>
-                    </Dropdown>
-                  </Descriptions.Item>
-                </Descriptions>
+                <div key={index} title="" className={cls('item_name')}>
+                  <Dropdown menu={{ items }}>
+                    <p onClick={(e) => e.preventDefault()}>
+                      <Space>
+                        <div className={cls('member')}>
+                          <AiOutlineUser />
+                        </div>
+                        <div className={cls('member')}>{i?.student?.name}</div>
+                        <DownOutlined />
+                      </Space>
+                    </p>
+                  </Dropdown>
+                </div>
               );
             })}
           </>
@@ -293,7 +326,6 @@ const GroupDetail = () => {
         );
     }
   }, [inforGroup?.members?.length]);
-  const [open, setOpen] = useState(false);
 
   const renderTopic = useMemo(() => {
     const items: MenuProps['items'] = [
@@ -317,26 +349,21 @@ const GroupDetail = () => {
 
     if (topic)
       return (
-        <Row align={'middle'}>
-          <Col span={8}>
-            <Descriptions title="">
-              <Descriptions.Item label={'Tên đề tài'}>
-                <div className={cls('member')}>{topic?.name}</div>
-              </Descriptions.Item>
-            </Descriptions>
-          </Col>
-
-          <Col>
-            <Dropdown menu={{ items }}>
-              <p onClick={(e) => e.preventDefault()}>
-                <Space>
+        <>
+          <div className={cls('_lable')} style={{ paddingBottom: '10px' }}>
+            <AiOutlineBars style={{ fontSize: '24px', alignItems: 'center', marginRight: '20px' }} /> {topic?.name}
+          </div>
+          <Dropdown menu={{ items }} className={cls('_topic_hover')}>
+            <p onClick={(e) => e.preventDefault()}>
+              <Space>
+                <div className={cls('member')}>
                   Chi tiết đề tài
                   <DownOutlined />
-                </Space>
-              </p>
-            </Dropdown>
-          </Col>
-        </Row>
+                </div>
+              </Space>
+            </p>
+          </Dropdown>
+        </>
       );
     else
       return (
@@ -365,18 +392,17 @@ const GroupDetail = () => {
 
     if (lecturer)
       return (
-        <Descriptions title="">
-          <Descriptions.Item label={'Giảng viên hướng dẫn'}>
-            <Dropdown menu={{ items }}>
-              <p onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <div className={cls('member')}>{lecturer?.name}</div>
-                  <DownOutlined />
-                </Space>
-              </p>
-            </Dropdown>
-          </Descriptions.Item>
-        </Descriptions>
+        <Dropdown menu={{ items }} className={cls('item_name')}>
+          <p onClick={(e) => e.preventDefault()}>
+            <Space>
+              <div className={cls('member')}>
+                <AiOutlineUser />
+              </div>
+              <div className={cls('member')}>{lecturer?.name}</div>
+              <DownOutlined />
+            </Space>
+          </p>
+        </Dropdown>
       );
     else
       return (
@@ -392,6 +418,7 @@ const GroupDetail = () => {
 
   const renderFormAssignReview = useMemo(() => {
     const nameDefault = groupAssignReview?.[0]?.groupLecturer?.name;
+
     const data = groupLecturerReview.map((value) => {
       return {
         value: value.id,
@@ -401,47 +428,143 @@ const GroupDetail = () => {
 
     return (
       <Form
-        labelCol={{ span: 14 }}
-        wrapperCol={{ span: 24 }}
-        layout="horizontal"
+        layout="vertical"
         onFinish={onFinishChosseGroupReview}
         initialValues={status === 'insert' ? {} : initData}
         style={{ maxWidth: 600 }}
       >
-        <Form.Item label="" rules={[{ required: true }]} name="groupLecturerId">
-          <Select
-            style={{ width: '100%' }}
-            placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
-            onChange={(value) => handleChangeGroupReview(value)}
-            optionLabelProp="label"
-            options={data}
-          />
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <Row justify={'end'} style={{ marginTop: '10px', bottom: 0 }}>
-            <Col>
-              <Button type="primary" htmlType="submit">
-                Cập nhật
-              </Button>
-            </Col>
-          </Row>
-        </Form.Item>
+        <Row>
+          <Col span={18}>
+            <Form.Item label="" rules={[{ required: true }]} name="groupLecturerId">
+              <Select
+                style={{ width: '100%' }}
+                placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
+                onChange={(value) => handleChangeGroupReview(value)}
+                optionLabelProp="label"
+                options={data}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item wrapperCol={{ span: 24 }}>
+              <Row justify={'end'} style={{ bottom: '0px' }}>
+                <Col>
+                  <Button type="primary" htmlType="submit">
+                    Cập nhật
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Col>
+        </Row>
 
         <div className={cls('group_of_lecture')}>
           {nameOfLecturerReview.length > 0 ? (
             <>
-              <Divider plain className={cls('title')} >
-                <Text strong type="secondary" className={cls('title')}>
-                  Thông tin nhóm Giảng viên
-                </Text>
-              </Divider>
               <Row align={'middle'}>
                 <Col span={8}>
                   <Text strong className={cls('title_group')}>{`${nameOfLecturerReview.length} Giảng Viên: `}</Text>
                 </Col>
-                <Col span={16}>
-
+                <Col span={16} style={{ overflowY: 'auto', height: '100px' }}>
                   {nameOfLecturerReview.map((i) => {
+                    const items: MenuProps['items'] = [
+                      {
+                        label: 'Mã GV: ' + i?.username,
+                        key: 1,
+                      },
+
+                      {
+                        label: 'Trình độ:  ' + `${checkDegree(String(i?.degree))}`,
+                        key: 2,
+                      },
+                    ];
+
+                    return (
+                      <Row justify={'space-evenly'}>
+                        <Col>
+                          <Dropdown menu={{ items }}>
+                            <p onClick={(e) => e.preventDefault()}>
+                              <Space>
+                                <div className={cls('sub_name_group')}>{i?.name}</div>
+                                <InfoCircleOutlined />
+                              </Space>
+                            </p>
+                          </Dropdown>
+                        </Col>
+                      </Row>
+                    );
+                  })}
+                </Col>
+              </Row>
+            </>
+          ) : (
+            ''
+          )}
+        </div>
+        {warmingLecturerReview === true && (
+          <Text mark type="danger" className={cls('title')}>
+            Nhóm có giảng viên là giảng viên hướng dẫn
+          </Text>
+        )}
+      </Form>
+    );
+  }, [status, initData, groupLecturerReview, onFinishChosseGroupReview]);
+
+  console.log('warmingLecturerHost 1', warmingLecturerHost);
+
+  const renderFormAssignSessionHost = useMemo(() => {
+    console.log('warmingLecturerHost 2', warmingLecturerHost);
+
+    const nameDefault = groupAssignSessionHost?.[0]?.groupLecturer?.name;
+
+    const data = groupLecturerHost.map((value) => {
+      return {
+        value: value.id,
+        label: value.name,
+      };
+    });
+
+    return (
+      <Form
+        layout="horizontal"
+        onFinish={onFinishChosseGroupSessionHost}
+        initialValues={statusHost === 'insert' ? {} : initDataHost}
+        style={{ maxWidth: 600 }}
+      >
+        <Row>
+          <Col span={18}>
+            <Form.Item label="" rules={[{ required: true }]} name="groupLecturerId">
+              <Select
+                style={{ width: '100%' }}
+                placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
+                onChange={(value) => handleChangeGroupHost(value)}
+                optionLabelProp="label"
+                options={data}
+              ></Select>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item wrapperCol={{ span: 24 }}>
+              <Row justify={'end'} style={{ bottom: 0 }}>
+                <Col>
+                  <Button type="primary" htmlType="submit">
+                    Cập nhật
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <div className={cls('group_of_lecture')}>
+          {nameOfLecturerHost.length > 0 ? (
+            <>
+              <Row align={'middle'}>
+                <Col span={8}>
+                  <Text strong className={cls('title_group')}>{`${nameOfLecturerHost.length} Giảng Viên: `}</Text>
+                </Col>
+                <Col span={16} style={{ overflowY: 'auto', height: '100px' }}>
+                  {nameOfLecturerHost.map((i) => {
                     const items: MenuProps['items'] = [
                       {
                         label: 'Mã GV: ' + i?.username,
@@ -474,130 +597,63 @@ const GroupDetail = () => {
           ) : (
             ''
           )}
-        </div>
-      </Form>
-    );
-  }, [status, initData, groupLecturerReview, onFinishChosseGroupReview]);
-
-  const renderFormAssignSessionHost = useMemo(() => {
-    const nameDefault = groupAssignSessionHost?.[0]?.groupLecturer?.name;
-    const data = groupLecturerHost.map((value) => {
-      return {
-        value: value.id,
-        label: value.name,
-      };
-    });
-
-    return (
-      <Form
-        labelCol={{ span: 14 }}
-        wrapperCol={{ span: 24 }}
-        layout="horizontal"
-        onFinish={onFinishChosseGroupSessionHost}
-        initialValues={statusHost === 'insert' ? {} : initDataHost}
-        style={{ maxWidth: 600 }}
-      >
-        <Form.Item label="" rules={[{ required: true }]} name="groupLecturerId">
-          <Select
-            style={{ width: '100%' }}
-            placeholder={nameDefault ? nameDefault : "Chọn Nhóm Giảng Viên chấm 'PHẢN BIỆN'"}
-            onChange={(value) => handleChangeGroupHost(value)}
-            optionLabelProp="label"
-            options={data}
-          ></Select>
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <Row justify={'end'} style={{ marginTop: '10px', bottom: 0 }}>
-            <Col>
-              <Button type="primary" htmlType="submit">
-                Cập nhật
-              </Button>
-            </Col>
-          </Row>
-        </Form.Item>
-        <div className={cls('group_of_lecture')}>
-
-
-          {nameOfLecturerHost.length > 0 ? (
-            <>
-              <Divider plain className={cls('title')} >
-                <Text strong type="secondary" className={cls('title')}>
-                  Thông tin nhóm Giảng viên
-                </Text>
-              </Divider>
-              <Row align={'middle'} >
-
-                <Col span={8}>
-                  <Text strong className={cls('title_group')}>{`${nameOfLecturerHost.length} Giảng Viên: `}</Text>
-                </Col>
-                <Col span={16}>
-                  {nameOfLecturerHost.map((i) => {
-                    const items: MenuProps['items'] = [
-                      {
-                        label: 'Mã GV: ' + i?.username,
-                        key: 1,
-                      },
-
-                      {
-                        label: 'Trình độ:  ' + `${checkDegree(String(i?.degree))}`,
-                        key: 2,
-                      },
-                    ];
-                    return (
-                      <Row justify={'space-evenly'}>
-                        <Col>
-                          <Dropdown menu={{ items }}>
-                            <p onClick={(e) => e.preventDefault()}>
-                              <Space>
-                                <div className={cls('sub_name_group')}>{i?.name}</div>
-                                <InfoCircleOutlined />
-                              </Space>
-                            </p>
-                          </Dropdown>
-                        </Col>
-                      </Row>
-                    );
-                  })}</Col>
-              </Row>
-
-            </>
-          ) : (
-            ''
+          {warmingLecturerHost === true && (
+            <Text mark type="danger" className={cls('title')}>
+              Nhóm có giảng viên là giảng viên hướng dẫn
+            </Text>
           )}
         </div>
       </Form>
     );
-  }, [statusHost, initDataHost, groupLecturerHost, onFinishChosseGroupSessionHost]);
+  }, [statusHost, initDataHost, groupLecturerHost, onFinishChosseGroupSessionHost, warmingLecturerHost]);
 
   return (
     <div className={cls('group_detail')}>
       <ToastContainer />
-
       <Skeleton loading={loading} avatar active>
         <Badge.Ribbon>
           <Card
             title={
               <Descriptions title="">
                 <Descriptions.Item label={<div className={cls('group_name')}>Tên nhóm</div>}>
-                  <div className={cls('group_name')}>{inforGroup?.name}</div>
+                  <div className={cls('_name')}>{inforGroup?.name}</div>
                 </Descriptions.Item>
               </Descriptions>
             }
             size="default"
           >
-            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
-              Thông tin Sinh Viên
-            </Text></Divider>
-            <div className={cls('group_member')}>{genderMemberForGroup}</div>
-            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
-              Thông tin Đề Tài
-            </Text></Divider>
-            <div className={cls('topic')}>{renderTopic}</div>
-            <Divider orientation="right">  <Text type="secondary" className={cls('title')}>
-              Thông tin Giảng Viên Hướng Dẫn
-            </Text></Divider>
-            <div className={cls('lecturer')}>{renderLecturerForGroup}</div>
-            <Divider orientation="left"></Divider>
+            <Row justify={'center'} align={'top'} className={cls('group_member')}>
+              <Col span={8} offset={2}>
+                <div className={cls('student_lable')}>
+                  <BiGroup style={{ fontSize: '24px', alignItems: 'center' }} /> Thành viên
+                </div>
+              </Col>
+              <Col span={14} style={{ overflowY: 'auto', height: '88px' }}>
+                {genderMemberForGroup}
+              </Col>
+            </Row>
+
+            <Divider plain></Divider>
+
+            <Row justify={'center'} align={'top'} className={cls('topic_content')}>
+              <Col span={8} offset={2}>
+                <div className={cls('_topic')}>
+                  <MdOutlineTopic style={{ fontSize: '24px', alignItems: 'center' }} /> Đề tài
+                </div>
+              </Col>
+              <Col span={14}> {renderTopic} </Col>
+            </Row>
+
+            <Divider plain></Divider>
+
+            <Row justify={'center'} align={'top'} className={cls('lecturer')}>
+              <Col span={8} offset={2}>
+                <div className={cls('_topic')}>
+                  <BiGroup style={{ fontSize: '24px', alignItems: 'center' }} /> Giảng viên hướng dẫn
+                </div>
+              </Col>
+              <Col span={14}>{renderLecturerForGroup}</Col>
+            </Row>
 
             <Row className={cls('lecturer')} justify={'space-between'}>
               <Col span={12}>

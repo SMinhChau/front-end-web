@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './EvaluateManagement.module.scss';
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Space, Tooltip, Typography } from 'antd';
 import { useAppSelector } from 'src/redux/hooks';
 import Evaluate from 'src/entities/evaluate';
 import evaluateService from 'src/services/evaluate';
@@ -85,16 +85,32 @@ const EvaluateManagement = () => {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Điểm tối đa',
       dataIndex: 'gradeMax',
       key: 'gradeMax',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '50px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
+      width: 200,
     },
     {
       title: 'Xóa',
@@ -324,16 +340,20 @@ const EvaluateManagement = () => {
 
       <Row justify={'center'} style={{ width: '100%' }}>
         <Col span={21}>
-          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} />
+          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} pagination={{ pageSize: 3 }} />
         </Col>
 
         <Col span={3}>
           <div className={cls('left')}>
             <Card
               title={
-                <Text mark strong type="danger" className={cls('title_name')}>
-                  Tổng điểm
-                </Text>
+                <Space wrap>
+                  <Tooltip title="Tổng điểm của phiếu chấm hiện tại" color={'geekblue'}>
+                    <Text mark strong type="danger" className={cls('title_name')}>
+                      Tổng điểm
+                    </Text>
+                  </Tooltip>
+                </Space>
               }
               bordered={false}
             >

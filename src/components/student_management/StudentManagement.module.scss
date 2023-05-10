@@ -1,9 +1,8 @@
 .function {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 40px;
-
+  justify-content: end;
+  padding: 30px;
   h4 {
     font-weight: 700;
     font-size: 2rem;
@@ -16,6 +15,27 @@
     display: flex;
     align-items: center;
   }
+}
+
+
+  ::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(#333, .2);
+    border: 3px solid transparent;
+    border-radius: 4px;
+ 
+}
+.text_colum{
+  font-size: 16px;
+  color: #264653;
 }
 
 .card_view {

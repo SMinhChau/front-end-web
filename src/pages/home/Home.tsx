@@ -8,12 +8,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import './Home.css';
-import contentHome from '../../pages/home/content';
-import { Col, Row } from 'antd';
+import contentHome, { LIST_DES, MAIN } from '../../pages/home/content';
+import { Carousel, Col, Row } from 'antd';
 import { CopyrightOutlined, HeartOutlined } from '@ant-design/icons';
-
-const slide1 = 'assets/home/sl01.jpg';
-const slide2 = 'assets/home/sl02.png';
 
 const cls = classNames.bind(style);
 
@@ -38,22 +35,19 @@ const Home = () => {
     <div className={cls('home_page')}>
       <AppHeader />
       <div className={cls('home_body')}>
-        <Slider {...settings}>
-          <div className={cls('slide_item')}>
-            <div>
-              <h2>{contentHome.title}</h2>
-              <span>{contentHome.slide}</span>
-            </div>
-            <img src={slide2} alt="" />
-          </div>
-          <div className={cls('slide_item')}>
-            <div>
-              <h2>{contentHome.title}</h2>
-              <span>{contentHome.slide}</span>
-            </div>
-            <img src={slide1} alt="" />
-          </div>
-        </Slider>
+        <Carousel autoplay style={{ position: 'relative' }}>
+          {contentHome.map((item, key) => {
+            return (
+              <div className={cls('slide_item')}>
+                <div>
+                  <h2>{item.title}</h2>
+                  <span>{item.slide}</span>
+                </div>
+                <img className={cls('img')} src={item.image} alt="" />
+              </div>
+            );
+          })}
+        </Carousel>
         <div className={cls('content')}>
           <div className={cls('_title')}>
             <Row justify={'center'} align={'middle'}>
@@ -61,13 +55,23 @@ const Home = () => {
             </Row>
           </div>
           <div className={cls('main_content')}>
-            <h2 className={cls('content_title')}>{contentHome.title}</h2>
+            <h2 className={cls('content_title')}>{MAIN.title}</h2>
             <p style={{ color: '#415a77', fontWeight: '400' }} className={cls('content_title')}>
-              {contentHome.main}
+              {MAIN.main}
             </p>
           </div>
         </div>
+
+        <div className={cls('info')}>
+          <h1 className={cls('title')}>Một số chứ năng</h1>
+          <Carousel autoplay style={{ position: 'relative' }}>
+            {LIST_DES.map((item) => {
+              return <h2 className={cls('content_title')}>{item.title}</h2>;
+            })}
+          </Carousel>
+        </div>
       </div>
+
       <div className={cls('home_footer')}>
         <Row justify={'center'} align={'middle'}>
           <HeartOutlined style={{ fontSize: '16px', color: 'red', fontWeight: 'bold' }} />

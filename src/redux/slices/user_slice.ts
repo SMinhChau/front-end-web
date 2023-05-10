@@ -35,7 +35,7 @@ const initialState = {
   functions: [] as any,
   is_login: tokenService.getRefreshToken() !== null,
   update: false,
-  allow: false,
+  allow: true,
 } as StateType;
 
 export const userSlice = createSlice({
