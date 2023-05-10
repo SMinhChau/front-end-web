@@ -1,12 +1,12 @@
 @import '../../../src/Variables.scss';
 .home_page {
-  width: 98.5vw;
+  width: 100%;
   .home_body {
- 
+    
     .slide_item {
       margin-top: 20px;
       position: relative;
-      
+
       div {
         position: absolute;
         top: 15%;
@@ -15,7 +15,7 @@
           font-weight: 900;
           padding: 5px;
           transition-duration: 3s;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           background: conic-gradient(from 20deg, transparent, #073b4c);
           color: #fff;
           &:hover {
@@ -46,9 +46,20 @@
         object-fit: cover;
       }
     }
+
+    .carousel{
+      
+    }
     .content {
-      margin-top: 50px;
-      padding: 0 50px;
+     
+ margin: 0 30px;
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 40px;
+      box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
       h1 {
         color: orange;
         font-weight: 900;
@@ -60,18 +71,30 @@
       }
       .content_title {
         color: #ff7d00;
-        margin-top: 30px;
+     
         padding-top: 10px;
+        text-transform: uppercase;
+        padding:  0 20px;
+        width: 100%;
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 10px;
       }
       ._title {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
         transition-duration: 3s;
+        border-radius: 100px;
+        background: conic-gradient(from 20deg, #fff, #e9edc9);
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         &:hover {
           transform: scale(1.1);
         }
-        background: conic-gradient(from 20deg, #fff, #e9edc9);
+
+      
         .title {
           padding: 10px 10px;
 
@@ -87,41 +110,85 @@
         }
       }
       .main_content {
-        padding: 0px 10px;
-        margin: 20px 0px;
+     
+        transition-duration: 3s;
+        &:hover {
+          transform: scale(0.9);
+        };
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+        padding:  10px 0;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+        box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
         background: conic-gradient(transparent, #fff, #caf2f8);
       }
     }
 
-    .info{
+    .info {
       width: 100%;
-padding: 0 50px;
-
+      padding: 0 50px;
+margin-top: 20px;
       justify-content: center;
       align-items: center;
       position: relative;
-      h1 {
-       
-        color: rgb(80, 71, 54);
-        font-weight: 700;
-        padding: 20px 0;
-        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-      h2 {
-       
-        font-weight: 900;
-        padding: 10px;
-        transition-duration: 2s;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: conic-gradient(from 20deg, transparent, #66e1ba);
-        color: #f32525;
+      .name_school {
+        padding: 10px 10px;
+
+        transition-duration: 3s;
         &:hover {
-          transform: scale(1.1);
+          transform: scale(0.9);
+        }
+        color: #4361ee;
+        text-shadow: 1px 3px 1px #f5cac3;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.9rem;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      h1 {
+        font-size: 1.8rem;
+        color: #83c5be;
+        font-weight: 700;
+        text-shadow: 1px 3px 1px rgb(80, 71, 54);
+        text-transform: uppercase;
+        padding: 20px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition-duration: 2s;
+        &:hover {
+          transform: scale(0.9);
+        }
+      }
+      .conttent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        height: 10%;
+        
+
+     
+
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        h2 {
+          font-weight: 600;
+          padding: 10px;
+          border-radius: 10px;
+          box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: conic-gradient(from 20deg, #9b85ce, transparent);
+          color: #10572b;
         }
       }
     }
   }
   .home_footer {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

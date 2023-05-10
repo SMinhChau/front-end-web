@@ -1,0 +1,61 @@
+@import 'src/Variables.scss';
+@import 'src/Resposive.scss';
+
+.semester_management {
+  margin: 0 10px;
+
+  .semester_func {
+    padding: 0 20px;
+    padding-top: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title_name {
+      font-size: 1.2rem;
+      color: #3a86ff;
+      font-weight: 600;
+      text-shadow: 0px 2px 1px #caf0f8;
+      text-transform: uppercase;
+      padding: 20px 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  }
+  .info {
+    display: flex;
+
+    margin-top: 20px;
+
+    border-radius: 10px;
+    .card_item {
+      background: conic-gradient(from 20deg, transparent, #ade8f4);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+      transition-duration: 2s;
+      &:hover {
+        box-shadow: #007aff 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        cursor: auto;
+      }
+      // width: 46%;
+      .lable {
+        font-size: 1.2rem;
+        color: #588157;
+        font-weight: 600;
+        text-shadow: 0px 2px 1px #caf0f8;
+        text-transform: uppercase;
+        padding: 20px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .value_text {
+        font-size: 1.2rem;
+        color: #e29578;
+        font-weight: 600;
+        text-shadow: 0px 2px 1px #caf0f8;
+        text-transform: uppercase;
+        padding: 20px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+    }
+  }
+}

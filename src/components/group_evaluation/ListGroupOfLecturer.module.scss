@@ -5,11 +5,13 @@
 padding-top: 30px;
   flex-direction: column;
   flex: 1;
+ 
   .type_evalution {
     background-color: white;
     width: 100%;
     text-align: center;
     padding: 20px 0;
+    
     .btn_radio {
       text-transform: uppercase;
     }
@@ -50,6 +52,14 @@ padding-top: 30px;
     overflow-x: scroll;
     // margin-right: 20px;
     // margin-left: 20px;
+    .title_non{
+      display: flex;
+      align-items: center;
+      justify-content:center;
+      width: 50%;
+      color: red;
+   
+    }
     .icon {
       font-size: 50px;
       color: rgb(13, 72, 139);

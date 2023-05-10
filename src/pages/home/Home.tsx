@@ -48,27 +48,41 @@ const Home = () => {
             );
           })}
         </Carousel>
-        <div className={cls('content')}>
-          <div className={cls('_title')}>
-            <Row justify={'center'} align={'middle'}>
-              <h1 className={cls('title')}>Giới thiệu</h1>
-            </Row>
+        <Row justify={'center'} align={'middle'} style={{ width: '100%', marginTop: '20px' }}>
+          <div className={cls('content')}>
+            <div className={cls('_title')}>
+              <Row justify={'center'} align={'middle'} style={{ width: '50%' }}>
+                <h1 className={cls('title')}>Giới thiệu</h1>
+              </Row>
+            </div>
+            <div className={cls('main_content')}>
+              <h2 className={cls('content_title')}>{MAIN.title}</h2>
+              <p style={{ color: '#415a77', fontWeight: '400', fontSize: '1.2rem' }} className={cls('content_title')}>
+                {MAIN.main}
+              </p>
+            </div>
           </div>
-          <div className={cls('main_content')}>
-            <h2 className={cls('content_title')}>{MAIN.title}</h2>
-            <p style={{ color: '#415a77', fontWeight: '400' }} className={cls('content_title')}>
-              {MAIN.main}
-            </p>
-          </div>
-        </div>
+        </Row>
 
         <div className={cls('info')}>
-          <h1 className={cls('title')}>Một số chứ năng</h1>
-          <Carousel autoplay style={{ position: 'relative' }}>
-            {LIST_DES.map((item) => {
-              return <h2 className={cls('content_title')}>{item.title}</h2>;
-            })}
-          </Carousel>
+          <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
+            <Col span={12}>
+              <h1 className={cls('name_school')}>Trường đại học công nghiệp thành phố hồ chí minh</h1>
+            </Col>
+
+            <Col span={12} style={{ width: '100%', height: '10%' }}>
+              <h1 className={cls('title')}>Một số chứ năng</h1>
+              <Carousel autoplay style={{ position: 'relative' }}>
+                {LIST_DES.map((item) => {
+                  return (
+                    <div className={cls('conttent')}>
+                      <h2 className={cls('content_title')}>{item.title}</h2>
+                    </div>
+                  );
+                })}
+              </Carousel>
+            </Col>
+          </Row>
         </div>
       </div>
 

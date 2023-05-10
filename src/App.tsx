@@ -28,6 +28,7 @@ import ForgotPassword from './pages/login/ForgotPassword';
 import Notification from './components/notification/Notification';
 import RejectUserLogin from './components/notification/RejectUserLogin';
 import ChangePassword from './components/setting/ChangePassword';
+import SemesterInfo from './pages/semester/SemesterInfo';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -167,6 +168,15 @@ function App() {
           element={
             <PrivateRoute isLogin={userState.is_login}>
               <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/term-info"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <SemesterInfo />
             </PrivateRoute>
           }
         />

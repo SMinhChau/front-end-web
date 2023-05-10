@@ -75,7 +75,11 @@ const GradingAssigment = () => {
     return (
       <>
         {listGroup.length === 0 && (
-          <Result status="warning" title={<div style={{ fontSize: '16px', color: '#264653' }}>Chưa có nhóm cho học kỳ này</div>} />
+          <Result status="warning" title={''}>
+            <Text type="danger" style={{ fontSize: '18px' }}>
+              Chưa có nhóm cho học kỳ này
+            </Text>
+          </Result>
         )}
         {listGroup.map((item, index) => {
           GetGroupLectureForGroup(item.id);
