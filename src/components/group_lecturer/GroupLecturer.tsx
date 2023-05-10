@@ -14,14 +14,11 @@ import {
   Modal,
   Row,
   Select,
-  SelectProps,
   Skeleton,
   Space,
   Table,
   Tag,
   Tooltip,
-  Upload,
-  UploadProps,
 } from 'antd';
 import { useAppSelector } from '../../redux/hooks';
 import { DeleteOutlined, EditOutlined, GroupOutlined, MoreOutlined, PlusOutlined, UserSwitchOutlined } from '@ant-design/icons';
@@ -465,6 +462,12 @@ const GroupLecturer = () => {
     );
   }, [groupLecturers, groupDes, lecturer, loading]);
 
+  const [selectedItems, setSelectedItems] = useState<Teacher[]>([]);
+
+  const filteredOptions = lecturer.filter((o) => !selectedItems.includes(o));
+
+  const filterOption = (inputValue: string, option: Teacher) => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1;
+
   return (
     <div className={cls('group_lecturer_management')}>
       <ToastContainer />
@@ -550,8 +553,16 @@ const GroupLecturer = () => {
           </Form.Item>
 
           <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]} name="lecturerIds">
-            <Select mode="multiple" style={{ width: '100%' }} placeholder="Giảng viên" onChange={handleChange} optionLabelProp="label">
-              {lecturer.map((value) => {
+            <Select
+              value={selectedItems}
+              onChange={setSelectedItems}
+              mode="multiple"
+              style={{ width: '100%' }}
+              placeholder="Giảng viên"
+              allowClear
+              showSearch
+            >
+              {filteredOptions.map((value) => {
                 return (
                   <>
                     <Option value={value.id} label={value.name}>

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styled from './ListGroupOfLecturer.module.scss';
-import { Badge, Card, Descriptions, Radio, Result, Row, Skeleton } from 'antd';
+import { Badge, Card, Descriptions, Radio, Result, Row, Skeleton, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { useAppSelector } from '../../redux/hooks';
@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import Assign, { TypeEvalution } from '../../entities/assign';
 
 const cls = classNames.bind(styled);
+const { Text } = Typography;
 
 const ListGroupOfLecturer = () => {
   const userState = useAppSelector((state) => state.user).user;
@@ -62,7 +63,11 @@ const ListGroupOfLecturer = () => {
         <Card title={''} className={cls('list_group')}>
           <div className={cls('type_evalution')}>
             {listAssign.length === 0 && (
-              <Result status="warning" style={{ fontSize: '16px', color: '#264653' }} title="Chưa có nhóm cho học kỳ này" />
+              <Result status="warning" title="">
+                <Text type="danger" style={{ fontSize: '18px' }}>
+                  Chưa có nhóm cho học kỳ này
+                </Text>
+              </Result>
             )}
           </div>
 

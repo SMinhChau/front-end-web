@@ -101,6 +101,11 @@ const menus = {
   ],
   LECTURER: [
     {
+      name: 'Thông tin Học Kỳ',
+      image: FcCalendar,
+      url: '/term-info',
+    },
+    {
       name: 'Quản lý Đề tài',
       image: FcViewDetails,
       url: '/topic',

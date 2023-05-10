@@ -166,9 +166,6 @@ const TeacherManagement = () => {
     formData.append('termId', String(termState.termIndex.id));
     formData.append('file', fileList[0] as RcFile);
 
-    console.log('fileList[0]  == ', fileList[0]);
-    console.log('formdata== ', formData);
-
     setUploading(true);
 
     lecturerService

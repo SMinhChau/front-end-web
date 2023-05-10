@@ -25,20 +25,23 @@ export const MAIN = {
 export const LIST_DES = [
   {
     title:
-      'Hệ thống đăng ký khóa luận của trường đại học Công nghệ TP.HCM là một phần mềm hỗ trợ quản lý quá trình đăng ký khóa luận cho sinh viên. Hệ thống này cung cấp nhiều tính năng giúp sinh viên có thể đăng ký đề tài khóa luận, chọn giảng viên hướng dẫn, quản lý tiến độ, nộp báo cáo và đăng ký bảo vệ khóa luận.',
-  },
-  { title: 'Cụ thể, hệ thống đăng ký khóa luận bao gồm các tính năng như sau:' },
-  {
-    title:
-      'Đăng ký đề tài khóa luận: Sinh viên có thể đăng ký đề tài khóa luận thông qua hệ thống, cung cấp thông tin về đề tài, mô tả chi tiết và các yêu cầu khác.',
+      'Đăng ký khóa luận: Sinh viên có thể đăng ký khóa luận thông qua phần mềm này, với các thông tin cơ bản như tên, lớp, chuyên ngành, đề tài khóa luận, giảng viên hướng dẫn, v.v.',
   },
   {
     title:
-      'Lựa chọn giảng viên hướng dẫn: Hệ thống cho phép sinh viên lựa chọn giảng viên hướng dẫn theo chuyên ngành và kinh nghiệm của giảng viên.',
+      'Quản lý đề tài khóa luận: Phần mềm cho phép quản lý các thông tin liên quan đến đề tài khóa luận, bao gồm các chi tiết về đề tài, thông tin giảng viên hướng dẫn, số lượng sinh viên đăng ký, v.v. ',
   },
   {
     title:
-      'Quản lý tiến độ khóa luận: Hệ thống giúp sinh viên và giảng viên hướng dẫn quản lý tiến độ khóa luận bằng cách lên lịch các cuộc họp, thông báo các mốc quan trọng và đưa ra lời nhắc nhở đến sinh viên khi cần.',
+      'Thống kê và báo cáo: Hệ thống có thể cung cấp các báo cáo và thống kê liên quan đến đăng ký khóa luận, bao gồm thông tin về số lượng sinh viên đăng ký khóa luận, tỷ lệ đăng ký theo chuyên ngành, thống kê các đề tài khóa luận phổ biến, v.v.',
+  },
+  {
+    title:
+      'Quản lý giảng viên: Hệ thống cũng cung cấp quản lý thông tin của giảng viên như tên, email, số điện thoại, và danh sách các đề tài khóa luận mà giảng viên đang hướng dẫn.',
+  },
+  {
+    title:
+      'Tính năng hỗ trợ: Hệ thống có thể hỗ trợ các tính năng như gửi thông báo qua email hoặc tin nhắn, đặt lịch hẹn với giảng viên, và cập nhật thông tin liên quan đến đăng ký khóa luận.',
   },
   {
     title:
