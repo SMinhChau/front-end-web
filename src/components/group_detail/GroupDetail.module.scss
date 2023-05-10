@@ -2,10 +2,11 @@
   width: 95%;
   justify-content: center;
   display: flex;
-
+  margin-top: 30px;
   flex-direction: column;
   align-items: flex-start;
   padding-left: 50px;
+
   span {
     font-weight: 700;
   }
@@ -15,19 +16,100 @@
   }
   .group_name {
     font-size: 1.3rem;
-    font-weight: 600;
+
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: 20px 0;
+  }
+  ._name {
+    margin-left: 30px;
+    font-size: 1.3rem;
+    color: #606c38;
+    font-weight: 700;
+    text-transform: uppercase;
     padding: 20px 0;
   }
   .group_member {
-    margin-bottom: 20px;
+   
+    .student_lable {
+      font-size: 1.2rem;
+      color: #3a86ff;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    .item_name {
+    
+      &:hover {
+        cursor: pointer;
+      }
+      .member {
+        font-size: 1.2rem;
+        color: #264653;
+        font-weight: 400;
+      }
+    }
   }
+  .topic_content {
+    ._topic {
+      font-size: 1.2rem;
+      color: #fb6f92;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .item_name {
+      font-size: 1.2rem;
+      color: #264653;
+      font-weight: 400;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    ._topic_hover {
+      & :hover {
+        cursor: pointer;
+      }
+      .member {
+        font-size: 1.1rem;
+        color: #264653;
+        font-weight: 400;
+      }
+    }
+
+    ._lable {
+      font-size: 1.2rem;
+      color: #3a86ff;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
   .lecturer {
     padding: 10px 0;
+    ._topic {
+      font-size: 1.2rem;
+      color: #ddb892;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .item_name {
+      &:hover {
+        cursor: pointer;
+      }
+      .member {
+        font-size: 1.2rem;
+        color: #264653;
+        font-weight: 400;
+      }
+    }
+    
 
     .group_of_lecture {
       margin-left: 20px;
+    
       .title_group {
         font-size: 0.9rem;
+        color: #3a86ff;
         font-weight: 500;
         padding-bottom: 20px;
         .sub_name_group {

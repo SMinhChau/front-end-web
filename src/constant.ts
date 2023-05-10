@@ -85,3 +85,9 @@ export const removeAccents = (str: string) => {
   }
   return str;
 };
+
+export const getNameStatus = (value: string) => {
+  if (value === 'REFUSE') return 'Không được duyệt';
+  if (value === 'PEDING') return 'Đang chờ';
+  if (value === 'ACCEPT') return 'Đã duyệt';
+};

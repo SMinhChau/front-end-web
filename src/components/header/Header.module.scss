@@ -7,9 +7,10 @@ width: 100%;
     position: fixed;
     align-items: center;
     justify-content: space-between;
-    z-index: 9999;
-
+    z-index: 999;
+    
     background-color: $white;
+
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     .logo {
         position: relative;

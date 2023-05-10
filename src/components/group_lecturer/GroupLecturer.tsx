@@ -18,6 +18,7 @@ import {
   Skeleton,
   Space,
   Table,
+  Tag,
   Tooltip,
   Upload,
   UploadProps,
@@ -27,8 +28,9 @@ import { DeleteOutlined, EditOutlined, GroupOutlined, MoreOutlined, PlusOutlined
 import lecturerService from '../../services/lecturer';
 import Teacher from '../../entities/teacher';
 import Meta from 'antd/es/card/Meta';
-import { TypeEvaluation, showMessage, showMessageEror } from '../../constant';
+import { TypeEvaluation, checkDegree, showMessage, showMessageEror } from '../../constant';
 import { Link } from 'react-router-dom';
+import { ColumnsType } from 'antd/es/table';
 
 const cls = classNames.bind(style);
 const { Option } = Select;
@@ -177,20 +179,31 @@ const GroupLecturer = () => {
       });
   };
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       title: 'Mã nhóm',
       dataIndex: 'id',
       key: 'id',
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Tên nhóm',
       dataIndex: 'name',
       key: 'name',
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Xóa',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => (
         <Button onClick={() => deleteGroupLecturer(id)}>
           <DeleteOutlined style={{ color: 'red' }} />
@@ -200,6 +213,7 @@ const GroupLecturer = () => {
     {
       title: 'Sửa',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => (
         <Button onClick={() => showEditModal(id)}>
           <EditOutlined style={{ color: '#30a3f1' }} />
@@ -209,43 +223,81 @@ const GroupLecturer = () => {
     {
       title: '',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => (
-        <Button
-          onClick={() => {
-            setInfoGroupLecturer(id);
-          }}
-        >
-          <MoreOutlined style={{ color: '#30a3f1' }} />
-        </Button>
+        <Space wrap>
+          <Tooltip title="Xem chi tiết" color={'geekblue'}>
+            <Button
+              onClick={() => {
+                setInfoGroupLecturer(id);
+              }}
+            >
+              <MoreOutlined style={{ color: '#30a3f1' }} />
+            </Button>
+          </Tooltip>
+        </Space>
       ),
     },
   ];
 
-  const columnsLecturer = [
+  const columnsLecturer: ColumnsType<any> = [
     {
       title: 'Mã GV',
       dataIndex: 'username',
       key: 'username',
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '50px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Tên GV',
       dataIndex: 'name',
       key: 'name',
+      width: 150,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Trình độ',
       dataIndex: 'degree',
-      key: 'degree',
+      width: 100,
+      render: (text: string) => {
+        const _name = checkDegree(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkDegree(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
     },
     {
       title: 'SĐT',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      width: 120,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      width: 150,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Xóa',
@@ -315,46 +367,80 @@ const GroupLecturer = () => {
   const renderGroupStudent = useMemo(() => {
     return (
       <>
-        <Skeleton loading={loading} avatar active>
-          {groupStudents?.length > 0 ? (
-            <>
-              <Card className={cls('scroll')}>
-                {groupStudents?.map((item, index) => {
-                  return (
-                    <Card.Grid className={cls('item_group')} hoverable>
-                      <div>
-                        <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
-                        {/* <GroupOutlined size={30} className={cls('icon')} /> */}
-                      </div>
-                      <Meta
-                        title={item?.group?.name}
-                        description={
-                          <div className={cls('group_more')}>
-                            <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
-                          </div>
-                        }
-                      />
-                    </Card.Grid>
-                  );
-                })}
+        {groupStudents?.length > 0 ? (
+          <>
+            <Card className={cls('scroll')}>
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+            </Card>
+          </>
+        ) : (
+          <>
+            <Badge.Ribbon text="Thông báo" color="red">
+              <Card title="Nhóm Sinh Viên" size="default">
+                Chưa có nhóm nào
               </Card>
-            </>
-          ) : (
-            <>
-              <Badge.Ribbon text="Thông báo" color="red">
-                <Card title="Nhóm Sinh Viên" size="default">
-                  Chưa có nhóm nào
-                </Card>
-              </Badge.Ribbon>
-            </>
-          )}
-        </Skeleton>
+            </Badge.Ribbon>
+          </>
+        )}
       </>
     );
   }, [groupStudents, groupDes, loading, groupLecturers]);
 
   const renderTable = useMemo(() => {
-    return <Table dataSource={groupLecturers} columns={columns} scroll={{ x: 400 }} />;
+    return <Table dataSource={groupLecturers} columns={columns} scroll={{ x: 400 }} pagination={{ pageSize: 7 }} />;
   }, [groupLecturers, columns, lecturer]);
 
   const renderTableGroupDes = useMemo(() => {
@@ -373,7 +459,8 @@ const GroupLecturer = () => {
           };
         })}
         columns={columnsLecturer}
-        scroll={{ x: 400, y: 200 }}
+        scroll={{ x: 400, y: 150 }}
+        pagination={{ pageSize: 2 }}
       />
     );
   }, [groupLecturers, groupDes, lecturer, loading]);
@@ -381,7 +468,7 @@ const GroupLecturer = () => {
   return (
     <div className={cls('group_lecturer_management')}>
       <ToastContainer />
-      <Row>
+      <Row justify={'space-between'} align={'top'} style={{ width: '100%' }}>
         <Col span={12}>
           <Skeleton loading={loadingListGroup} avatar active>
             <div className={cls('group_content')}>
@@ -405,35 +492,38 @@ const GroupLecturer = () => {
             </div>
           </Skeleton>
         </Col>
-
         <Col span={12}>
-          <div className={cls('info_item_des')}>
-            <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
-            <Skeleton loading={loadingInfoGroup} avatar active>
-              <Descriptions title={<></>}>
-                <Descriptions.Item label={<p className={cls('title_info_lecturer')}>Tên nhóm:</p>} span={1}>
-                  <h4 className={cls('name_group')}>{groupDes?.name}</h4>
-                </Descriptions.Item>
-              </Descriptions>
-              <Descriptions
-                bordered
-                layout="horizontal"
-                column={2}
-                title={<h3 className={cls('title_info_lecturer')}>Thông tin giảng viên</h3>}
-              ></Descriptions>
+          <div className={cls('left')}>
+            <Col span={24}>
+              <div className={cls('info_item_des')}>
+                <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
+                <Skeleton loading={loadingInfoGroup} avatar active>
+                  <Descriptions title={<></>}>
+                    <Descriptions.Item label={<p className={cls('title_info_lecturer')}>Tên nhóm:</p>} span={1}>
+                      <h4 className={cls('name_group')}>{groupDes?.name}</h4>
+                    </Descriptions.Item>
+                  </Descriptions>
+                  <Descriptions
+                    bordered
+                    layout="horizontal"
+                    column={2}
+                    title={<h3 className={cls('title_info_lecturer')}>Thông tin giảng viên</h3>}
+                  ></Descriptions>
 
-              {renderTableGroupDes}
-            </Skeleton>
+                  {renderTableGroupDes}
+                </Skeleton>
+              </div>
+            </Col>
+            <Col span={24}>
+              <div className={cls('info_group_student')}>
+                <Skeleton loading={loading} avatar active>
+                  <Descriptions title={<h3 className={cls('title_info')}>Nhóm được quản lý</h3>}></Descriptions>
+                  {renderGroupStudent}
+                </Skeleton>
+              </div>
+            </Col>
           </div>
         </Col>
-
-        <div className={cls('info_group_student')}>
-          <Col span={24}>
-            <Descriptions title={<h3 className={cls('title_info')}>Nhóm được quản lý</h3>}></Descriptions>
-
-            {renderGroupStudent}
-          </Col>
-        </div>
       </Row>
 
       <Modal

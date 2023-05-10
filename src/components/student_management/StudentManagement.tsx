@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './StudentManagement.module.scss';
-import { Table, Avatar, Button, Upload, Modal, Form, Input, message, Card, Select, Row, Col, Image, Descriptions, Space } from 'antd';
+import { Table, Avatar, Button, Upload, Modal, Form, Input, message, Card, Select, Row, Col, Image, Descriptions, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, UploadOutlined, EditOutlined } from '@ant-design/icons';
 import studentService from '../../services/student';
@@ -9,8 +9,9 @@ import Student from '../../entities/student';
 import { ToastContainer, toast } from 'react-toastify';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useAppSelector } from '../../redux/hooks';
-import { checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
+import { checkDegree, checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
+import Search from 'antd/es/input/Search';
 
 const avatarDefault = 'assets/avatars/avatarDefault.png';
 
@@ -33,28 +34,61 @@ const StudentManagement = () => {
       title: 'MSSV',
       dataIndex: 'username',
       key: 'username',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Tên Sinh viên',
       dataIndex: 'name',
       key: 'name',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      render: (text: string) => checkGender(text),
+      render: (text) => {
+        const _name = checkGender(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'NAM' ? 'green' : 'blue'} key={checkDegree(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
     },
     {
       title: 'Loại đào tạo',
       dataIndex: 'typeTraining',
       key: 'typeTraining',
-      render: (text: string) => checkTypeTraining(text),
+      render: (text) => {
+        const _name = checkTypeTraining(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'ĐẠI HỌC' ? 'yellow' : 'red'} key={checkTypeTraining(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
     },
   ];
   const [student, setStudent] = useState<Array<StudentData>>([]);
@@ -78,6 +112,11 @@ const StudentManagement = () => {
     phoneNumber: string;
     typeTraining: string;
   }>({ avatar: '', name: '', gender: '', email: '', phoneNumber: '', typeTraining: '' });
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+
+  const [data, setData] = useState<Array<StudentData>>([]);
 
   const showModal = () => {
     setOpen(true);
@@ -119,6 +158,11 @@ const StudentManagement = () => {
       .getStudent({})
       .then((result) => {
         setStudent(
+          result.data.map((value: any) => {
+            return { ...value, key: value.id };
+          }),
+        );
+        setData(
           result.data.map((value: any) => {
             return { ...value, key: value.id };
           }),
@@ -211,6 +255,22 @@ const StudentManagement = () => {
         showMessageEror(er.response.data.error, 5000);
       });
   };
+  const onSearch = (value: string) => {
+    console.log('value', value);
+    if (value.toUpperCase() === '') {
+      setData(student);
+    } else {
+      const filteredData = student.filter((row) =>
+        Object.values(row).some((fieldValue) => typeof fieldValue === 'string' && fieldValue.toLowerCase().includes(value.toLowerCase())),
+      );
+
+      setData(filteredData);
+    }
+  };
+
+  const RenderStudent = useMemo(() => {
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 5 }} />;
+  }, [student, baseColumns, data]);
 
   return (
     <div className={cls('student')}>
@@ -274,13 +334,18 @@ const StudentManagement = () => {
               </Button>
             </div>
           </Col>
+          <Col span={7}>
+            <div className={cls('search')}>
+              <Search className={cls('search_iput')} placeholder="Nhập tên giảng viên" allowClear size="large" onSearch={onSearch} />
+            </div>
+          </Col>
           <Col>
             {/* {viewType === 'table' && (
                             <ColumnSetting
                                 setColumnVisible={setColumnVisible}
                                 columns={baseColumns}
                                 cacheKey={Config.STUDENT_CACHE_KEY}
-                                style={{ marginLeft: 20 }}
+                                style={{ marginLeftF: 20 }}
                             />
                         )} */}
           </Col>
@@ -396,7 +461,7 @@ const StudentManagement = () => {
         </div>
       </div>
       {viewType === 'table' ? (
-        <Table dataSource={student} columns={baseColumns} scroll={{ y: 570 }} />
+        <> {RenderStudent}</>
       ) : (
         <div className={cls('card_view')}>
           <Row>

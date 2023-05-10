@@ -31,25 +31,37 @@ const MajorManagement = () => {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Chủ nhiệm ngành',
       dataIndex: 'headName',
       key: 'headName',
+
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Xóa',
       dataIndex: 'id',
+      width: 100,
       render: (id: any) => (
         <Button onClick={() => deleteMajor(id)}>
           <DeleteOutlined style={{ color: 'red' }} />
         </Button>
       ),
-      width: 200,
     },
     {
       title: 'Sửa tên chuyên ngành',
       dataIndex: 'id',
+      width: 200,
       render: (id: any) => (
         <Button
           onClick={() => {
@@ -60,11 +72,11 @@ const MajorManagement = () => {
           <EditOutlined style={{ color: '#30a3f1' }} />
         </Button>
       ),
-      width: 200,
     },
     {
       title: 'Đổi chủ nhiệm ngành',
       dataIndex: 'id',
+      width: 200,
       render: (id: any) => (
         <Button
           onClick={() => {
@@ -224,7 +236,7 @@ const MajorManagement = () => {
     <div className={cls('major_management')}>
       <ToastContainer />
       <div className={cls('major_func')}>
-        <h4 className={cls('major_title')}>Quản lý chuyên ngành</h4>
+        <h4 className={cls('major_title')}></h4>
         <Button
           type="dashed"
           icon={<PlusOutlined />}
@@ -320,7 +332,7 @@ const MajorManagement = () => {
           </Form>
         </Modal>
       </div>
-      <Table dataSource={major} columns={columns} scroll={{ y: 450, x: 540 }} />
+      <Table dataSource={major} columns={columns} scroll={{ y: 450, x: 540 }} pagination={{ pageSize: 7 }} />
     </div>
   );
 };

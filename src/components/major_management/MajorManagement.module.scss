@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  
     .major_title {
       font-weight: 600;
       font-size: 1.5rem;
@@ -12,5 +13,9 @@
       font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
       margin: 8px;
     }
+  }
+  .text_colum{
+    font-size: 16px;
+    color: #264653;
   }
 }
