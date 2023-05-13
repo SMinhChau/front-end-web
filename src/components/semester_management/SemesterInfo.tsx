@@ -58,26 +58,6 @@ const SemesterInfo = () => {
             );
           })}
         </Row>
-        {/* <Row justify="center">
-          <Col span={24}>
-            <Card>
-              {_data.map((item) => {
-                return (
-                  <Card.Grid className={cls('card_item')}>
-                    <Row justify="center">
-                      <Col span={16}>
-                        <Text className={cls('lable')}>{item.lable}</Text>
-                      </Col>
-                      <Col span={8}>
-                        <Text className={cls('value_text')}>{moment(item.value).format('MM/DD/YYYY')}</Text>{' '}
-                      </Col>
-                    </Row>
-                  </Card.Grid>
-                );
-              })}
-            </Card>
-          </Col>
-        </Row> */}
       </div>
     </div>
   );

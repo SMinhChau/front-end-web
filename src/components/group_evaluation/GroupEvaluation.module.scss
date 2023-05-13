@@ -1,10 +1,19 @@
 .group_evaluation {
   margin-left: 10px;
   margin-right: 10px;
+  padding-top: 30px;
   display: flex;
   flex-direction: row;
   flex: 1;
   height: 100%;
+  .title_group {
+    text-align: center;
+    padding: 10px 0;
+    text-transform: uppercase;
+    color: gray;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
   .group-info-col {
     height: 100%;
   }
@@ -15,6 +24,10 @@
       align-items: center;
       justify-content: space-between;
     }
+    .text_colum {
+      font-size: 16px;
+      color: #264653;
+    }
   }
 
   .info_item_des {
@@ -22,19 +35,38 @@
     padding: 20px;
     justify-content: center;
     align-items: center;
-    background-color: white;
+
     height: 100%;
+    .top_des {
+      padding: 20px;
+      background-color: white;
+      .name_group {
+        font-size: 1.1rem;
+
+        color: #bc6c25;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .title_info_group {
+        font-size: 1.1rem;
+        padding: 2px 0;
+        color: #d4a373;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .title_point {
+        font-size: 15px;
+        padding: 2px 0;
+        color: #264653;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+    }
     .title_info {
       font-size: 22px;
       font-weight: 600;
     }
-    .name_group {
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .title_info_group {
-      font-weight: 500;
-    }
+
     .des_item {
       width: 100%;
     }
@@ -43,7 +75,7 @@
       font-weight: 500;
     }
 
-    .text_colum{
+    .text_colum {
       font-size: 16px;
       color: #264653;
     }
@@ -89,7 +121,28 @@
     }
   }
   .transcript-col {
-    padding-top: 20px;
+    padding: 0 20px;
+    .title_info_student {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #264653;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .name_group {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #a98467;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .title_point {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #264653;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
     .title_info {
       font-size: 22px;
       font-weight: 600;
@@ -109,8 +162,7 @@
         padding: 10px;
       }
     }
-    .title_info_student {
-    }
+
     .title_point {
       font-size: 18px;
       font-weight: 600;

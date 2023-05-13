@@ -95,6 +95,7 @@ const GroupEvaluation = () => {
   const [avgGrader, setAvgGrader] = useState(0);
   const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
   const [avgSummary, setAvgSummary] = useState<number | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(true);
 
   useEffect(() => {
     groupService
@@ -113,6 +114,7 @@ const GroupEvaluation = () => {
       .getTranscriptsSummary(_id, termState.termIndex.id)
       .then((result) => {
         console.log('getTranscriptsSummary -> result', result.data);
+        setLoadingDetail(false);
         setTranscriptsSummary(result.data);
       })
       .catch((er) => console.log('er', er));
@@ -131,13 +133,18 @@ const GroupEvaluation = () => {
 
   useEffect(() => {
     let sum = 0;
+    console.log('listAvgGrader', listAvgGrader);
+
     listAvgGrader.forEach((i) => {
+      console.log('i.grade', i.grade);
+
       sum += i.grade;
       setAvgGrader(sum);
     });
   }, [listAvgGrader]);
 
   const loadTranscriptStudent = (id: any) => {
+    setLoadingDetail(true);
     setTranscripts([]);
     setStudentTranscript(null);
     setLoadingTranscript(true);
@@ -157,6 +164,8 @@ const GroupEvaluation = () => {
             };
           }),
         );
+        console.log('setListAvgGrader', result?.data);
+
         setListAvgGrader(
           result?.data.map((i: any) => {
             return { grade: i.grade };
@@ -341,81 +350,94 @@ const GroupEvaluation = () => {
         <Col span={9} className={cls('group-col')}>
           <Row justify={'space-between'} style={{ height: '100%' }}>
             <Col span={24}>
+              <div className={cls('title_group')}>Thông tin nhóm</div>
               <div className={cls('info_item_des')}>
-                <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
                 <Skeleton loading={!loadingInfoGroup} active paragraph={{ rows: 5 }}>
-                  <Descriptions title={<></>}>
-                    <Descriptions.Item label={<p className={cls('title_info_group')}>Tên nhóm</p>} span={1}>
-                      <h4 className={cls('name_group')}>{group?.name}</h4>
-                    </Descriptions.Item>
-                  </Descriptions>
-                  <Divider plain> Danh sách sinh viên</Divider>
+                  <div className={cls('top_des')}>
+                    <Row justify={'start'} align={'middle'}>
+                      <Col span={6}>
+                        <p className={cls('title_info_group')}>Tên nhóm :</p>
+                      </Col>
+                      <Col span={6}>
+                        <h4 className={cls('name_group')}>{group?.name}</h4>
+                      </Col>
+                    </Row>
 
-                  <Table
-                    dataSource={group?.members.map((value) => {
-                      return {
-                        id: value?.student?.id,
-                        username: value?.student?.username,
-                        name: value?.student?.name,
-                      };
-                    })}
-                    columns={columnsLecturer}
-                    pagination={{ pageSize: 2 }}
-                  />
+                    <Divider className={cls('title_point')} plain>
+                      Danh sách sinh viên
+                    </Divider>
+                    <Table
+                      dataSource={group?.members.map((value) => {
+                        return {
+                          id: value?.student?.id,
+                          username: value?.student?.username,
+                          name: value?.student?.name,
+                        };
+                      })}
+                      columns={columnsLecturer}
+                      pagination={{ pageSize: 2 }}
+                    />
+                  </div>
                 </Skeleton>
               </div>
             </Col>
           </Row>
         </Col>
 
-        <Col span={15} style={{ backgroundColor: '#ffff' }} className={cls('transcript-col')}>
-          <Spin spinning={loadingTranscript}>
-            <Descriptions title={<h3 className={cls('title_info')}>Bảng điểm - {getEvalutionName()}</h3>}></Descriptions>
-            <Descriptions title={<></>}>
-              <Descriptions.Item label={<p className={cls('title_info_student')}>MSSV</p>} span={1}>
-                <h4 className={cls('name_group')}>{studentTranscript?.username}</h4>
-              </Descriptions.Item>
-              <Descriptions.Item label={<p className={cls('title_info_student')}>Tên SV</p>} span={1}>
-                <h4 className={cls('name_group')}>{studentTranscript?.name}</h4>
-              </Descriptions.Item>
-              <Descriptions.Item label={<p className={cls('title_info_student')}>Email</p>} span={1}>
-                <h4 className={cls('name_group')}>{studentTranscript?.email}</h4>
-              </Descriptions.Item>
-            </Descriptions>
-            <Divider plain> Danh sách Tiêu chí</Divider>
-            <div className={cls('group_content')}>
-              <Table dataSource={transcripts} columns={columns} pagination={{ pageSize: 3 }} />
-            </div>
+        <Col span={15} style={{ backgroundColor: '#ffff' }}>
+          <div className={cls('transcript-col')}>
+            <div className={cls('title_group')}>Bảng điểm - {getEvalutionName()}</div>
 
-            {studentIdSelect && (
-              <>
-                <Row
-                  justify={'start'}
-                  style={{
-                    marginTop: '20px',
-                  }}
-                >
-                  <Col span={7} offset={11}>
-                    <Text mark strong type="danger" className={cls('title_point')}>
-                      Tổng điểm:
-                    </Text>
-                  </Col>
-                  <Col>{getPointAvg}</Col>
-                </Row>
-
-                <div className={cls('submit-grade')}>
-                  <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
-                    <div className={cls('avg_content')}>{renderAvgSumTranscript}</div>
-                    <Col>
-                      <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
-                        Chấm điểm
-                      </Button>
-                    </Col>
-                  </Row>
+            <Spin spinning={loadingTranscript}>
+              <Descriptions title={<></>}>
+                <Descriptions.Item label={<p className={cls('title_info_student')}>MSSV</p>} span={1}>
+                  <h4 className={cls('name_group')}>{studentTranscript?.username}</h4>
+                </Descriptions.Item>
+                <Descriptions.Item label={<p className={cls('title_info_student')}>Tên SV</p>} span={1}>
+                  <h4 className={cls('name_group')}>{studentTranscript?.name}</h4>
+                </Descriptions.Item>
+                <Descriptions.Item label={<p className={cls('title_info_student')}>Email</p>} span={1}>
+                  <h4 className={cls('name_group')}>{studentTranscript?.email}</h4>
+                </Descriptions.Item>
+              </Descriptions>
+              <Divider className={cls('title_point')} plain>
+                Danh sách Tiêu chí
+              </Divider>
+              <Skeleton loading={loadingDetail} active paragraph={{ rows: 5 }}>
+                <div className={cls('group_content')}>
+                  <Table dataSource={transcripts} columns={columns} scroll={{ x: 400, y: 290 }} />
                 </div>
-              </>
-            )}
-          </Spin>
+              </Skeleton>
+              {studentIdSelect && (
+                <>
+                  <Row
+                    justify={'start'}
+                    style={{
+                      marginTop: '20px',
+                    }}
+                  >
+                    <Col span={7} offset={11}>
+                      <Text mark strong type="danger" className={cls('title_point')}>
+                        Tổng điểm:
+                      </Text>
+                    </Col>
+                    <Col>{getPointAvg}</Col>
+                  </Row>
+
+                  <div className={cls('submit-grade')}>
+                    <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
+                      <div className={cls('avg_content')}>{renderAvgSumTranscript}</div>
+                      <Col>
+                        <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
+                          Chấm điểm
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </>
+              )}
+            </Spin>
+          </div>
         </Col>
       </Row>
     </div>

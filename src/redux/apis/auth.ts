@@ -12,8 +12,16 @@ class AuthAPI {
   }
   getInfo() {
     return createAsyncThunk('user/get-info', async (thunkAPI) => {
-      const result = await authService.getInfo();
-      if (result.status === 200) return result.data;
+      try {
+        const result = await authService.getInfo();
+
+        if (result.status === 200) {
+          console.log('result', result);
+          return result.data;
+        }
+      } catch (error) {
+        console.log('er', error);
+      }
     });
   }
   updateInfo() {

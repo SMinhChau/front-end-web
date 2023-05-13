@@ -6,13 +6,15 @@ import classNames from 'classnames/bind';
 import AppHeader from '../../components/header/Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
+
 import './Home.css';
 import contentHome, { LIST_DES, MAIN } from '../../pages/home/content';
-import { Carousel, Col, Row } from 'antd';
+import { Carousel, Col, Row, Typography } from 'antd';
 import { CopyrightOutlined, HeartOutlined } from '@ant-design/icons';
+import { AiFillReconciliation, AiOutlineMail, AiOutlineRead, AiOutlineUser } from 'react-icons/ai';
 
 const cls = classNames.bind(style);
+const { Text } = Typography;
 
 const Home = () => {
   const userState = useAppSelector((state) => state.user);
@@ -31,6 +33,16 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userState]);
 
+  const _StudentData = [
+    {
+      name: 'Nguyễn Thị Minh Châu',
+      email: 'chaunguyen.141201@gmail.com',
+    },
+    {
+      name: 'Nguyễn Thanh Sơn',
+      email: 'nguyenthanhson162001@gmail.com',
+    },
+  ];
   return (
     <div className={cls('home_page')}>
       <AppHeader />
@@ -51,9 +63,8 @@ const Home = () => {
         <Row justify={'center'} align={'middle'} style={{ width: '100%', marginTop: '20px' }}>
           <div className={cls('content')}>
             <div className={cls('_title')}>
-              <Row justify={'center'} align={'middle'} style={{ width: '50%' }}>
-                <h1 className={cls('title')}>Giới thiệu</h1>
-              </Row>
+              <h1 className={cls('title')}>Giới thiệu</h1>
+              <Row justify={'center'} align={'middle'} style={{ width: '50%' }}></Row>
             </div>
             <div className={cls('main_content')}>
               <h2 className={cls('content_title')}>{MAIN.title}</h2>
@@ -87,12 +98,50 @@ const Home = () => {
       </div>
 
       <div className={cls('home_footer')}>
-        <Row justify={'center'} align={'middle'}>
-          <HeartOutlined style={{ fontSize: '16px', color: 'red', fontWeight: 'bold' }} />
-          <Col className={cls('title_footer')} style={{ padding: '10px' }}>
-            2023
+        <Row>
+          <Col xs={{ span: 5 }} lg={{ span: 6, offset: 1 }}>
+            <h1 className={cls('title')}>Liên hệ</h1>
+            {_StudentData.map((item) => (
+              <>
+                <Row justify={'start'} align={'top'} style={{ paddingLeft: '30px', paddingBottom: '10px' }}>
+                  <Text strong className={cls('title_name')}>
+                    <AiOutlineUser style={{ fontSize: '1.2rem', fontWeight: '700' }} /> {item.name}
+                  </Text>
+                  <Text strong className={cls('title_emai')}>
+                    <AiOutlineMail style={{ fontSize: '1.2rem', fontWeight: '700' }} /> {item.email}
+                  </Text>
+                </Row>
+              </>
+            ))}
           </Col>
-          <HeartOutlined style={{ fontSize: '16px', color: 'red', fontWeight: 'bold' }} />
+          <Col xs={{ span: 5 }} lg={{ span: 6, offset: 2 }}>
+            <div className={cls('footer_center')}>
+              <AiOutlineRead
+                className={cls('icon')}
+                style={{
+                  fontSize: '26px',
+                  color: '#344e41',
+                }}
+              />
+              <Text className={cls('title_footer')}>@ 2023</Text>
+              <HeartOutlined
+                className={cls('icon')}
+                style={{
+                  fontSize: '26px',
+                  color: '#344e41',
+                  fontWeight: 'bold',
+                }}
+              />
+            </div>
+          </Col>
+          <Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 2 }}>
+            <h1 className={cls('title')}>Thống kê</h1>
+            <Row justify={'center'} align={'middle'} style={{ paddingLeft: '30px', paddingBottom: '10px' }}>
+              <Text strong className={cls('title_name')}>
+                ! Chưa có thông tin
+              </Text>
+            </Row>
+          </Col>
         </Row>
       </div>
     </div>

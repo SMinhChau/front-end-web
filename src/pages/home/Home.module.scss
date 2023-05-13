@@ -2,7 +2,6 @@
 .home_page {
   width: 100%;
   .home_body {
-    
     .slide_item {
       margin-top: 20px;
       position: relative;
@@ -18,6 +17,7 @@
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           background: conic-gradient(from 20deg, transparent, #073b4c);
           color: #fff;
+          border-radius: 10px;
           &:hover {
             transform: scale(1.1);
           }
@@ -27,6 +27,7 @@
           transition-duration: 3s;
           font-family: Arial, Helvetica, sans-serif;
           background: conic-gradient(from 20deg, transparent, #03045e);
+          border-radius: 10px;
           &:hover {
             transform: scale(1.1);
           }
@@ -47,12 +48,10 @@
       }
     }
 
-    .carousel{
-      
+    .carousel {
     }
     .content {
-     
- margin: 0 30px;
+      margin: 0 30px;
       width: 90%;
       display: flex;
       justify-content: center;
@@ -71,20 +70,17 @@
       }
       .content_title {
         color: #ff7d00;
-     
+
         padding-top: 10px;
         text-transform: uppercase;
-        padding:  0 20px;
+        padding: 0 20px;
         width: 100%;
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 10px;
       }
       ._title {
-        width: 25%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        padding: 5px 20px;
         margin-top: 20px;
         transition-duration: 3s;
         border-radius: 100px;
@@ -94,10 +90,10 @@
           transform: scale(1.1);
         }
 
-      
         .title {
+          width: 100%;
+          text-align: center;
           padding: 10px 10px;
-
           transition-duration: 3s;
           &:hover {
             transform: scale(1.1);
@@ -110,18 +106,17 @@
         }
       }
       .main_content {
-     
         transition-duration: 3s;
         &:hover {
           transform: scale(0.9);
-        };
-    display: flex;
-    width: 100%;
-    margin-top: 20px;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-        padding:  10px 0;
+        }
+        display: flex;
+        width: 100%;
+        margin-top: 20px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 10px 0;
         border-bottom-left-radius: 40px;
         border-bottom-right-radius: 40px;
         box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
@@ -132,7 +127,7 @@
     .info {
       width: 100%;
       padding: 0 50px;
-margin-top: 20px;
+      margin-top: 20px;
       justify-content: center;
       align-items: center;
       position: relative;
@@ -169,9 +164,6 @@ margin-top: 20px;
         align-items: center;
         padding: 20px;
         height: 10%;
-        
-
-     
 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -188,22 +180,70 @@ margin-top: 20px;
     }
   }
   .home_footer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: $footerHeight;
-    background-color: #ffff;
-    margin-top: 10px;
+    background-color: #f0f4ef;
+    box-shadow: #a3b18a(0, 0, 0, 0.15) 0px 5px 15px 0px;
 
-    box-shadow: rgba(17, 12, 46, 0.15) 48px 0px 48px 0px;
-    .title_footer {
+    margin: 20px 0;
+
+    .title {
+      padding: 10px 10px;
+      color: #344e41;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      font-weight: 700;
       transition-duration: 2s;
       &:hover {
+        color: #344e41;
         transform: scale(1.1);
       }
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 1.2rem;
+    }
+    .title_name {
+      color: #a8763e;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition-duration: 2s;
+      &:hover {
+        color: #fb8500;
+        transform: scale(1.1);
+      }
+    }
+    .title_emai {
+      color: #b2675e;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.1rem;
+
+      font-weight: 700;
+      transition-duration: 2s;
+      &:hover {
+        color: #f28482;
+        transform: scale(1.1);
+      }
+    }
+
+    .footer_center {
+      display: flex;
+
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+
+      .title_footer {
+        padding: 0 20px;
+
+        font-weight: 700;
+        color: #bc6c25;
+        transition-duration: 3s;
+        &:hover {
+          color: #283618;
+          transform: scale(1.1);
+        }
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.3rem;
+      }
     }
   }
 }

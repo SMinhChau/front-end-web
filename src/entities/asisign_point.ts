@@ -1,11 +1,7 @@
+import { TypeEvalution } from './assign';
 import Student from './student';
-import Topic from './topic';
-export enum TypeEvalution {
-  ADVISOR = 'ADVISOR',
-  REVIEWER = 'REVIEWER',
-  SESSION_HOST = 'SESSION_HOST',
-}
-export default interface Assign {
+
+export default interface AssignPoint {
   id: number;
   typeEvaluation: TypeEvalution;
   updatedAt: Date;
@@ -21,9 +17,7 @@ export default interface Assign {
     members: [
       {
         id: number;
-        student: {
-          id: number;
-        };
+        student: Student;
         group: {
           id: number;
         };
