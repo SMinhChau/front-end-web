@@ -13,7 +13,7 @@ import {
   Input,
   Modal,
   Row,
-  Select,
+  SelectProps,
   Skeleton,
   Space,
   Table,
@@ -28,9 +28,9 @@ import Meta from 'antd/es/card/Meta';
 import { TypeEvaluation, checkDegree, showMessage, showMessageEror } from '../../constant';
 import { Link } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
+import Select from 'react-select';
 
 const cls = classNames.bind(style);
-const { Option } = Select;
 interface GroupLecturer {
   id: number;
   name: string;
@@ -62,6 +62,11 @@ interface GroupLecturerTable extends GroupLecturer {
   key: number;
 }
 
+interface SelectOption {
+  value: number;
+  lable: string;
+}
+
 const GroupLecturer = () => {
   const [groupLecturers, setGroupLecturers] = useState<Array<GroupLecturerTable>>([]);
 
@@ -81,6 +86,7 @@ const GroupLecturer = () => {
   const [loading, setLoading] = useState(true);
   const [loadingInfoGroup, setLoadingInfoGroup] = useState(true);
   const termState = useAppSelector((state) => state.term);
+  const [defaultValue, setDefaultValue] = useState([{ value: '', label: '' }]);
 
   useEffect(() => {
     getGroupLecturer();
@@ -137,7 +143,6 @@ const GroupLecturer = () => {
 
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
-
     setGroupDes(m);
     setLoadingInfoGroup(false);
     setGroupIdDelete(m?.id);
@@ -148,14 +153,20 @@ const GroupLecturer = () => {
     setUpdateId(id);
     setOpen(true);
     setStatus('update');
+
     const m = groupLecturers.filter((value) => value.id === id)[0];
+
+    const members = m.members.map((i) => ({
+      value: i.lecturer.id,
+      label: i.lecturer.name,
+    }));
+    setDefaultValue(members);
 
     setInitData((prev: any) => {
       const data = {
         ...prev,
         termId: termState.termIndex.id,
         name: m.name,
-        lecturerIds: m.members?.map((value) => value?.lecturer?.id),
       };
 
       return data;
@@ -316,17 +327,25 @@ const GroupLecturer = () => {
     setOpen(false);
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const [id, setId] = useState<Array<SelectOption>>([]);
+
+  const handleSelectChange = (selectedOption: any) => {
+    setId(selectedOption);
   };
 
-  const onFinish = (value: { termId: number; name: string; lecturerIds: Array<number> }) => {
+  const onFinish = (value: { termId: number; name: string }) => {
+    let lecturerIds: number[] = [];
+    id.forEach((i) => {
+      lecturerIds.push(i.value);
+    });
+    console.log('lecturerIds', lecturerIds);
+
     if (status === 'insert')
       lecturerService
         .createGroupLecturer({
           ...value,
           termId: termState.termIndex.id,
-          lecturerIds: `[${value.lecturerIds}]`,
+          lecturerIds: `[${lecturerIds}]`,
         })
         .then((result) => {
           showMessage('Tạo thành công', 3000);
@@ -344,7 +363,7 @@ const GroupLecturer = () => {
         .updateGroupLecturer(updateId as number, {
           ...value,
           termId: termState.termIndex.id,
-          lecturerIds: `[${value.lecturerIds}]`,
+          lecturerIds: `[${lecturerIds}]`,
         })
         .then((result) => {
           showMessage('Cập nhật thành công', 2000);
@@ -460,13 +479,7 @@ const GroupLecturer = () => {
         pagination={{ pageSize: 2 }}
       />
     );
-  }, [groupLecturers, groupDes, lecturer, loading]);
-
-  const [selectedItems, setSelectedItems] = useState<Teacher[]>([]);
-
-  const filteredOptions = lecturer.filter((o) => !selectedItems.includes(o));
-
-  const filterOption = (inputValue: string, option: Teacher) => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1;
+  }, [groupLecturers, groupDes, loading]);
 
   return (
     <div className={cls('group_lecturer_management')}>
@@ -501,16 +514,20 @@ const GroupLecturer = () => {
               <div className={cls('info_item_des')}>
                 <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
                 <Skeleton loading={loadingInfoGroup} avatar active>
-                  <Descriptions title={<></>}>
-                    <Descriptions.Item label={<p className={cls('title_info_lecturer')}>Tên nhóm:</p>} span={1}>
+                  <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
+                    <Col span={6}>
+                      <p className={cls('title_info_lecturer')}>Tên nhóm:</p>
+                    </Col>
+                    <Col span={6}>
                       <h4 className={cls('name_group')}>{groupDes?.name}</h4>
-                    </Descriptions.Item>
-                  </Descriptions>
+                    </Col>
+                  </Row>
+
                   <Descriptions
                     bordered
                     layout="horizontal"
                     column={2}
-                    title={<h3 className={cls('title_info_lecturer')}>Thông tin giảng viên</h3>}
+                    title={<h3 className={cls('title_group')}>Thông tin giảng viên</h3>}
                   ></Descriptions>
 
                   {renderTableGroupDes}
@@ -552,30 +569,19 @@ const GroupLecturer = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]} name="lecturerIds">
+          <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]}>
             <Select
-              value={selectedItems}
-              onChange={setSelectedItems}
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Giảng viên"
-              allowClear
-              showSearch
-            >
-              {filteredOptions.map((value) => {
-                return (
-                  <>
-                    <Option value={value.id} label={value.name}>
-                      <Space>
-                        <span>
-                          {value.name} - Mã GV: {value.username}
-                        </span>
-                      </Space>
-                    </Option>
-                  </>
-                );
+              defaultValue={status === 'insert' ? [] : defaultValue}
+              onChange={handleSelectChange}
+              closeMenuOnSelect={false}
+              isMulti
+              options={lecturer.map((val) => {
+                return {
+                  value: val.id,
+                  label: val.name,
+                };
               })}
-            </Select>
+            />
           </Form.Item>
 
           <Form.Item wrapperCol={{ span: 24 }}>

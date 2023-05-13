@@ -1,17 +1,13 @@
 .list_evaluation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-padding-top: 30px;
+  padding-top: 30px;
   flex-direction: column;
   flex: 1;
- 
+  width: 100%;
   .type_evalution {
-    background-color: white;
     width: 100%;
     text-align: center;
-    padding: 20px 0;
-    
+    padding: 10px 0;
+
     .btn_radio {
       text-transform: uppercase;
     }
@@ -19,9 +15,8 @@ padding-top: 30px;
 
   .title_group {
     width: 100%;
-    background-color: white;
     text-align: center;
-    padding: 20px 0;
+    padding: 10px 0;
     text-transform: uppercase;
     color: gray;
     font-size: 1.3rem;
@@ -42,61 +37,129 @@ padding-top: 30px;
     justify-content: start;
     padding: 20px;
   }
-  .list_group {
-    width: 98%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    height: calc(100vh - 200px);
-    overflow-x: scroll;
-    // margin-right: 20px;
-    // margin-left: 20px;
-    .title_non{
-      display: flex;
-      align-items: center;
-      justify-content:center;
-      width: 50%;
-      color: red;
-   
-    }
-    .icon {
-      font-size: 50px;
-      color: rgb(13, 72, 139);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-    }
-    .icon_evaluation {
-      font-size: 1.3rem;
-      color: rgb(119, 113, 5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .group {
-      margin: 30px;
-      width: 45%;
 
+  .info {
+    width: 100%;
+    height: calc(100vh - 260px);
+
+    display: flex;
+    padding: 0 20px;
+
+    overflow-y: auto;
+    overflow-x: auto;
+    .group {
+      padding: 20px !important;
+      flex-direction: row;
+      background: conic-gradient(from 300deg, #e3f2fd, transparent);
+      border-radius: 10px;
+      width: 100%;
+      box-shadow: #bbdefb 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+      transition-duration: 3s;
+      &:hover {
+        cursor: auto;
+
+        box-shadow: #1e88e5 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+      }
       .group_name {
+        // width: 100%;
         font-size: 1.1rem;
         font-weight: 600;
+        position: relative;
         .name_info {
+          padding: 2px 0;
           font-size: 1.2rem;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: #0096c7;
+        }
+        .name_info_more {
+          font-size: 1.3rem;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: #0096c7;
+          &:hover {
+            cursor: auto;
+            color: #184e77;
+            text-shadow: 1px 3px 1px rgb(80, 71, 54);
+          }
+        }
+
+        .member {
+          padding: 5px;
+          font-size: 15px;
+          text-transform: uppercase;
           font-weight: 600;
+          color: #588157;
+        }
+
+        .evalaution_content {
+          display: flex;
+          justify-content: flex-end;
+          align-items: end;
+          transition-duration: 3s;
+          .icon_evaluation {
+            font-size: 16px;
+            color: red;
+            text-transform: uppercase;
+            &:hover {
+              cursor: pointer;
+              color: #e63946;
+            }
+          }
         }
       }
       .group_more {
+        position: absolute;
         display: flex;
-        justify-content: end;
-        align-items: end;
-        margin-top: 20px;
-        .evalaution_content {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
+        top: 80;
+        z-index: 9999;
+      }
+
+      padding: 10px 0;
+      .title {
+        font-size: 15px;
+        padding: 2px 0;
+        color: #d4a373;
+        text-transform: uppercase;
+      }
+      ._name {
+        font-size: 0.9rem;
+
+        color: #bc6c25;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .title_name {
+        font-size: 0.9rem;
+        color: rgb(119, 113, 5);
+        text-transform: uppercase;
+      }
+      .no_name {
+        font-size: 14px;
+        color: red;
+        text-transform: uppercase;
+      }
+      .item {
+        height: 50px;
+        display: flex;
+        width: 100%;
+        // justify-content: flex-start;
+        // align-items: flex-start;
+
+        overflow-y: auto;
+        overflow-x: auto;
+
+        .item_name {
+          padding-left: 20%;
+          width: 100%;
+
+          ._item {
+            font-size: 15px;
+            padding: 5px 0;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #a3b18a;
+          }
         }
       }
     }

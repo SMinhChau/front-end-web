@@ -91,3 +91,13 @@ export const getNameStatus = (value: string) => {
   if (value === 'PEDING') return 'Đang chờ';
   if (value === 'ACCEPT') return 'Đã duyệt';
 };
+
+export enum TypeStatusGroup {
+  OPEN = 'OPEN',
+  FAIL_ADVISOR = 'FAIL_ADVISOR',
+  FAIL_REVIEWER = 'FAIL_REVIEWER',
+  FAIL_SESSION_HOST = 'FAIL_SESSION_HOST',
+  PASS_ADVISOR = 'PASS_ADVISOR',
+  PASS_REVIEWER = 'PASS_REVIEWER',
+  PASS_SESSION_HOST = 'PASS_SESSION_HOST',
+}

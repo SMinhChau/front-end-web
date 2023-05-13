@@ -1,169 +1,216 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GradingAssigment.module.scss';
-import { Avatar, Badge, Button, Card, Col, Descriptions, Result, Row, Select, Skeleton, Space, Typography } from 'antd';
+import { Avatar, Col, Result, Row, Skeleton, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
 import studentService from '../../services/student';
-import GroupStudent from '../../entities/group_student';
-import { FileDoneOutlined, GroupOutlined, SnippetsOutlined, UserOutlined } from '@ant-design/icons';
+
+import { GroupOutlined, SnippetsOutlined, UserOutlined } from '@ant-design/icons';
 import Meta from 'antd/es/card/Meta';
-import { isEntityName } from 'typescript';
+
+import Topic from 'src/entities/topic';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
 
-interface GroupAssign {
+interface InfoAll {
   id: number;
-  typeEvaluation: string;
-  groupLecturer: {
+  name: string;
+  term: {
     id: number;
-    name: string;
   };
+  topic: Topic;
+  members: [
+    {
+      id: number;
+      student: {
+        id: number;
+        username: string;
+        avatar: string;
+        phoneNumber: string;
+        email: string;
+        name: string;
+        gender: string;
+        createdAt: string;
+        updatedAt: string;
+        majors: {
+          id: number;
+        };
+        typeTraining: string;
+        schoolYear: string;
+      };
+      group: {
+        id: number;
+      };
+    },
+  ];
+  groupReview: string;
+  groupHost: string;
 }
 const GradingAssigment = () => {
   const { user } = useAppSelector((state) => state.user);
-
-  const [listGroup, setListGroup] = useState<Array<GroupStudent>>([]);
+  const [listGroup, setListGroup] = useState<Array<InfoAll>>([]);
   const [loading, setLoading] = useState(true);
   const termState = useAppSelector((state) => state.term);
 
-  const [groupAssignReview, setGroupAssignRieview] = useState<Array<GroupAssign>>([]);
-  const [groupAssignSessionHost, setGroupAssignSessionHost] = useState<Array<GroupAssign>>([]);
-
   useEffect(() => {
     if (termState.term.length > 0) {
-      studentService
-        .getGroupStudents(termState.termIndex.id)
-        .then((result) => {
-          setLoading(false);
-          setListGroup(result?.data);
-        })
-        .catch((error) => {
-          console.log('error', error);
-        });
+      getDataFromApi();
     }
   }, [termState]);
 
-  const GetGroupLectureForGroup = (idGroup: number) => {
+  const getDataFromApi = () => {
     studentService
-      .getGroupLecturerOfStudentByType(Number(idGroup), termState.termIndex.id, 'REVIEWER')
-      .then((resutl) => {
-        console.log('getGroupLecturerOfStudentByType R', resutl.data);
+      .getGroupStudents(termState.termIndex.id)
+      .then((result) => {
+        setLoading(false);
 
-        setGroupAssignRieview(resutl?.data);
-      })
-      .catch((error) => console.log('error REVIEWER', error));
+        const promises = result.data.map((item: any) => {
+          let groupR = '';
+          let groupH = '';
 
-    studentService
-      .getGroupLecturerOfStudentByType(Number(idGroup), termState.termIndex.id, 'SESSION_HOST')
-      .then((resutl) => {
-        console.log('getGroupLecturerOfStudentByType H', resutl.data);
-        setGroupAssignSessionHost(resutl?.data);
+          return Promise.all([
+            studentService
+              .getGroupLecturerOfStudentByType(Number(item.id), termState.termIndex.id, 'REVIEWER')
+              .then((result) => {
+                groupR = result?.data?.[0].groupLecturer.name;
+              })
+              .catch((error) => console.log('error REVIEWER', error)),
+            studentService
+              .getGroupLecturerOfStudentByType(Number(item.id), termState.termIndex.id, 'SESSION_HOST')
+              .then((result) => {
+                groupH = result?.data?.[0].groupLecturer.name;
+              })
+              .catch((error) => console.log('error SESSION_HOST', error)),
+          ]).then(() => ({ ...item, groupReview: groupR, groupHost: groupH }));
+        });
+
+        Promise.all(promises)
+          .then((results) => setListGroup(results))
+          .catch((error) => console.log('error', error));
       })
-      .catch((error) => console.log('error SESSION_HOST', error));
+      .catch((error) => {
+        console.log('error', error);
+      });
   };
 
-  const renderInfoGroupOfStudent = useMemo(() => {
-    return <></>;
-  }, []);
-
   const renderInfoGroup = useMemo(() => {
-    console.log('groupAssignReview', groupAssignReview);
-    console.log('groupAssignSessionHost', groupAssignSessionHost);
-
     return (
       <>
-        {listGroup.length === 0 && (
-          <Result status="warning" title={''}>
-            <Text type="danger" style={{ fontSize: '18px' }}>
-              Chưa có nhóm cho học kỳ này
-            </Text>
-          </Result>
-        )}
-        {listGroup.map((item, index) => {
-          GetGroupLectureForGroup(item.id);
-          return (
+        <Skeleton loading={loading} avatar active>
+          {listGroup.length > 0 ? (
             <>
-              <Card.Grid key={index} className={cls('group')} hoverable>
-                <Avatar style={{ backgroundColor: '#87d068' }} icon={<SnippetsOutlined />} />
-                <GroupOutlined size={16} className={cls('icon')} />
-                <div className={cls('lecturer_info')}>
-                  <Row justify={'start'} align={'top'}>
-                    <Col span={12}>
-                      <Text strong className={cls('title')}>
-                        Nhóm Giảng viên phản biện
-                      </Text>
-                    </Col>
-                    <Col span={10} offset={1}>
-                      <Text mark className={cls('no_name')}>
-                        {groupAssignReview?.length > 0 ? groupAssignReview?.[0].groupLecturer?.name : 'Chưa có nhóm'}
-                      </Text>
-                    </Col>
-                  </Row>
+              <Row gutter={[24, 24]} style={{ width: '100%' }}>
+                {listGroup.map((item, index) => {
+                  const renderInfoGroup = () => (
+                    <>
+                      <Row justify={'start'} align={'top'}>
+                        <Col span={12}>
+                          <Text strong className={cls('title')}>
+                            Nhóm Giảng viên phản biện
+                          </Text>
+                        </Col>
+                        <Col span={10} offset={1}>
+                          {item?.groupReview ? (
+                            <Text className={cls('_name')}>{item?.groupReview}</Text>
+                          ) : (
+                            <Text mark className={cls('no_name')}>
+                              Chưa có nhóm
+                            </Text>
+                          )}
+                        </Col>
+                      </Row>
+                      <Row justify={'start'} align={'top'} style={{ paddingTop: '10px' }}>
+                        <Col span={12}>
+                          <Text strong className={cls('title')}>
+                            Nhóm Giảng viên hướng dẫn
+                          </Text>
+                        </Col>
+                        <Col span={10} offset={1}>
+                          {item?.groupHost ? (
+                            <Text className={cls('_name')}>{item?.groupHost}</Text>
+                          ) : (
+                            <Text mark className={cls('no_name')}>
+                              Chưa có nhóm
+                            </Text>
+                          )}
+                        </Col>
+                      </Row>
+                    </>
+                  );
 
-                  <Row justify={'start'} align={'top'}>
-                    <Col span={12}>
-                      <Text strong className={cls('title')}>
-                        Nhóm Giảng viên hướng dẫn
-                      </Text>
-                    </Col>
-                    <Col span={10} offset={1}>
-                      <Text mark className={cls('no_name')}>
-                        {groupAssignSessionHost?.length > 0 ? groupAssignSessionHost?.[0].groupLecturer?.name : 'Chưa có nhóm'}
-                      </Text>
-                    </Col>
-                  </Row>
-                </div>
-
-                <Row justify={'space-between'} align={'stretch'}>
-                  <Row justify={'end'} style={{ width: '100%' }}>
-                    <div className={cls('group_more')}>
-                      <Link to={'/group/' + item?.id}> Chi tiết...</Link>
-                    </div>
-                  </Row>
-                  <Col span={24}>
-                    <Meta
-                      title={
-                        <div className={cls('group_name')}>
-                          <Descriptions column={2} title={<div className={cls('name_info')}>Nhóm: {item?.name}</div>}>
-                            <Descriptions.Item label={<div className={cls('member')}>Thành viên</div>}>
-                              <div className={cls('item')}>
-                                {item?.members.map((i, d) => {
-                                  return (
-                                    <Space key={d}>
-                                      <Text className={cls('_item')}>{i?.student?.name}</Text>
-                                    </Space>
-                                  );
-                                })}
-                              </div>
-                            </Descriptions.Item>
-                          </Descriptions>
+                  const getNameGroup = () => (
+                    <>
+                      <Row justify={'end'} style={{ width: '100%' }}>
+                        <div className={cls('group_more_more')}>
+                          <Link to={'/group/' + item?.id}> Chi tiết...</Link>
                         </div>
-                      }
-                      description={''}
-                    />
-                  </Col>
-                </Row>
-              </Card.Grid>
+                      </Row>
+                    </>
+                  );
+                  return (
+                    <Col span={8}>
+                      <div key={index} className={cls('group')}>
+                        <Avatar style={{ backgroundColor: '#87d068' }} icon={<SnippetsOutlined />} />
+                        <div className={cls('lecturer_info')}>{renderInfoGroup()}</div>
+                        {getNameGroup()}
+                        <Col span={24}>
+                          <Meta
+                            title={
+                              <div className={cls('group_name')}>
+                                <div className={cls('name_info')}>Nhóm: {item?.name}</div>
+
+                                <div className={cls('member')}>Thành viên</div>
+
+                                <Row gutter={[24, 24]}>
+                                  <div className={cls('item')}>
+                                    <Col span={24}>
+                                      {item?.members.map((i, d) => {
+                                        console.log('members.map', i);
+
+                                        return (
+                                          <div key={d} className={cls('item_name')}>
+                                            <Text className={cls('_item')}>{i?.student?.name}</Text>
+                                          </div>
+                                        );
+                                      })}
+                                    </Col>
+                                  </div>
+                                </Row>
+                              </div>
+                            }
+                            description={''}
+                          />
+                        </Col>
+                      </div>
+                    </Col>
+                  );
+                })}
+              </Row>
             </>
-          );
-        })}
+          ) : (
+            <>
+              <Result status="warning" title={''}>
+                <Text type="danger" style={{ fontSize: '18px' }}>
+                  Chưa có nhóm cho học kỳ này
+                </Text>
+              </Result>
+            </>
+          )}
+        </Skeleton>
       </>
     );
-  }, [listGroup, groupAssignReview.length, groupAssignSessionHost.length]);
+  }, [listGroup, loading]);
 
   return (
     <div className={cls('grading_assigment')}>
-      <div className={cls('filter_term')}></div>
-
-      <h3 className={cls('title_group')}>Danh sách nhóm Sinh Viên</h3>
-
-      <Skeleton loading={loading} avatar active>
-        <Card title={''} className={cls('list_group')}>
-          {renderInfoGroup}
-        </Card>
-      </Skeleton>
+      <div className={cls('top')}>
+        <h3 className={cls('title_group')}>Danh sách nhóm Sinh Viên</h3>
+      </div>
+      <div title={''} className={cls('list_group')}>
+        {renderInfoGroup}
+      </div>
     </div>
   );
 };

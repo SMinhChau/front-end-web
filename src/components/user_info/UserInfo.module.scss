@@ -10,24 +10,27 @@
   margin-right: 50px;
   .content_title {
     .title {
-      font-size: 24px;
-      font-weight: 400;
+      text-transform: uppercase;
+      color: gray;
+      font-size: 1.5rem;
+      font-weight: 600;
       padding-top: 20px;
       padding-bottom: 20px;
     }
   }
 
-  .title {
+  .title_lable {
     font-size: 16px;
-    text-align: center;
-    //  text-transform: uppercase;
-    color: #403d39;
+    letter-spacing: '3px';
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #4f6d7a;
   }
   .item_title {
-    text-transform: uppercase;
     font-size: 16px;
-    color: gray;
-    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #1976d2;
   }
   .modal {
     width: 50%;
@@ -44,6 +47,11 @@
     .content {
       text-decoration: none;
       text-transform: none;
+      .title {
+        color: #f27059;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
     }
   }
 }

@@ -188,6 +188,7 @@ const HEADTopicManagement = () => {
     };
     topicService.updateTopicStatus(idUpdate as number, data).then(() => {
       showMessage('Đã duyệt đề tài', 3000);
+      setOpen(false);
       getListOfTopic();
     });
   };

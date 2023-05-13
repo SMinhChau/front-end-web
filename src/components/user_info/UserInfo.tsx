@@ -10,6 +10,16 @@ import majorService from '../../services/major';
 import { RcFile } from 'antd/es/upload';
 import authAPI from '../../redux/apis/auth';
 import { KeyOutlined, LoadingOutlined, SettingOutlined, UploadOutlined } from '@ant-design/icons';
+import { AiOutlineUser } from 'react-icons/ai';
+import {
+  MdManageAccounts,
+  MdOutlineEmail,
+  MdOutlineLibraryBooks,
+  MdOutlinePhoneEnabled,
+  MdOutlineVerifiedUser,
+  MdTransgender,
+  MdTurnedInNot,
+} from 'react-icons/md';
 
 const { Text } = Typography;
 const roofLink = '/user-info';
@@ -53,42 +63,50 @@ const UserInfo = () => {
       key: user?.username,
       lable: 'Mã Giảng Viên',
       value: user?.username,
+      icon: <MdManageAccounts className={cls('title_lable')} size={24} />,
     },
 
     {
       key: user?.name,
       lable: 'Tên giảng viên',
       value: user?.name,
+      icon: <AiOutlineUser className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.gender,
       lable: 'Giới tính',
       value: checkGender(user?.gender),
+      icon: <MdTransgender className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.phoneNumber,
       lable: 'Số điện thoại',
       value: user?.phoneNumber,
+      icon: <MdOutlinePhoneEnabled className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.email,
       lable: 'Email',
       value: user?.email,
+      icon: <MdOutlineEmail className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.name,
       lable: 'Chuyên ngành',
       value: major?.name,
+      icon: <MdOutlineLibraryBooks className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.role,
       lable: 'Chức vụ',
       value: checkRole(user?.role),
+      icon: <MdOutlineVerifiedUser className={cls('title_lable')} size={24} />,
     },
     {
       key: user?.degree,
       lable: 'Trình độ',
       value: checkDegree(user?.degree),
+      icon: <MdTurnedInNot className={cls('title_lable')} size={24} />,
     },
   ];
 
@@ -178,28 +196,19 @@ const UserInfo = () => {
 
   return (
     <div className={cls('user_info')}>
-      <Row justify={'space-between'}>
+      <Row justify={'start'}>
         <Col span={16}>
           <Descriptions
             column={1}
             title={
               <div className={cls('content_title')}>
-                <Text strong type="secondary" className={cls('title')}>
-                  Thông tin cá nhân
-                </Text>
+                <Text className={cls('title')}>Thông tin cá nhân</Text>
               </div>
             }
             style={{ marginTop: '20px' }}
-          >
-            {DataInfo.map((item, key) => {
-              return (
-                <Descriptions.Item label={<p className={cls('title')}>{item?.lable}</p>}>
-                  <p className={cls('item_title')}>{item?.value}</p>
-                </Descriptions.Item>
-              );
-            })}
-          </Descriptions>
+          ></Descriptions>
         </Col>
+
         <Col span={8}>
           <Row justify={'end'}>
             <div className={cls('btn')}>
@@ -222,6 +231,24 @@ const UserInfo = () => {
               </Button>
             </div>
           </Row>
+        </Col>
+      </Row>
+
+      <Row gutter={[4, 10]}>
+        <Col span={24}>
+          {DataInfo.map((item, key) => {
+            return (
+              <Row align={'stretch'} style={{ padding: '10px', marginLeft: '10px' }}>
+                <Col span={1}>{item.icon}</Col>
+                <Col span={6}>
+                  <p className={cls('title_lable')}>{item?.lable}</p>
+                </Col>
+                <Col span={10}>
+                  <p className={cls('item_title')}>{item?.value}</p>
+                </Col>
+              </Row>
+            );
+          })}
         </Col>
       </Row>
 
@@ -331,7 +358,9 @@ const UserInfo = () => {
                 </Text> */}
 
         <Divider plain className={cls('title')}>
-          Cài đặt <SettingOutlined style={{ paddingLeft: '20px' }} />
+          <p className={cls('title_lable')}>
+            Cài đặt <SettingOutlined style={{ paddingLeft: '20px' }} size={20} />
+          </p>
         </Divider>
 
         <Col span={6}>
