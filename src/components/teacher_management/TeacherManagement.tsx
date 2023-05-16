@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './TeacherManagement.module.scss';
-import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input, Space, Tag } from 'antd';
+import { Table, Avatar, Button, Upload, Select, message, Row, Col, Modal, Form, Input, Space, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import Config from '../../utils/config';
@@ -15,6 +15,7 @@ import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
 
 import { ToastContainer } from 'react-toastify';
 import Search from 'antd/es/input/Search';
+import { MdOutlinePassword } from 'react-icons/md';
 const avatarDefault = 'assets/avatars/avatarDefault.png';
 
 const cls = classNames.bind(style);
@@ -100,6 +101,24 @@ const TeacherManagement = () => {
           </Tag>
         );
       },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
+      width: 50,
+      render: (id: any) => (
+        <Space wrap>
+          <Tooltip title="Mật khẩu mặt định" color={'geekblue'}>
+            <Button
+              onClick={() => {
+                reSetPasss(id);
+              }}
+            >
+              <MdOutlinePassword style={{ color: '#30a3f1' }} />
+            </Button>
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 
@@ -312,6 +331,19 @@ const TeacherManagement = () => {
   const renderTableLecturer = useMemo(() => {
     return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 5 }} />;
   }, [lecturer, baseColumns, data]);
+
+  const reSetPasss = (id: number) => {
+    lecturerService
+      .reSetPass(id, { password: '123456' })
+      .then((result) => {
+        console.log('ressult', result.data);
+        showMessage('Đã cập nhật', 3000);
+      })
+      .catch((errr) => {
+        console.log('errr', error);
+        showMessageEror('Lỗi cập nhật', 3000);
+      });
+  };
 
   return (
     <div className={cls('teacher_management')}>

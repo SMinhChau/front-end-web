@@ -1,7 +1,25 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './StudentManagement.module.scss';
-import { Table, Avatar, Button, Upload, Modal, Form, Input, message, Card, Select, Row, Col, Image, Descriptions, Space, Tag } from 'antd';
+import {
+  Table,
+  Avatar,
+  Button,
+  Upload,
+  Modal,
+  Form,
+  Input,
+  message,
+  Card,
+  Select,
+  Row,
+  Col,
+  Image,
+  Descriptions,
+  Space,
+  Tag,
+  Tooltip,
+} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, UploadOutlined, EditOutlined } from '@ant-design/icons';
 import studentService from '../../services/student';
@@ -12,6 +30,7 @@ import { useAppSelector } from '../../redux/hooks';
 import { checkDegree, checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
 import Search from 'antd/es/input/Search';
+import { MdOutlinePassword } from 'react-icons/md';
 
 const avatarDefault = 'assets/avatars/avatarDefault.png';
 
@@ -89,6 +108,24 @@ const StudentManagement = () => {
           </Tag>
         );
       },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
+      width: 50,
+      render: (id: any) => (
+        <Space wrap>
+          <Tooltip title="Mật khẩu mặt định" color={'geekblue'}>
+            <Button
+              onClick={() => {
+                reSetPasss(id);
+              }}
+            >
+              <MdOutlinePassword style={{ color: '#30a3f1' }} />
+            </Button>
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
   const [student, setStudent] = useState<Array<StudentData>>([]);
@@ -271,6 +308,17 @@ const StudentManagement = () => {
   const RenderStudent = useMemo(() => {
     return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 5 }} />;
   }, [student, baseColumns, data]);
+
+  const reSetPasss = (id: number) => {
+    studentService
+      .reSetPass(id, { password: '123456' })
+      .then((result) => {
+        showMessage('Đã cập nhật', 3000);
+      })
+      .catch((errr) => {
+        showMessageEror('Lỗi cập nhật', 3000);
+      });
+  };
 
   return (
     <div className={cls('student')}>
