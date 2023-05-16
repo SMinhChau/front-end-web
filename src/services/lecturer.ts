@@ -125,6 +125,13 @@ class LecturerService {
       method: 'get',
     });
   }
+  async reSetPass(id: number, data: { password: string }) {
+    return await axiosAuth({
+      url: `/lecturer/lecturers/${id}/reset-password`,
+      method: 'patch',
+      data,
+    });
+  }
 }
 
 const lecturerService = new LecturerService();

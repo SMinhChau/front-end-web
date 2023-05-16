@@ -61,6 +61,14 @@ class StudentService {
       method: 'get',
     });
   }
+
+  async reSetPass(id: number, data: { password: string }) {
+    return await axiosAuth({
+      url: `/lecturer/students/${id}/reset-password`,
+      method: 'patch',
+      data,
+    });
+  }
 }
 
 const studentService = new StudentService();
