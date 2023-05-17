@@ -133,24 +133,6 @@ const GroupAdvisor = () => {
                   );
                 })}
               </Row>
-
-              {/* {listAssign.map((item, index) => (
-                  <Row gutter={[24, 24]}>
-                    <Col span={8}>
-                      <div className={cls('group_item')}>
-                        <div className={cls('group_name')}>Nhóm: {item?.group.name}</div>
-                        <div className={cls('group_more')}>
-                          <div className={cls('evalaution_content')}>
-                            <DoubleRightOutlined className={cls('icon_evaluation')} size={20} />
-                            <Link to={`/group/evaluation-for-group/${item?.group.id}?type=${item.typeEvaluation}&assignId=${item.id}`}>
-                              Chấm điểm
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                ))} */}
             </>
           ) : (
             <Result status="warning" title="">
