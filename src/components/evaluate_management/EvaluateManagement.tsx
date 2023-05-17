@@ -8,7 +8,7 @@ import evaluateService from 'src/services/evaluate';
 import Table, { ColumnsType } from 'antd/es/table';
 import { DeleteOutlined, EditOutlined, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import { ToastContainer } from 'react-toastify';
-import { checkPoint, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkPoint, showMessage, showMessageEror } from '../../constant';
 
 interface EvaluateTableType extends Evaluate {
   key: number;
@@ -161,7 +161,7 @@ const EvaluateManagement = () => {
         getListOfEvaluate();
       })
       .catch((err) => {
-        showMessageEror(err.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[err.response.data.code].message, 3000);
       });
   };
 
@@ -203,7 +203,7 @@ const EvaluateManagement = () => {
             setOpen(false);
           })
           .catch((error) => {
-            showMessageEror(error.response.data.error, 2000);
+            showMessageEror(ErrorCodeDefine[error.response.data.code].message, 2000);
           });
       } else {
         showMessageEror('Vui lòng nhập điểm đúng định dạng', 2000);

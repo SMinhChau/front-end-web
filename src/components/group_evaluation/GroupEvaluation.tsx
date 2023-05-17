@@ -10,7 +10,7 @@ import transcriptService from '../../services/transcript';
 import Teacher from '../../entities/teacher';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Student from '../../pages/student/Student';
-import { showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
 import studentService from '../../services/student';
 import TranscriptSumMary from '../../entities/transcript';
 
@@ -179,7 +179,7 @@ const GroupEvaluation = () => {
       })
 
       .catch((error) => {
-        showMessageEror(error.response.data.error, 5000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
         setLoadingTranscript(false);
       });
   };
@@ -230,7 +230,7 @@ const GroupEvaluation = () => {
         );
       })
       .catch((error) => {
-        showMessageEror(JSON.stringify(error.response.data.error) || 'Chấm điểm thất bại', 5000);
+        showMessageEror(JSON.stringify(ErrorCodeDefine[error.response.data.code].message) || 'Chấm điểm thất bại', 5000);
         setLoadingTranscript(false);
       });
   };

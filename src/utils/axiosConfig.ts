@@ -1,6 +1,6 @@
 import axios, { AxiosRequestHeaders } from 'axios';
 import tokenService from '../services/token';
-import { URL } from '../constant';
+import { ErrorCodeDefine, URL } from '../constant';
 
 const axiosAuth = axios.create({
   baseURL: URL,
@@ -24,8 +24,10 @@ axiosAuth.interceptors.response.use(
   },
   async (error) => {
     const config = error.config;
+    const status = error.response ? error.response.status : null;
+
     // Access Token was expired
-    if (error.response && error.response.status === 401 && !config._retry) {
+    if (status === 422 && !config._retry) {
       config._retry = true;
       try {
         const refresh_token = tokenService.getRefreshToken();
@@ -33,9 +35,7 @@ axiosAuth.interceptors.response.use(
           const res = await axios({
             url: URL + '/lecturer/auth/Refresh-token',
             method: 'post',
-            data: {
-              refreshToken: tokenService.getRefreshToken(),
-            },
+            data: { refreshToken: refresh_token },
           });
           if (res.data.accessToken) {
             tokenService.setAccessToken(res.data.accessToken);
@@ -47,6 +47,7 @@ axiosAuth.interceptors.response.use(
         return Promise.reject(error);
       }
     }
+
     return Promise.reject(error);
   },
 );

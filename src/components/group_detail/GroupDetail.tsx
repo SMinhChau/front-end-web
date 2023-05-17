@@ -12,7 +12,7 @@ import GroupLecturer from '../group_lecturer/GroupLecturer';
 import lecturerService from '../../services/lecturer';
 import { useAppSelector } from '../../redux/hooks';
 import { ToastContainer } from 'react-toastify';
-import { checkDegree, checkGender, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkDegree, checkGender, showMessage, showMessageEror } from '../../constant';
 import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { AiOutlineBars, AiOutlineUser } from 'react-icons/ai';
 import { BiGroup } from 'react-icons/bi';
@@ -186,7 +186,7 @@ const GroupDetail = () => {
         })
         .catch((error) => {
           console.log(error);
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     } else {
       lecturerService
@@ -201,7 +201,7 @@ const GroupDetail = () => {
           getGroupReviewApi(Number(idGroup));
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     }
   };
@@ -225,7 +225,7 @@ const GroupDetail = () => {
         })
         .catch((error) => {
           console.log(error);
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     } else {
       lecturerService
@@ -239,7 +239,7 @@ const GroupDetail = () => {
           showMessage('Cập nhật thành công', 3000);
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     }
   };
@@ -281,12 +281,8 @@ const GroupDetail = () => {
         );
       else
         return (
-          <div style={{ width: '100%' }}>
-            <Badge.Ribbon text="Thông báo" color="red">
-              <Card title="Sinh viên" size="default">
-                Chọn Sinh Viên
-              </Card>
-            </Badge.Ribbon>
+          <div style={{ width: '90%' }}>
+            <Badge.Ribbon text="Không có sinh viên" color="red"></Badge.Ribbon>
           </div>
         );
     }
@@ -601,8 +597,15 @@ const GroupDetail = () => {
           <Card
             title={
               <Descriptions title="">
-                <Descriptions.Item label={<div className={cls('group_name')}>Tên nhóm</div>}>
-                  <div className={cls('_name')}>{inforGroup?.name}</div>
+                <Descriptions.Item label={''}>
+                  <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
+                    <Col>
+                      <div className={cls('group_name')}>Tên nhóm: </div>
+                    </Col>
+                    <Col>
+                      <div className={cls('_name')}>{inforGroup?.name}</div>
+                    </Col>
+                  </Row>
                 </Descriptions.Item>
               </Descriptions>
             }

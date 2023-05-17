@@ -27,7 +27,7 @@ import Student from '../../entities/student';
 import { ToastContainer, toast } from 'react-toastify';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useAppSelector } from '../../redux/hooks';
-import { checkDegree, checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkDegree, checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
 import Search from 'antd/es/input/Search';
 import { MdOutlinePassword } from 'react-icons/md';
@@ -206,7 +206,7 @@ const StudentManagement = () => {
         );
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 5000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
       });
   };
 

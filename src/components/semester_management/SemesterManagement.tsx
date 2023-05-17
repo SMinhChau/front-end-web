@@ -11,7 +11,7 @@ import ColumnSetting from '../column_setting/ColumnSetting';
 import Config from '../../utils/config';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setTermSlice } from '../../redux/slices/term_slice';
-import { showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
@@ -285,8 +285,7 @@ const SemesterManagement = () => {
         getListOfTerm();
       })
       .catch((err) => {
-        console.log('err', err);
-        showMessageEror(err.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[err.response.data.code].message, 3000);
       });
   };
 
@@ -321,7 +320,7 @@ const SemesterManagement = () => {
         setModalUpdate(false);
       })
       .catch((err) => {
-        showMessageEror(err.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[err.response.data.code].message, 3000);
         setModalUpdate(false);
       });
   };
@@ -334,7 +333,7 @@ const SemesterManagement = () => {
         getListOfTerm();
       })
       .catch((err) => {
-        showMessageEror(err.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[err.response.data.code].message, 3000);
       });
   };
 
