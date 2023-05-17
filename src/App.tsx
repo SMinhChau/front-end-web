@@ -29,6 +29,7 @@ import Notification from './components/notification/Notification';
 import RejectUserLogin from './components/notification/RejectUserLogin';
 import ChangePassword from './components/setting/ChangePassword';
 import SemesterInfo from './pages/semester/SemesterInfo';
+import GroupAdvisorOfLecture from './pages/group_advisor/GroupAdvisorOfLecturer';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -168,6 +169,14 @@ function App() {
           element={
             <PrivateRoute isLogin={userState.is_login}>
               <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/group-advisor"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <GroupAdvisorOfLecture />
             </PrivateRoute>
           }
         />

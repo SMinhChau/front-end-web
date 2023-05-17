@@ -1,6 +1,6 @@
 import { AiOutlineCalendar } from 'react-icons/ai';
 
-import { FcCalendar, FcViewDetails, FcManager, FcTodoList, FcPortraitMode, FcNews, FcReading } from 'react-icons/fc';
+import { FcCalendar, FcViewDetails, FcManager, FcTodoList, FcPortraitMode, FcNews, FcReading, FcGrid } from 'react-icons/fc';
 
 const menus = {
   ADMIN: [
@@ -52,6 +52,11 @@ const menus = {
       url: '/group-lecturer',
     },
     {
+      name: 'Nhóm hướng dẫn',
+      image: FcGrid,
+      url: '/group-advisor',
+    },
+    {
       name: 'Quản Lý Chấm Điểm',
       image: FcNews,
       url: '/evaluation-group-of-lecturer',
@@ -94,6 +99,11 @@ const menus = {
       url: '/group-lecturer',
     },
     {
+      name: 'Nhóm hướng dẫn',
+      image: FcGrid,
+      url: '/group-advisor',
+    },
+    {
       name: 'Quản Lý Chấm Điểm',
       image: FcNews,
       url: '/evaluation-group-of-lecturer',
@@ -109,6 +119,11 @@ const menus = {
       name: 'Quản lý Đề tài',
       image: FcViewDetails,
       url: '/topic',
+    },
+    {
+      name: 'Nhóm hướng dẫn',
+      image: FcGrid,
+      url: '/group-advisor',
     },
     // {
     //   name: 'Quản lý Đánh giá',

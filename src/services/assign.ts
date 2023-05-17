@@ -11,6 +11,13 @@ class AssignService {
       method: 'get',
     });
   }
+  getAssignByTypeAdvisor(lecturerId: number, data: { typeEvaluation?: string }) {
+    return axiosAuth({
+      url: `/assigns/lecturers/${lecturerId}`,
+      params: data,
+      method: 'get',
+    });
+  }
 }
 
 const studentService = new AssignService();
