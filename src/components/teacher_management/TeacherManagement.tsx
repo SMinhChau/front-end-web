@@ -10,7 +10,7 @@ import Teacher from '../../entities/teacher';
 import { useAppSelector } from '../../redux/hooks';
 import type { UploadProps, UploadFile, RcFile } from 'antd/es/upload/interface';
 import lecturerService from '../../services/lecturer';
-import { checkDegree, checkGender, removeAccents, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkDegree, checkGender, removeAccents, showMessage, showMessageEror } from '../../constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
 
 import { ToastContainer } from 'react-toastify';
@@ -284,9 +284,9 @@ const TeacherManagement = () => {
         console.log('result add ', result);
         // window.location.reload();
       })
-      .catch((er) => {
+      .catch((error) => {
         setOpen(false);
-        showMessageEror(er.response.data.error, 5000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
       });
   };
 

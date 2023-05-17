@@ -7,7 +7,7 @@ import style from './MajorManagement.module.scss';
 import type { ColumnsType } from 'antd/es/table';
 import headOfLecturerService from '../../services/lecturer';
 import majorService from '../../services/major';
-import { showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
 import { useAppSelector } from 'src/redux/hooks';
 
 const cls = classNames.bind(style);
@@ -167,7 +167,7 @@ const MajorManagement = () => {
         getListOfMajor();
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
       });
   };
 
@@ -199,7 +199,7 @@ const MajorManagement = () => {
           getListOfMajor();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     else {
       majorService
@@ -210,7 +210,7 @@ const MajorManagement = () => {
           getListOfMajor();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     }
   };
@@ -224,7 +224,7 @@ const MajorManagement = () => {
         getListOfMajor();
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
       });
   };
 

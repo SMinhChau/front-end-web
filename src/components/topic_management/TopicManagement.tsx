@@ -13,7 +13,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Config from '../../utils/config';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import TextArea from 'antd/es/input/TextArea';
-import { getNameStatus, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, getNameStatus, showMessage, showMessageEror } from '../../constant';
 import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
 import { ColumnsType } from 'antd/es/table';
@@ -212,7 +212,7 @@ const TopicManagement = () => {
           getTopic(termState.termIndex.id);
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 5000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
         });
   };
 
@@ -224,7 +224,7 @@ const TopicManagement = () => {
         getTopic(termState.termIndex.id);
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 5000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
       });
   };
   const showEditModal = (id: number) => {

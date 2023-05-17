@@ -25,7 +25,7 @@ import { DeleteOutlined, EditOutlined, GroupOutlined, MoreOutlined, PlusOutlined
 import lecturerService from '../../services/lecturer';
 import Teacher from '../../entities/teacher';
 import Meta from 'antd/es/card/Meta';
-import { TypeEvaluation, checkDegree, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, TypeEvaluation, checkDegree, showMessage, showMessageEror } from '../../constant';
 import { Link } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 import Select from 'react-select';
@@ -87,6 +87,7 @@ const GroupLecturer = () => {
   const [loadingInfoGroup, setLoadingInfoGroup] = useState(true);
   const termState = useAppSelector((state) => state.term);
   const [defaultValue, setDefaultValue] = useState([{ value: '', label: '' }]);
+  const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     getGroupLecturer();
@@ -122,7 +123,7 @@ const GroupLecturer = () => {
         setLoading(true);
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
       });
   };
 
@@ -183,7 +184,7 @@ const GroupLecturer = () => {
         setLoading(true);
       })
       .catch((error) => {
-        showMessageEror(error.response.data.error, 3000);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
       });
   };
 
@@ -355,7 +356,7 @@ const GroupLecturer = () => {
           setLoading(true);
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 3000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
           setOpen(false);
         });
     else {
@@ -374,7 +375,7 @@ const GroupLecturer = () => {
           // window.location.reload();
         })
         .catch((error) => {
-          showMessageEror(error.response.data.error, 2000);
+          showMessageEror(ErrorCodeDefine[error.response.data.code].message, 2000);
           setOpen(false);
         });
     }
@@ -576,9 +577,13 @@ const GroupLecturer = () => {
               closeMenuOnSelect={false}
               isMulti
               options={lecturer.map((val) => {
+                let me = '';
+                if (val.id === user.id) {
+                  me = '(Bạn)';
+                }
                 return {
                   value: val.id,
-                  label: val.name,
+                  label: `${val.name} ${me} - (Mã: ${val.username} - Trình độ: ${checkDegree(val.degree)})`,
                 };
               })}
             />
