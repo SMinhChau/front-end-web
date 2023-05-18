@@ -1,20 +1,22 @@
-import Teacher from 'src/pages/teacher/Teacher';
 import { TypeEvalution } from './assign';
 import Student from './student';
+import Teacher from './teacher';
 
-export default interface AssignPoint {
+export default interface AssignAdvisor {
   id: number;
   typeEvaluation: TypeEvalution;
-  updatedAt: Date;
+
   group: {
     id: number;
     name: string;
     term: {
       id: number;
     };
+    status: string;
     topic: {
       id: number;
     };
+
     members: [
       {
         id: number;
@@ -25,10 +27,10 @@ export default interface AssignPoint {
       },
     ];
   };
+
   groupLecturer: {
     id: number;
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
+    members: [Teacher];
   };
 }

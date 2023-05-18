@@ -13,7 +13,7 @@ class AssignService {
   }
   getAssignByTypeAdvisor(lecturerId: number, data: { typeEvaluation?: string }) {
     return axiosAuth({
-      url: `/assigns/lecturers/${lecturerId}`,
+      url: `/lecturer/assigns/lecturers/${lecturerId}`,
       params: data,
       method: 'get',
     });

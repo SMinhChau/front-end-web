@@ -246,3 +246,49 @@ export const ErrorCodeDefine: Record<string, IErrorCodeInfo> = {
     message: 'Tên học kỳ đã tồn tại',
   },
 };
+
+export type ITypeNotificationLecturer =
+  | 'UPDATE_STATUS_COMMENT_MY_TOPIC'
+  | 'ASSIGN_REVIEW'
+  | 'ASSIGN_SESSION_HOST'
+  | 'ASSIGN_ADVISOR'
+  | 'LECTURER'
+  | 'GROUP_STUDENT';
+
+export const TypeNotificationPath: Record<ITypeNotificationLecturer | string, string> = {
+  UPDATE_STATUS_COMMENT_MY_TOPIC: '/topic',
+  ASSIGN_REVIEW: '/evaluation-group-of-lecturer',
+  ASSIGN_SESSION_HOST: '/evaluation-group-of-lecturer',
+  ASSIGN_ADVISOR: '/evaluation-group-of-lecturer',
+  LECTURER: '/group-lecturer', // khi thêm giảng viên vào học kỳ hoặc đôi role của lecturer
+  GROUP_STUDENT: '/group-advisor',
+};
+
+// // Khi nhận được thông báo
+// const notification = {
+//   message: "Hello",
+//   type: "LECTURER",
+// };
+
+// const path = TypeNotificationPath[notification.type];
+
+// window.location.href = path;
+
+export const getStatusGroup = (status: string) => {
+  switch (status) {
+    case 'OPEN':
+      return 'Nhóm mới tạo';
+    case 'FAIL_ADVISOR':
+      return 'Rớt hướng dẫn';
+    case 'FAIL_REVIEWER':
+      return 'Rớt phản biện';
+    case 'FAIL_SESSION_HOST':
+      return 'Rớt hội đồng';
+    case 'PASS_ADVISOR':
+      return 'Đậu phản biện';
+    case 'PASS_REVIEWER':
+      return 'Đậu hướng dẫn';
+    case 'PASS_SESSION_HOST':
+      return 'Đậu hội dồng';
+  }
+};

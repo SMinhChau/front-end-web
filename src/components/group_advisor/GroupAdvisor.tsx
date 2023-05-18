@@ -12,13 +12,15 @@ import { Link } from 'react-router-dom';
 import { TypeEvalution } from '../../entities/assign';
 
 import { AiOutlineEdit } from 'react-icons/ai';
-import AssignPoint from 'src/entities/asisign_point';
+
+import AssignAdvisor from 'src/entities/assign_advisor';
+import { getStatusGroup } from 'src/constant';
 
 const cls = classNames.bind(styled);
 const { Text } = Typography;
 
 const GroupAdvisor = () => {
-  const [listAssign, setListAssign] = useState<Array<AssignPoint>>([]);
+  const [listAssign, setListAssign] = useState<Array<AssignAdvisor>>([]);
   const [loading, setLoading] = useState(true);
   const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
   const termState = useAppSelector((state) => state.term);
@@ -31,12 +33,11 @@ const GroupAdvisor = () => {
         .then((result) => {
           setLoading(false);
           console.log('getlist -> result.data', result.data);
-
           setListAssign(result.data);
         })
         .catch((error) => {
           setLoading(false);
-          console.log('error', error);
+          console.log('getlist -> error', error);
         });
     }
   }, [termState, typeEvalution, user.id]);
@@ -116,12 +117,17 @@ const GroupAdvisor = () => {
                                   </div>
                                 </Row>
                                 <div className={cls('evalaution_content')}>
-                                  <AiOutlineEdit className={cls('icon_evaluation')} size={22} />
-                                  <Link
-                                    to={`/group/evaluation-for-group/${item?.group.id}?type=${item.typeEvaluation}&assignId=${item.id}`}
-                                  >
-                                    <div className={cls('icon_evaluation')}>Chấm điểm</div>
-                                  </Link>
+                                  <Col>
+                                    <div className={cls('icon_evaluation')}>{getStatusGroup(item.group.status)}</div>
+                                  </Col>
+                                  <Col>
+                                    <Row>
+                                      <AiOutlineEdit className={cls('icon_evaluation')} size={22} />
+                                      <Link to={`/group-advisor-of-lecturer/${item?.group.id}`}>
+                                        <div className={cls('icon_evaluation')}>Xem chi tiết</div>
+                                      </Link>
+                                    </Row>
+                                  </Col>
                                 </div>
                               </div>
                             }
