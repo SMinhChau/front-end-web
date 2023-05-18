@@ -43,24 +43,21 @@ function AppHeader() {
       .getAllMotify()
       .then((result) => {
         setNotify(result.data);
-        console.log('result.data', result.data);
 
         let sum = 0;
-        console.log('sum 1', sum);
-        for (const item of result.data) {
-          if (item.read === 0) {
-            sum += item.id;
-          }
-        }
-        console.log('sum', sum);
 
-        SetNewNotify(sum);
+        if (result?.data.length > 0) {
+          result?.data.forEach((i: { read: number }) => {
+            if (i.read === 0) {
+              sum += i.read;
+              SetNewNotify(sum);
+            } else {
+              SetNewNotify(0);
+            }
+          });
+        }
       })
       .catch((error) => console.log('errr', error));
-  };
-
-  const handleNotify = (e: string) => {
-    console.log('Handle ->', e);
   };
 
   const handleClickItem = (id: number) => {
@@ -71,7 +68,6 @@ function AppHeader() {
     authService
       .readNotify(id)
       .then((result) => {
-        console.log('handleClickItem', result.data);
         showMessage(`Đã đọc thông báo:  ${result.data.message}`, 2000);
         navigate(path);
         getNotifyApi();
@@ -80,11 +76,9 @@ function AppHeader() {
   };
 
   const handleReadAllNotify = () => {
-    console.log('read all ->');
     authService
       .readAllNotify()
       .then((result) => {
-        console.log('result', result.data);
         showMessage('Đánh dấu tất cả là đã đọc', 2000);
         getNotifyApi();
       })
@@ -119,14 +113,9 @@ function AppHeader() {
               </div>
             </Col>
             <Col>
-              <Button
-                block={false}
-                disabled={notify.length > 0 ? false : true}
-                style={{ borderColor: '#fff' }}
-                onClick={handleReadAllNotify}
-              >
+              <Button block={false} disabled={newNotify > 0 ? false : true} style={{ borderColor: '#fff' }} onClick={handleReadAllNotify}>
                 <CheckOutlined style={{ color: '#6d6875', marginRight: '10px' }} />
-                <Space wrap style={{ color: '#006400', fontSize: '1rem', textTransform: 'uppercase' }}>
+                <Space wrap style={{ color: newNotify > 0 ? '#006400' : '#6d6875', fontSize: '1rem', textTransform: 'uppercase' }}>
                   Đánh dấu tất cả là đã đọc
                 </Space>
               </Button>
