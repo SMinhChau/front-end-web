@@ -1,0 +1,186 @@
+.group_evaluation {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 30px;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: 100%;
+
+  .type_evalution {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+
+    .btn_radio {
+      text-transform: uppercase;
+    }
+  }
+  .title_group {
+    text-align: center;
+    padding: 10px 0;
+    text-transform: uppercase;
+    color: gray;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  .group-info-col {
+    height: 100%;
+  }
+  .group_content {
+    .function {
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .text_colum {
+      font-size: 16px;
+      color: #264653;
+    }
+  }
+
+  .info_item_des {
+    // margin-left: 20px;
+    padding-right: 20px;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    .top_des {
+      padding: 20px;
+      background-color: white;
+      .name_group {
+        font-size: 1.1rem;
+
+        color: #bc6c25;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .title_info_group {
+        font-size: 1.1rem;
+        padding: 2px 0;
+        color: #d4a373;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .title_point {
+        font-size: 15px;
+
+        color: #264653;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+    }
+    .title_info {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .des_item {
+      width: 100%;
+    }
+    .tearch_name {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .text_colum {
+      font-size: 16px;
+      color: #264653;
+    }
+  }
+
+  .info_group_student {
+    margin-top: 30px;
+    margin-left: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    .title_info {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .scroll {
+      height: 20%;
+      overflow-y: scroll;
+    }
+    .item_group {
+      margin: 20px 24px;
+      width: 43%;
+
+      display: flex;
+      flex-direction: column;
+
+      .icon {
+        font-size: 50px;
+        color: rgb(13, 72, 139);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+      .group_more {
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        margin-top: 20px;
+      }
+    }
+  }
+  .type_evalution {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+  }
+  .transcript-col {
+    padding: 0 20px;
+    .title_info_student {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #264653;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .name_group {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #a98467;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .title_point {
+      font-size: 15px;
+      padding: 2px 0;
+      color: #264653;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .title_info {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .avg_content {
+      display: flex;
+      flex-direction: row;
+
+      border-radius: 5px;
+      border-color: '#fae1dd';
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .title_point {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .title_point_avg {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+}

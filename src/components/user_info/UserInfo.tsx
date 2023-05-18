@@ -263,7 +263,6 @@ const UserInfo = () => {
               Hủy
             </Button>,
           ]}
-          width={'50%'}
         >
           <Form
             labelCol={{ span: 6 }}

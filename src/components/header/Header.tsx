@@ -12,8 +12,9 @@ import authService from 'src/services/auth';
 import { setNotyfy } from 'src/redux/slices/user_slice';
 import authAPI from 'src/redux/apis/auth';
 
-import { showMessage } from 'src/constant';
+import { TypeNotificationPath, showMessage } from 'src/constant';
 import Notify from 'src/entities/notify';
+import { ToastContainer } from 'react-toastify';
 const { Search } = Input;
 const cls = classNames.bind(style);
 const logo = 'assets/Logo_IUH.png';
@@ -27,6 +28,7 @@ function AppHeader() {
   const onSearch = (value: string) => console.log(value);
   const userState = useAppSelector((state) => state.user);
   const [notify, setNotify] = useState<Array<Notify>>([]);
+  const [newNotify, SetNewNotify] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -41,6 +43,18 @@ function AppHeader() {
       .getAllMotify()
       .then((result) => {
         setNotify(result.data);
+        console.log('result.data', result.data);
+
+        let sum = 0;
+        console.log('sum 1', sum);
+        for (const item of result.data) {
+          if (item.read === 0) {
+            sum += item.id;
+          }
+        }
+        console.log('sum', sum);
+
+        SetNewNotify(sum);
       })
       .catch((error) => console.log('errr', error));
   };
@@ -50,10 +64,16 @@ function AppHeader() {
   };
 
   const handleClickItem = (id: number) => {
-    console.log('id -> ', id);
+    const m = notify.filter((item) => id === item.id)[0];
+    const path = TypeNotificationPath[m.type];
+    console.log('path->', path);
+
     authService
       .readNotify(id)
       .then((result) => {
+        console.log('handleClickItem', result.data);
+        showMessage(`Đã đọc thông báo:  ${result.data.message}`, 2000);
+        navigate(path);
         getNotifyApi();
       })
       .catch((error) => console.log('errr', error));
@@ -65,6 +85,7 @@ function AppHeader() {
       .readAllNotify()
       .then((result) => {
         console.log('result', result.data);
+        showMessage('Đánh dấu tất cả là đã đọc', 2000);
         getNotifyApi();
       })
       .catch((error) => console.log('errr', error));
@@ -121,7 +142,7 @@ function AppHeader() {
                 padding: '5px',
               }}
             >
-              Tất cả: {notify.length} thông báo
+              Tất cả: {newNotify} thông báo mới
             </div>
           </Row>
           <Divider dashed style={{ margin: '0px', color: '#f07167' }} />
@@ -183,6 +204,7 @@ function AppHeader() {
   };
   return (
     <div className={cls('header')}>
+      <ToastContainer />
       <Row gutter={[8, 24]} justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
         <Col span={24} offset={18}>
           <Row>
@@ -203,7 +225,7 @@ function AppHeader() {
                         className={cls('dropdown')}
                       >
                         <Button>
-                          <Badge count={5}>
+                          <Badge count={newNotify}>
                             <MdOutlineNotificationsActive />
                           </Badge>
                         </Button>

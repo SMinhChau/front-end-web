@@ -54,7 +54,7 @@ const menus = {
     {
       name: 'Nhóm hướng dẫn',
       image: FcGrid,
-      url: '/group-advisor',
+      url: '/group-advisor-of-lecturer',
     },
     {
       name: 'Quản Lý Chấm Điểm',
@@ -101,7 +101,7 @@ const menus = {
     {
       name: 'Nhóm hướng dẫn',
       image: FcGrid,
-      url: '/group-advisor',
+      url: '/group-advisor-of-lecturer',
     },
     {
       name: 'Quản Lý Chấm Điểm',
@@ -123,7 +123,7 @@ const menus = {
     {
       name: 'Nhóm hướng dẫn',
       image: FcGrid,
-      url: '/group-advisor',
+      url: '/group-advisor-of-lecturer',
     },
     // {
     //   name: 'Quản lý Đánh giá',

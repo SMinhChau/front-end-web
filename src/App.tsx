@@ -30,6 +30,7 @@ import RejectUserLogin from './components/notification/RejectUserLogin';
 import ChangePassword from './components/setting/ChangePassword';
 import SemesterInfo from './pages/semester/SemesterInfo';
 import GroupAdvisorOfLecture from './pages/group_advisor/GroupAdvisorOfLecturer';
+import ItemGroupAdvisor from './pages/group_advisor_item/GroupAdvisorItem';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -173,10 +174,18 @@ function App() {
           }
         />
         <Route
-          path="/group-advisor"
+          path="/group-advisor-of-lecturer"
           element={
             <PrivateRoute isLogin={userState.is_login}>
               <GroupAdvisorOfLecture />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/group-advisor-of-lecturer/:id"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <ItemGroupAdvisor />
             </PrivateRoute>
           }
         />
