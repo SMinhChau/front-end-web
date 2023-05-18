@@ -94,8 +94,9 @@
 
         .evalaution_content {
           display: flex;
-          justify-content: flex-end;
-          align-items: end;
+
+          justify-content: space-between;
+          align-items: center;
           transition-duration: 3s;
           .icon_evaluation {
             font-size: 16px;

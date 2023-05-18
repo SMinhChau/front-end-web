@@ -261,7 +261,7 @@ export const TypeNotificationPath: Record<ITypeNotificationLecturer | string, st
   ASSIGN_SESSION_HOST: '/evaluation-group-of-lecturer',
   ASSIGN_ADVISOR: '/evaluation-group-of-lecturer',
   LECTURER: '/group-lecturer', // khi thêm giảng viên vào học kỳ hoặc đôi role của lecturer
-  GROUP_STUDENT: '/group-advisor',
+  GROUP_STUDENT: '/group-advisor-of-lecturer',
 };
 
 // // Khi nhận được thông báo
