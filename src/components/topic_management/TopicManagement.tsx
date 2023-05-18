@@ -128,7 +128,7 @@ const TopicManagement = () => {
       title: '',
       dataIndex: 'id',
       render: (id: any) => (
-        <Button onClick={() => deleteTerm(id)}>
+        <Button onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
           <DeleteOutlined style={{ color: 'red' }} />
         </Button>
       ),

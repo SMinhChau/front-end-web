@@ -32,7 +32,7 @@ const menus = {
       url: '/student',
     },
     {
-      name: 'Quản lý Đề tài',
+      name: 'Duyệt Đề tài',
       image: FcViewDetails,
       url: '/topic',
     },
@@ -79,7 +79,7 @@ const menus = {
       url: '/student',
     },
     {
-      name: 'Quản lý Đề tài',
+      name: 'Duyệt Đề tài',
       image: FcViewDetails,
       url: '/topic',
     },
@@ -118,7 +118,7 @@ const menus = {
     {
       name: 'Quản lý Đề tài',
       image: FcViewDetails,
-      url: '/topic',
+      url: '/management-topic',
     },
     {
       name: 'Nhóm hướng dẫn',
