@@ -14,7 +14,7 @@ class TermrAPI {
     });
   }
   getTermById() {
-    return createAsyncThunk('term/get-term-by-id', async (id: number, thunkAPI) => {
+    return createAsyncThunk('term/get-term-by-id', async (id: number) => {
       try {
         const result = await termService.getTermById(id);
         console.log('result get tẻm ', result.data.allow);

@@ -39,6 +39,27 @@ class AuthService {
       data,
     });
   }
+
+  getAllMotify() {
+    return axiosAuth({
+      url: '/lecturer/me/notification',
+      method: 'get',
+    });
+  }
+
+  readNotify(id: number) {
+    return axiosAuth({
+      url: `/lecturer/me/notification/${id}/read`,
+      method: 'post',
+    });
+  }
+
+  readAllNotify() {
+    return axiosAuth({
+      url: `/lecturer/me/notification/read-all`,
+      method: 'post',
+    });
+  }
 }
 
 const authService = new AuthService();
