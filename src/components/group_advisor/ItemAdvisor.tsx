@@ -134,17 +134,6 @@ const ItemAdvisor = () => {
     }
   }, [transcriptsSummary, listAvgGrader]);
 
-  useEffect(() => {
-    let sum = 0;
-
-    listAvgGrader.forEach((i) => {
-      console.log('i.grade', i.grade);
-
-      sum += i.grade;
-      setAvgGrader(sum);
-    });
-  }, [listAvgGrader]);
-
   const loadTranscriptStudent = (id: any) => {
     setStudentIdSelect(id);
     getTranscriptByType(id, typeEvalution);
@@ -162,21 +151,23 @@ const ItemAdvisor = () => {
       .getTranscripts(param.id, userState?.id, studentId, typeEvalution)
       .then((result) => {
         setTranscripts(result?.data);
-        setGrades(
-          result?.data.map((e: any) => {
-            return {
-              idEvaluation: e.id,
-              grade: e.grade,
-              gradeMax: e.gradeMax,
-            };
-          }),
-        );
 
         setListAvgGrader(
           result?.data.map((i: any) => {
             return { grade: i.grade };
           }),
         );
+
+        let sum = 0;
+        if (result?.data.length > 0) {
+          result?.data.forEach((i: { grade: number }) => {
+            sum += i.grade;
+            setAvgGrader(sum);
+          });
+        } else {
+          setAvgGrader(0);
+        }
+
         setIsLoadSum(false);
         const member = group?.members.find((e) => e.student.id == studentId);
         setStudentTranscript(member?.student);
@@ -190,17 +181,6 @@ const ItemAdvisor = () => {
       });
   };
 
-  const getGradeById = (id: number) => {
-    return grades.find((e: Grade) => e?.idEvaluation === id);
-  };
-
-  const handlerChangeGrade = (id: number, grade: number) => {
-    grades.find((e: Grade) => {
-      if (e.idEvaluation === id) {
-        e.grade = grade;
-      }
-    });
-  };
   const getEvalutionName = () => {
     switch (typeEvalution) {
       case 'ADVISOR':
@@ -289,7 +269,7 @@ const ItemAdvisor = () => {
         {avgGrader}
       </Text>
     );
-  }, [avgGrader]);
+  }, [listAvgGrader]);
 
   const handlerChangeType = (props: any) => {
     setTypeEvalution(props.target.value);
@@ -420,7 +400,7 @@ const ItemAdvisor = () => {
                         </Col>
                         <Col span={2}>
                           <Text mark strong type="danger" className={cls('title_point')}>
-                            <div className={cls('avg_content')}> {getPointAvg}</div>
+                            <div className={cls('avg_content')}> {avgGrader}</div>
                           </Text>
                         </Col>
                       </Row>
