@@ -401,7 +401,7 @@ const GroupEvaluation = () => {
                 </Descriptions.Item>
               </Descriptions>
               <Divider className={cls('title_point')} plain>
-                Danh sách Tiêu chí
+                Danh sách Tiêu chí : {transcripts?.length}
               </Divider>
               <Skeleton loading={loadingDetail} active paragraph={{ rows: 5 }}>
                 <div className={cls('group_content')}>
