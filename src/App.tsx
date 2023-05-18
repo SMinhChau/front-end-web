@@ -31,6 +31,7 @@ import ChangePassword from './components/setting/ChangePassword';
 import SemesterInfo from './pages/semester/SemesterInfo';
 import GroupAdvisorOfLecture from './pages/group_advisor/GroupAdvisorOfLecturer';
 import ItemGroupAdvisor from './pages/group_advisor_item/GroupAdvisorItem';
+import TopicofLecture from './pages/topic/TopicofLecture';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -92,6 +93,14 @@ function App() {
           element={
             <PrivateRoute isLogin={userState.is_login}>
               <Topic />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/management-topic"
+          element={
+            <PrivateRoute isLogin={userState.is_login}>
+              <TopicofLecture />
             </PrivateRoute>
           }
         />
