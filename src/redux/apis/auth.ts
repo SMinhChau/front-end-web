@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '../../services/auth';
 import { log } from 'console';
+import { setNotyfy } from '../slices/user_slice';
 
 class AuthAPI {
   login() {
@@ -17,6 +18,7 @@ class AuthAPI {
 
         if (result.status === 200) {
           console.log('result', result);
+
           return result.data;
         }
       } catch (error) {

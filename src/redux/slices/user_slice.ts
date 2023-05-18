@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import authAPI from '../apis/auth';
 import tokenService from '../../services/token';
 import Teacher from '../../entities/teacher';
@@ -6,6 +6,7 @@ import { EnumRole, EnumGender } from '../../enum';
 import MenuItemType from '../../entities/menu';
 import menus from '../../constant/menu';
 import { log } from 'console';
+import Notify, { TypeNotify } from 'src/entities/notify';
 
 interface StateType {
   user: Teacher;
@@ -14,6 +15,7 @@ interface StateType {
   is_login: boolean;
   update: boolean;
   allow: boolean;
+  notify: Array<Notify>;
 }
 
 const initialState = {
@@ -36,6 +38,7 @@ const initialState = {
   is_login: tokenService.getRefreshToken() !== null,
   update: false,
   allow: true,
+  notify: [] as Notify[],
 } as StateType;
 
 export const userSlice = createSlice({
@@ -45,6 +48,9 @@ export const userSlice = createSlice({
     setAllow: (state, action) => {
       console.log('-> setAllow', action);
       state.allow = action.payload;
+    },
+    setNotyfy: (state, action: PayloadAction<Array<Notify>>) => {
+      state.notify = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -101,4 +107,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setAllow } = userSlice.actions;
+export const { setAllow, setNotyfy } = userSlice.actions;
