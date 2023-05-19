@@ -37,6 +37,11 @@ const menus = {
       url: '/topic',
     },
     {
+      name: 'Quản lý Đề tài',
+      image: FcViewDetails,
+      url: '/management-topic',
+    },
+    {
       name: 'Quản lý Đánh giá',
       image: FcTodoList,
       url: '/evaluate',
@@ -44,7 +49,7 @@ const menus = {
     {
       name: 'Quản lý nhóm',
       image: FcPortraitMode,
-      url: '/grading',
+      url: '/group',
     },
     {
       name: 'Quản lý nhóm Giảng viên',
@@ -84,6 +89,11 @@ const menus = {
       url: '/topic',
     },
     {
+      name: 'Quản lý Đề tài',
+      image: FcViewDetails,
+      url: '/management-topic',
+    },
+    {
       name: 'Quản lý Đánh giá',
       image: FcTodoList,
       url: '/evaluate',
@@ -91,7 +101,7 @@ const menus = {
     {
       name: 'Quản lý nhóm',
       image: FcPortraitMode,
-      url: '/grading',
+      url: '/group',
     },
     {
       name: 'Quản lý nhóm Giảng viên',

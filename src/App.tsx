@@ -105,7 +105,7 @@ function App() {
           }
         />
         <Route
-          path="/grading"
+          path="/group"
           element={
             <PrivateRoute isLogin={userState.is_login}>
               <GradingAssigment />
