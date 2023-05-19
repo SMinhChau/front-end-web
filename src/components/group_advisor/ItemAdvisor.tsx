@@ -381,24 +381,24 @@ const ItemAdvisor = () => {
               {studentIdSelect && (
                 <>
                   <Row
-                    justify={'space-between'}
+                    justify={'start'}
                     align={'middle'}
                     style={{
                       marginTop: '10px',
                       width: '100%',
                     }}
                   >
-                    <Col span={6}>
+                    <Col span={10}>
                       <div className={cls('avg_content')}>{renderAvgSumTranscript}</div>
                     </Col>
-                    <Col span={6}>
+                    <Col span={12}>
                       <Row justify={'start'} align={'middle'}>
                         <Col>
                           <Text mark strong type="danger" className={cls('title_point')}>
                             <div className={cls('avg_content')}>Tổng điểm: </div>
                           </Text>
                         </Col>
-                        <Col span={2}>
+                        <Col>
                           <Text mark strong type="danger" className={cls('title_point')}>
                             <div className={cls('avg_content')}> {avgGrader}</div>
                           </Text>

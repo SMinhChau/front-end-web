@@ -18,6 +18,7 @@ import { AiOutlineBars, AiOutlineUser } from 'react-icons/ai';
 import { BiGroup } from 'react-icons/bi';
 import { MdOutlineTopic } from 'react-icons/md';
 import Select, { StylesConfig } from 'react-select';
+import { userInfo } from 'os';
 
 const cls = classNames.bind(style);
 
@@ -41,6 +42,7 @@ const GroupDetail = () => {
   const [statusHost, setStatusHost] = useState('insert');
   const [idGroupReview, setIdGroupReview] = useState<number | null>(null);
   const [idGroupHost, setIdGroupHost] = useState<number | null>(null);
+  const { user } = useAppSelector((state) => state.user);
 
   const [initData, setInitData] = useState<{
     typeEvaluation: string;
@@ -388,9 +390,13 @@ const GroupDetail = () => {
                 <Select
                   onChange={handleSelectChangeReview}
                   options={groupLecturerReview.map((val) => {
+                    let me = '';
+                    if (val.id === user.id) {
+                      me = '(Bạn)';
+                    }
                     return {
-                      value: String(val.id),
-                      label: val.name,
+                      value: val.id,
+                      label: `${val.name} ${me}`,
                     };
                   })}
                 />
@@ -497,9 +503,13 @@ const GroupDetail = () => {
                 <Select
                   onChange={handleSelectChangeHost}
                   options={groupLecturerHost.map((val) => {
+                    let me = '';
+                    if (val.id === user.id) {
+                      me = '(Bạn)';
+                    }
                     return {
-                      value: String(val.id),
-                      label: val.name,
+                      value: val.id,
+                      label: `${val.name} ${me}`,
                     };
                   })}
                 />
