@@ -54,7 +54,7 @@ const StudentManagement = () => {
       dataIndex: 'username',
       key: 'username',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -64,7 +64,7 @@ const StudentManagement = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -74,7 +74,7 @@ const StudentManagement = () => {
       dataIndex: 'email',
       key: 'email',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -87,7 +87,7 @@ const StudentManagement = () => {
         const _name = checkGender(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'NAM' ? 'green' : 'blue'} key={checkDegree(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
               {_name}
             </div>
           </Tag>
@@ -102,7 +102,7 @@ const StudentManagement = () => {
         const _name = checkTypeTraining(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'ĐẠI HỌC' ? 'yellow' : 'red'} key={checkTypeTraining(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
               {_name}
             </div>
           </Tag>
@@ -110,7 +110,7 @@ const StudentManagement = () => {
       },
     },
     {
-      title: '',
+      title: 'Cấp lại mật khẩu',
       dataIndex: 'id',
       width: 50,
       render: (id: any) => (
@@ -453,7 +453,7 @@ const StudentManagement = () => {
                         <Input />
                       </Form.Item>
 
-                      <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}>
+                      <Form.Item name="gender" label="Giới tính">
                         <Select
                           style={{ width: 120 }}
                           onChange={handleChangeSelectedOption}
@@ -464,23 +464,15 @@ const StudentManagement = () => {
                         />
                       </Form.Item>
 
-                      <Form.Item
-                        name="phoneNumber"
-                        label="Số điện thoại"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
-                      >
+                      <Form.Item name="phoneNumber" label="Số điện thoại">
                         <Input />
                       </Form.Item>
 
-                      <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
+                      <Form.Item name="email" label="Email">
                         <Input />
                       </Form.Item>
 
-                      <Form.Item
-                        name="typeTraining"
-                        label="Loại đào tạo"
-                        rules={[{ required: true, message: 'Vui lòng chọn loại đào tạo' }]}
-                      >
+                      <Form.Item name="typeTraining" label="Loại đào tạo">
                         <Select
                           style={{ width: 120 }}
                           onChange={handleChangeSelectedOption}

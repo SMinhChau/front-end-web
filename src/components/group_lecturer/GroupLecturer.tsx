@@ -96,6 +96,8 @@ const GroupLecturer = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       lecturerService.getWithTerm(termState.termIndex.id).then((response) => {
+        console.log('setListLecturer ->', response.data);
+
         setListLecturer(response.data);
       });
     }
@@ -133,6 +135,7 @@ const GroupLecturer = () => {
       .getGroupStudentOfLecturer(termState.termIndex.id, _id)
       .then((result) => {
         setLoading(false);
+
         setGroupStudents(result?.data);
       })
       .catch((er) => {
@@ -340,6 +343,7 @@ const GroupLecturer = () => {
       lecturerIds.push(i.value);
     });
     console.log('lecturerIds', lecturerIds);
+    console.log('value', value);
 
     if (status === 'insert')
       lecturerService

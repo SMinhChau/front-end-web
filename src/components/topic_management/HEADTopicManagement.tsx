@@ -111,7 +111,9 @@ const HEADTopicManagement = () => {
       render: (status: any) => {
         return (
           <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
-            {getNameStatus(status)}
+            <div style={{ color: getNameStatus(status)?.toLocaleLowerCase() === 'Đã duyệt'.toLocaleLowerCase() ? 'green' : 'red' }}>
+              {getNameStatus(status)}
+            </div>
           </Tag>
         );
       },

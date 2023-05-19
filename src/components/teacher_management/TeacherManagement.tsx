@@ -37,7 +37,7 @@ const TeacherManagement = () => {
       dataIndex: 'username',
       key: 'userame',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -47,7 +47,7 @@ const TeacherManagement = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -60,7 +60,7 @@ const TeacherManagement = () => {
         const _name = checkDegree(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkDegree(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
               {_name}
             </div>
           </Tag>
@@ -72,7 +72,7 @@ const TeacherManagement = () => {
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
       render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+        <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
           {text}
         </div>
       ),
@@ -103,9 +103,9 @@ const TeacherManagement = () => {
       },
     },
     {
-      title: '',
+      title: 'Cấp lại mật khẩu',
       dataIndex: 'id',
-      width: 50,
+      width: 150,
       render: (id: any) => (
         <Space wrap>
           <Tooltip title="Mật khẩu mặt định" color={'geekblue'}>
@@ -471,7 +471,7 @@ const TeacherManagement = () => {
                       <Input />
                     </Form.Item>
 
-                    <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}>
+                    <Form.Item name="gender" label="Giới tính">
                       <Select
                         style={{ width: 120 }}
                         onChange={handleChangeSelectedOption}
@@ -482,19 +482,15 @@ const TeacherManagement = () => {
                       />
                     </Form.Item>
 
-                    <Form.Item
-                      name="phoneNumber"
-                      label="Số điện thoại"
-                      rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
-                    >
+                    <Form.Item name="phoneNumber" label="Số điện thoại">
                       <Input />
                     </Form.Item>
 
-                    <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
+                    <Form.Item name="email" label="Email">
                       <Input />
                     </Form.Item>
 
-                    <Form.Item name="degree" label="Trình độ" rules={[{ required: true, message: 'Vui lòng chọn giới trình độ' }]}>
+                    <Form.Item name="degree" label="Trình độ">
                       <Select
                         style={{ width: 120 }}
                         onChange={handleChangeSelectedOption}

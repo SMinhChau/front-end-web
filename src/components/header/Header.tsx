@@ -43,19 +43,15 @@ function AppHeader() {
       .getAllMotify()
       .then((result) => {
         setNotify(result.data);
-
-        let sum = 0;
-
-        if (result?.data.length > 0) {
-          result?.data.forEach((i: { read: number }) => {
-            if (i.read === 0) {
-              sum += i.read;
-              SetNewNotify(sum);
-            } else {
-              SetNewNotify(0);
-            }
-          });
-        }
+        let ary = [];
+        result.data.forEach((i: { read: number }) => {
+          console.log('i.read', i.read);
+          if (i.read === 0) {
+            ary.push(i);
+          }
+          console.log('ary.length', ary.length);
+          SetNewNotify(ary.length);
+        });
       })
       .catch((error) => console.log('errr', error));
   };
@@ -213,7 +209,7 @@ function AppHeader() {
                         overlayStyle={{ borderRadius: '5px', width: '500px', height: '600px', overflowY: 'auto' }}
                         className={cls('dropdown')}
                       >
-                        <Button>
+                        <Button onClick={() => getNotifyApi()}>
                           <Badge count={newNotify}>
                             <MdOutlineNotificationsActive />
                           </Badge>
