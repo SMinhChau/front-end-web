@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Select, Space } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Row, Col } from 'antd';
 import { ToastContainer } from 'react-toastify';
 import classNames from 'classnames/bind';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -7,11 +7,13 @@ import style from './MajorManagement.module.scss';
 import type { ColumnsType } from 'antd/es/table';
 import headOfLecturerService from '../../services/lecturer';
 import majorService from '../../services/major';
-import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkDegree, showMessage, showMessageEror } from '../../constant';
 import { useAppSelector } from 'src/redux/hooks';
+import Select from 'react-select';
+import Teacher from 'src/entities/teacher';
 
 const cls = classNames.bind(style);
-const { Option } = Select;
+
 interface Major {
   id: number;
   name: String;
@@ -19,12 +21,10 @@ interface Major {
   headID?: number;
 }
 
-interface HeadLecturer {
-  key: string;
+interface SelectOption {
   value: number;
-  label: string;
+  lable: string;
 }
-
 const MajorManagement = () => {
   const columns: ColumnsType<any> = [
     {
@@ -90,7 +90,7 @@ const MajorManagement = () => {
     },
   ];
 
-  const [headLecture, setHeadLecture] = useState<Array<HeadLecturer>>([]);
+  const [headLecture, setHeadLecture] = useState<Array<Teacher>>([]);
   const [major, setMajor] = useState<Array<Major>>([]);
   const [open, setOpen] = useState(false);
   const [openChangeRole, setOpenChangeRole] = useState(false);
@@ -105,18 +105,11 @@ const MajorManagement = () => {
 
   const [updateId, setUpdateId] = useState<number | null>(null);
   const termState = useAppSelector((state) => state.term);
+  const [_id, setId] = useState();
 
   const getListLecturerOfMajor = (id: number) => {
     headOfLecturerService.getLecturerByMajor(id, termState.termIndex.id).then((result) => {
-      setHeadLecture(
-        result.data.map((value: any) => {
-          return {
-            id: value.username,
-            value: value.id,
-            label: value.name,
-          };
-        }),
-      );
+      setHeadLecture(result.data);
     });
   };
 
@@ -215,9 +208,15 @@ const MajorManagement = () => {
     }
   };
 
-  const onFinishChangeRole = (value: { id: number }) => {
+  const handleSelectChange = (selectedOptionReview: any) => {
+    const id = selectedOptionReview.value;
+    setId(id);
+  };
+
+  const onFinishChangeRole = () => {
+    console.log('_id', _id);
     majorService
-      .updateRoleOfMajor(value.id, { role: 'HEAD_LECTURER' })
+      .updateRoleOfMajor(Number(_id), { role: 'HEAD_LECTURER' })
       .then(() => {
         setOpenChangeRole(false);
         showMessage('Cập nhật thành công', 3000);
@@ -264,8 +263,8 @@ const MajorManagement = () => {
           ]}
         >
           <Form
-            labelCol={{ span: 10 }}
-            wrapperCol={{ span: 14 }}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
             layout="horizontal"
             onFinish={onFinish}
             style={{ maxWidth: 600 }}
@@ -275,11 +274,16 @@ const MajorManagement = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item label=" ">
-              <Button type="primary" htmlType="submit">
-                {status === 'insert' ? 'Tạo ' : 'Cập nhật '}
-              </Button>
-            </Form.Item>
+            <Row justify={'end'} align={'bottom'}>
+              <Col span={14}></Col>
+              <Col span={8} offset={5}>
+                <Form.Item label=" ">
+                  <Button type="primary" htmlType="submit">
+                    {status === 'insert' ? 'Tạo ' : 'Cập nhật '}
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form>
         </Modal>
 
@@ -306,8 +310,17 @@ const MajorManagement = () => {
               <Input disabled />
             </Form.Item>
 
-            <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]} name="id">
-              <Select style={{ width: '100%' }} placeholder="Giảng viên" onChange={handleChange} optionLabelProp="label">
+            <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]}>
+              <Select
+                onChange={handleSelectChange}
+                options={headLecture.map((val) => {
+                  return {
+                    value: val.id,
+                    label: `${val.name}  - (Mã: ${val.username} - Trình độ: ${checkDegree(val.degree)})`,
+                  };
+                })}
+              />
+              {/* <Select style={{ width: '100%' }} placeholder="Giảng viên" onChange={handleChange} optionLabelProp="label">
                 {headLecture.map((value, key) => {
                   return (
                     <>
@@ -321,7 +334,7 @@ const MajorManagement = () => {
                     </>
                   );
                 })}
-              </Select>
+              </Select> */}
             </Form.Item>
 
             <Form.Item label=" ">
