@@ -169,7 +169,7 @@ const GroupDetail = () => {
 
   const onFinishChosseGroupReview = (value: { typeEvaluation: string; groupId: number }) => {
     const idGroup = id;
-    console.log('idReview', idReview);
+
     console.log('status', status);
 
     if (status === 'insert') {
@@ -191,12 +191,14 @@ const GroupDetail = () => {
           showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     } else {
+      console.log(idGroupReview);
+
       lecturerService
-        .updateAssignGroupLecturer(Number(idGroupReview), {
+        .createAssignGroupLecturer({
           ...value,
-          groupId: Number(idGroup),
-          groupLecturerId: Number(idReview),
           typeEvaluation: 'REVIEWER',
+          groupLecturerId: Number(idReview),
+          groupId: Number(idGroup),
         })
         .then((result) => {
           showMessage('Cập nhật thành công', 3000);
@@ -231,16 +233,18 @@ const GroupDetail = () => {
         });
     } else {
       lecturerService
-        .updateAssignGroupLecturer(Number(idGroupHost), {
+        .createAssignGroupLecturer({
           ...value,
-          groupId: Number(idGroup),
-          groupLecturerId: Number(idHost),
           typeEvaluation: 'SESSION_HOST',
+          groupLecturerId: Number(idHost),
+          groupId: Number(idGroup),
         })
         .then((result) => {
           showMessage('Cập nhật thành công', 3000);
         })
         .catch((error) => {
+          console.log('error', error);
+
           showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
         });
     }
