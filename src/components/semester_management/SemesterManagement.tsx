@@ -42,19 +42,7 @@ const SemesterManagement = () => {
         );
       },
     },
-    {
-      title: 'Kết thúc',
-      dataIndex: 'endDate',
-      key: 'endDate',
-      render: (t: Date) => {
-        const col = checkDay(t) === true ? 'red' : '#0077b6';
-        return (
-          <div className={cls('text_colum_date')} style={{ color: col }}>
-            {moment(t).format('MM/DD/YYYY')}
-          </div>
-        );
-      },
-    },
+
     {
       title: 'Bắt đầu submit đề tài',
       dataIndex: 'startDateSubmitTopic',
@@ -134,19 +122,19 @@ const SemesterManagement = () => {
       },
     },
 
-    {
-      title: 'Ngày phản biện',
-      dataIndex: 'dateDiscussion',
-      key: 'dateDiscussion',
-      render: (t: Date) => {
-        const col = checkDay(t) === true ? 'red' : '#0077b6';
-        return (
-          <div className={cls('text_colum_date')} style={{ color: col }}>
-            {moment(t).format('MM/DD/YYYY')}
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: 'Ngày phản biện',
+    //   dataIndex: 'dateDiscussion',
+    //   key: 'dateDiscussion',
+    //   render: (t: Date) => {
+    //     const col = checkDay(t) === true ? 'red' : '#0077b6';
+    //     return (
+    //       <div className={cls('text_colum_date')} style={{ color: col }}>
+    //         {moment(t).format('MM/DD/YYYY')}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: 'Thời gian bắt đầu Báo cáo',
       dataIndex: 'startDateReport',
@@ -175,9 +163,9 @@ const SemesterManagement = () => {
     },
 
     {
-      title: 'Ngày báo cáo',
-      dataIndex: 'dateReport',
-      key: 'dateReport',
+      title: 'Kết thúc',
+      dataIndex: 'endDate',
+      key: 'endDate',
       render: (t: Date) => {
         const col = checkDay(t) === true ? 'red' : '#0077b6';
         return (
@@ -270,11 +258,9 @@ const SemesterManagement = () => {
 
       startDateDiscussion: values.startDate.add(5, 'months').format('MM/DD/YYYY'),
       endDateDiscussion: values.startDate.add(5, 'months').add(1, 'weeks').format('MM/DD/YYYY'),
-      dateDiscussion: values.startDate.add(5, 'months').add(1, 'weeks').format('MM/DD/YYYY'),
 
       startDateReport: values.startDate.add(6, 'months').format('MM/DD/YYYY'),
       endDateReport: values.startDate.add(6, 'months').add(1, 'weeks').format('MM/DD/YYYY'),
-      dateReport: values.startDate.add(6, 'months').add(1, 'weeks').format('MM/DD/YYYY'),
     };
 
     termService
@@ -439,9 +425,9 @@ const SemesterManagement = () => {
               <Form.Item label="Thời gian kết thúc phản biện" rules={[{ required: true }]} name="endDateDiscussion">
                 <DatePicker format="MM/DD/YYYY" />
               </Form.Item>
-              <Form.Item label="Ngày phản biện" rules={[{ required: true }]} name="dateDiscussion">
+              {/* <Form.Item label="Ngày phản biện" rules={[{ required: true }]} name="dateDiscussion">
                 <DatePicker format="MM/DD/YYYY" />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item label="Thời gian bắt đầu báo cáo" rules={[{ required: true }]} name="startDateReport">
                 <DatePicker format="MM/DD/YYYY" />
@@ -449,9 +435,9 @@ const SemesterManagement = () => {
               <Form.Item label="Thời gian kết thúc báo cáo" rules={[{ required: true }]} name="endDateReport">
                 <DatePicker format="MM/DD/YYYY" />
               </Form.Item>
-              <Form.Item label="Báo cáo hội đồng" rules={[{ required: true }]} name="dateReport">
+              {/* <Form.Item label="Báo cáo hội đồng" rules={[{ required: true }]} name="dateReport">
                 <DatePicker format="MM/DD/YYYY" />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item label=" ">
                 <Button type="primary" htmlType="submit">
