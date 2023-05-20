@@ -554,7 +554,7 @@ const GroupLecturer = () => {
       <Modal
         destroyOnClose
         open={open}
-        title={status === 'insert' ? 'Tạo nhóm Giảng viên' : 'Cập nhật nhóm Giảng viên'}
+        title={status === 'insert' ? 'Tạo Nhóm hội đồng' : 'Cập nhật Nhóm hội đồng'}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>

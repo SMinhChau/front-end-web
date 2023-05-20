@@ -12,7 +12,7 @@ interface Teacher {
     id: number;
   };
   degree: string;
-  isAdmin: string;
+  isAdmin: boolean;
 }
 
 export default Teacher;

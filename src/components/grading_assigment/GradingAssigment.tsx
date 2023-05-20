@@ -108,7 +108,7 @@ const GradingAssigment = () => {
                       <Row justify={'start'} align={'top'}>
                         <Col span={12}>
                           <Text strong className={cls('title')}>
-                            Nhóm Giảng viên phản biện
+                            Nhóm hội đồng phản biện
                           </Text>
                         </Col>
                         <Col span={10} offset={1}>
@@ -124,7 +124,7 @@ const GradingAssigment = () => {
                       <Row justify={'start'} align={'top'} style={{ paddingTop: '10px' }}>
                         <Col span={12}>
                           <Text strong className={cls('title')}>
-                            Nhóm Giảng viên hướng dẫn
+                            Nhóm hội đồng hướng dẫn
                           </Text>
                         </Col>
                         <Col span={10} offset={1}>

@@ -1,3 +1,4 @@
+import { menusAdmin } from './../../constant/menu';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import authAPI from '../apis/auth';
 import tokenService from '../../services/token';
@@ -7,6 +8,7 @@ import MenuItemType from '../../entities/menu';
 import menus from '../../constant/menu';
 import { log } from 'console';
 import Notify, { TypeNotify } from 'src/entities/notify';
+import { isBooleanObject } from 'util/types';
 
 interface StateType {
   user: Teacher;
@@ -16,6 +18,7 @@ interface StateType {
   update: boolean;
   allow: boolean;
   notify: Array<Notify>;
+  admin: boolean;
 }
 
 const initialState = {
@@ -26,10 +29,11 @@ const initialState = {
     phoneNumber: '',
     name: '',
     email: '',
-    role: EnumRole.ADMIN,
+    role: EnumRole.LECTURER,
     majors: {
       id: 1,
     },
+    isAdmin: false,
     gender: EnumGender.UNKNOW,
     degree: '',
   },
@@ -39,6 +43,7 @@ const initialState = {
   update: false,
   allow: true,
   notify: [] as Notify[],
+  admin: false,
 } as StateType;
 
 export const userSlice = createSlice({
@@ -52,6 +57,9 @@ export const userSlice = createSlice({
     setNotyfy: (state, action: PayloadAction<Array<Notify>>) => {
       state.notify = action.payload;
     },
+    setLoginIsAdmin: (state, action: PayloadAction<boolean>) => {
+      state.admin = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(authAPI.login().fulfilled, (state, action) => {
@@ -61,14 +69,16 @@ export const userSlice = createSlice({
       state.user = action.payload.user;
       state.error = false;
       state.is_login = true;
-      const my_menu = menus[state.user.role];
-      if (state.user.isAdmin) {
-        for (const i of menus[EnumRole.ADMIN])
-          if (!my_menu.map((value) => value.url).includes(i.url)) {
-            my_menu.push(i);
-          }
+
+      if (state.user.isAdmin === false && state.admin === false) {
+        state.functions = menus[state.user.role];
+      } else {
+        if (state.admin === true && state.user.isAdmin === true) {
+          state.functions = menusAdmin.ADMIN;
+        } else {
+          state.functions = menus[state.user.role];
+        }
       }
-      state.functions = my_menu;
     });
     builder.addCase(authAPI.login().rejected, (state) => {
       state.is_login = false;
@@ -80,14 +90,15 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      const my_menu = menus[state.user.role];
-      if (state.user.isAdmin) {
-        for (const i of menus[EnumRole.ADMIN])
-          if (!my_menu.map((value: any) => value.url).includes(i.url)) {
-            my_menu.push(i);
-          }
+      if (state.user.isAdmin === false && state.admin === false) {
+        state.functions = menus[state.user.role];
+      } else {
+        if (state.admin === true && state.user.isAdmin === true) {
+          state.functions = menusAdmin.ADMIN;
+        } else {
+          state.functions = menus[state.user.role];
+        }
       }
-      state.functions = my_menu;
     });
 
     builder.addCase(authAPI.updateInfo().pending, (state) => {
@@ -107,4 +118,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setAllow, setNotyfy } = userSlice.actions;
+export const { setAllow, setNotyfy, setLoginIsAdmin } = userSlice.actions;

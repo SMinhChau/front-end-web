@@ -5,16 +5,13 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import tokenService from '../../services/token';
 import { BiLogOutCircle } from 'react-icons/bi';
-import { Col, Row, Select, Typography } from 'antd';
+import { Avatar, Col, Row, Typography } from 'antd';
 import Term from '../../entities/term';
 import termService from '../../services/term';
 import { TermSlices, setTermIndex, setTermSlice } from '../../redux/slices/term_slice';
 import { setAllow } from 'src/redux/slices/user_slice';
 import { EnumRole } from 'src/enum';
-import Notification from '../notification/Notification';
-import RejectUserLogin from '../notification/RejectUserLogin';
-import { IconBase, IconContext } from 'react-icons';
-import { IconMap } from 'antd/es/result';
+import Select from 'react-select';
 const cls = classNames.bind(style);
 
 const avatarDefault = '/assets/avatars/avatarDefault.png';
@@ -66,8 +63,10 @@ const Management = () => {
   }, [termState.termSelected]);
 
   const onchangeValue = (value: any) => {
-    setTermSelect(value);
-    dispatch(TermSlices.actions.setTermSelected(value));
+    console.log('onchangeValue value', value.value);
+
+    setTermSelect(value.value);
+    dispatch(TermSlices.actions.setTermSelected(value.value));
   };
 
   const router = useLocation();
@@ -80,11 +79,7 @@ const Management = () => {
           {router.pathname !== '/term' ? (
             <>
               <Row justify={'center'} style={{ width: '100%' }} align={'middle'}>
-                <Col>
-                  <Text type="success" style={{ paddingRight: '10px' }} className={cls('name_term')}>
-                    Học kỳ:
-                  </Text>
-                </Col>
+                <Col></Col>
                 <Col>
                   <Text type="success" className={cls('name_term')}>
                     {termState?.termIndex?.name}
@@ -94,7 +89,22 @@ const Management = () => {
             </>
           ) : (
             <>
-              <Select
+              <div style={{ width: '70%' }}>
+                <Select
+                  placeholder={termState?.termIndex?.name ? termState?.termIndex?.name : termState.term[0].name}
+                  onChange={(value: any) => onchangeValue(value)}
+                  isDisabled={router.pathname !== '/term' ? true : false}
+                  closeMenuOnSelect={false}
+                  options={term.map((val) => {
+                    return {
+                      value: val.id,
+                      label: val.name,
+                    };
+                  })}
+                />
+              </div>
+              {/* <Select
+
                 size={'middle'}
                 style={{ width: '70%' }}
                 placeholder={termState?.termIndex?.name ? termState?.termIndex?.name : termState.term[0].name}
@@ -106,7 +116,7 @@ const Management = () => {
                     label: val.name,
                   };
                 })}
-              />
+              /> */}
             </>
           )}
         </div>
@@ -133,14 +143,14 @@ const Management = () => {
           <Row justify={'start'} style={{ width: '100%' }}>
             <Col span={24} offset={1}>
               <div className={cls('logo')}>
-                <img src={logo} alt="" style={{ width: '100px' }} />
+                <img src={logo} alt="" style={{ width: '150px' }} />
               </div>
             </Col>
           </Row>
 
           <div className={cls('empty')}>
             <Link to="/user-info">
-              <img src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
+              <img className={cls('img')} src={userState.user.avatar ? userState.user.avatar : avatarDefault} alt="" />
             </Link>
             <div className={cls('username')}>{userState.user.name}</div>
           </div>

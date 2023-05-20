@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
-import styled from './ListGroupOfLecturer.module.scss';
+import styled from './GroupAdvisor.module.scss';
 import { Avatar, Col, Radio, Result, Row, Skeleton, Typography } from 'antd';
 
 import { useAppSelector } from '../../redux/hooks';
@@ -12,14 +12,14 @@ import { Link } from 'react-router-dom';
 import { TypeEvalution } from '../../entities/assign';
 
 import { AiOutlineEdit } from 'react-icons/ai';
-import AssignPoint from 'src/entities/asisign_point';
-import { getStatusGroup } from 'src/constant';
+
 import AssignAdvisor from 'src/entities/assign_advisor';
+import { getStatusGroup } from 'src/constant';
 
 const cls = classNames.bind(styled);
 const { Text } = Typography;
 
-const ListGroupOfLecturer = () => {
+const GroupAdvisor = () => {
   const [listAssign, setListAssign] = useState<Array<AssignAdvisor>>([]);
   const [loading, setLoading] = useState(true);
   const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
@@ -29,23 +29,19 @@ const ListGroupOfLecturer = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       assignService
-        .getAssignByLecturer(termState.termIndex.id, user.id, typeEvalution)
+        .getAssignByTypeAdvisor(user.id, { typeEvaluation: 'ADVISOR' })
         .then((result) => {
           setLoading(false);
           console.log('getlist -> result.data', result.data);
-
           setListAssign(result.data);
         })
         .catch((error) => {
           setLoading(false);
-          console.log('error', error);
+          console.log('getlist -> error', error);
         });
     }
   }, [termState, typeEvalution, user.id]);
 
-  const handlerChangeType = (props: any) => {
-    setTypeEvalution(props.target.value);
-  };
   const getEvalutionName = () => {
     switch (typeEvalution) {
       case 'ADVISOR':
@@ -128,11 +124,7 @@ const ListGroupOfLecturer = () => {
                                     <Row>
                                       <AiOutlineEdit className={cls('icon_evaluation')} size={22} />
                                       <Link to={`/group-advisor-of-lecturer/${item?.group.id}`}>
-                                        <Link
-                                          to={`/group/evaluation-for-group/${item?.group.id}?type=${item.typeEvaluation}&assignId=${item.id}`}
-                                        >
-                                          <div className={cls('icon_evaluation')}>Chấm điểm</div>
-                                        </Link>
+                                        <div className={cls('icon_evaluation')}>Xem chi tiết</div>
                                       </Link>
                                     </Row>
                                   </Col>
@@ -147,24 +139,6 @@ const ListGroupOfLecturer = () => {
                   );
                 })}
               </Row>
-
-              {/* {listAssign.map((item, index) => (
-                  <Row gutter={[24, 24]}>
-                    <Col span={8}>
-                      <div className={cls('group_item')}>
-                        <div className={cls('group_name')}>Nhóm: {item?.group.name}</div>
-                        <div className={cls('group_more')}>
-                          <div className={cls('evalaution_content')}>
-                            <DoubleRightOutlined className={cls('icon_evaluation')} size={20} />
-                            <Link to={`/group/evaluation-for-group/${item?.group.id}?type=${item.typeEvaluation}&assignId=${item.id}`}>
-                              Chấm điểm
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                ))} */}
             </>
           ) : (
             <Result status="warning" title="">
@@ -181,9 +155,9 @@ const ListGroupOfLecturer = () => {
   return (
     <>
       <div className={cls('list_evaluation')}>
-        <h3 className={cls('title_group')}>Danh sách Nhóm sinh viên chấm điểm</h3>
+        <h3 className={cls('title_group')}>Danh sách Nhóm sinh Hướng Dẫn</h3>
 
-        <div className={cls('type_evalution')}>
+        {/* <div className={cls('type_evalution')}>
           <Radio.Group defaultValue={typeEvalution} buttonStyle="solid" onChange={handlerChangeType}>
             <Radio.Button className={cls('btn_radio')} value={TypeEvalution.ADVISOR}>
               hướng dẫn
@@ -195,10 +169,10 @@ const ListGroupOfLecturer = () => {
               Hội đồng
             </Radio.Button>
           </Radio.Group>
-        </div>
+        </div> */}
         <div className={cls('info')}>{renderListGroup}</div>
       </div>
     </>
   );
 };
-export default ListGroupOfLecturer;
+export default GroupAdvisor;

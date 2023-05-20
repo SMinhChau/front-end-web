@@ -45,11 +45,10 @@ function AppHeader() {
         setNotify(result.data);
         let ary = [];
         result.data.forEach((i: { read: number }) => {
-          console.log('i.read', i.read);
           if (i.read === 0) {
             ary.push(i);
           }
-          console.log('ary.length', ary.length);
+
           SetNewNotify(ary.length);
         });
       })
@@ -59,7 +58,6 @@ function AppHeader() {
   const handleClickItem = (id: number) => {
     const m = notify.filter((item) => id === item.id)[0];
     const path = TypeNotificationPath[m.type];
-    console.log('path->', path);
 
     authService
       .readNotify(id)

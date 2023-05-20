@@ -112,7 +112,7 @@ const StudentManagement = () => {
     {
       title: 'Cấp lại mật khẩu',
       dataIndex: 'id',
-      width: 50,
+      width: 150,
       render: (id: any) => (
         <Space wrap>
           <Tooltip title="Mật khẩu mặt định" color={'geekblue'}>
@@ -306,7 +306,7 @@ const StudentManagement = () => {
   };
 
   const RenderStudent = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 5 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} />;
   }, [student, baseColumns, data]);
 
   const reSetPasss = (id: number) => {
