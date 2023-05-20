@@ -161,41 +161,7 @@ const GroupAdvisor = () => {
   }, [listAssign]);
 
   const renderGroupLecturer = useMemo(() => {
-    const columLecturerReview: ColumnsType<any> = [
-      {
-        title: 'Mã nhóm',
-        dataIndex: 'id',
-        key: 'id',
-        width: 100,
-        render: (text) => {
-          return <div className={cls('text_colum')}>{text}</div>;
-        },
-      },
-      {
-        title: 'Giảng viên',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => {
-          return <div className={cls('text_colum_name')}>{text}</div>;
-        },
-      },
-      {
-        title: 'Tình tạng',
-        dataIndex: 'status',
-        key: 'status',
-
-        render: (text) => {
-          const name = getStatusGroup(text);
-          const color = getStatusGroupColor(text);
-          return (
-            <Tag color={color}>
-              <div style={{ color: color, fontSize: '16px' }}>{name}</div>
-            </Tag>
-          );
-        },
-      },
-    ];
-    return <Table columns={columLecturerReview} dataSource={listAssign} scroll={{ x: 400 }} pagination={{ pageSize: 7 }} />;
+    return <Table columns={baseColumns} dataSource={listAssign} />;
   }, [listAssign]);
 
   return (

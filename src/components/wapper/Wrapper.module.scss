@@ -1,28 +1,33 @@
 @import '../../Variables.scss';
 
 .wrapper {
-
-
-  
   background-color: #f0f2f5;
 }
 .menu_left {
   width: 100%;
-// height: 100%;
-background-color: #fff;
-box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(45, 2, 162, 0.3) 0px 18px 36px -18px ;
-
-
+  // height: 100%;
+  background-color: #fff;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(45, 2, 162, 0.3) 0px 18px 36px -18px;
 }
 .menu_right {
-height: 100vh;
+  height: 100vh;
   background-color: #f0f2f5;
   position: relative;
- width: 100%;
+
+  width: 100%;
+  .info {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 400px;
+    height: 60px;
+    background-color: aqua;
+  }
   .content {
     position: relative;
- top: 50px;
-    min-height: calc(100vh - ($headerHeight + 30px) );
+
+    top: 50px;
+    min-height: calc(100vh - ($headerHeight + 30px));
     padding: 20px;
 
     background-color: #f0f2f5;

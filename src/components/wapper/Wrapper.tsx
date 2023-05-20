@@ -6,7 +6,8 @@ import style from './Wrapper.module.scss';
 import { useAppSelector } from 'src/redux/hooks';
 import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
+import FooterEnd from '../header/FooterEnd';
 
 const cls = classNames.bind(style);
 
@@ -24,6 +25,9 @@ const Wrapper = ({ children }: { children: React.ReactElement }) => {
             <AppHeader />
 
             <div className={cls('content')}>{children}</div>
+            <Row justify={'end'}>
+              <FooterEnd />
+            </Row>
           </div>
         </Col>
       </Row>

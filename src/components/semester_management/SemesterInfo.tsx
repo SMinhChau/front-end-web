@@ -43,7 +43,7 @@ const SemesterInfo = () => {
         <Row gutter={[24, 24]}>
           {_data.map((item) => {
             return (
-              <Col span={8}>
+              <Col span={12}>
                 <div className={cls('card_item')}>
                   <Row justify={'center'}>
                     <Col span={18}>

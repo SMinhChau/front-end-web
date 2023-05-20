@@ -34,3 +34,20 @@ export default interface AssignAdvisor {
     members: [Teacher];
   };
 }
+
+export default interface AssignAdvisorOfLecturer {
+  id: number;
+  typeEvaluation: TypeEvalution;
+  name: string;
+  status: string;
+  member: [
+    {
+      id: number;
+      student: Student;
+      group: {
+        id: number;
+      };
+    },
+  ];
+  groupOfLecturer: Teacher[];
+}

@@ -2,7 +2,7 @@ import { AiOutlineCalendar } from 'react-icons/ai';
 
 import { FcCalendar, FcViewDetails, FcManager, FcTodoList, FcPortraitMode, FcNews, FcReading, FcGrid } from 'react-icons/fc';
 
-const menus = {
+export const menusAdmin = {
   ADMIN: [
     {
       name: 'Quản lý chuyên ngành',
@@ -15,6 +15,9 @@ const menus = {
       url: '/teacher',
     },
   ],
+};
+
+const menus = {
   HEAD_LECTURER: [
     {
       name: 'Quản lý Học Kỳ',
@@ -47,17 +50,17 @@ const menus = {
       url: '/evaluate',
     },
     {
-      name: 'Quản lý nhóm',
+      name: 'Quản lý nhóm sinh viên',
       image: FcPortraitMode,
       url: '/group',
     },
     {
-      name: 'Quản lý nhóm Giảng viên',
+      name: 'Quản lý Nhóm hội đồng',
       image: FcManager,
       url: '/group-lecturer',
     },
     {
-      name: 'Nhóm hướng dẫn',
+      name: 'Quản lý Nhóm hướng dẫn',
       image: FcGrid,
       url: '/group-advisor-of-lecturer',
     },
@@ -99,17 +102,17 @@ const menus = {
       url: '/evaluate',
     },
     {
-      name: 'Quản lý nhóm',
+      name: 'Quản lý nhóm sinh viên',
       image: FcPortraitMode,
       url: '/group',
     },
     {
-      name: 'Quản lý nhóm Giảng viên',
+      name: 'Quản lý Nhóm hội đồng',
       image: FcManager,
       url: '/group-lecturer',
     },
     {
-      name: 'Nhóm hướng dẫn',
+      name: 'Quản lý Nhóm hướng dẫn',
       image: FcGrid,
       url: '/group-advisor-of-lecturer',
     },
@@ -131,7 +134,7 @@ const menus = {
       url: '/management-topic',
     },
     {
-      name: 'Nhóm hướng dẫn',
+      name: 'Quản lý Nhóm hướng dẫn',
       image: FcGrid,
       url: '/group-advisor-of-lecturer',
     },

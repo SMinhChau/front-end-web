@@ -1,16 +1,16 @@
-
-
-.teacher_management{
+.teacher_management {
   .function {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 40px;
-    .search{
+
+    padding: 0px 40px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    .search {
       width: 100%;
       background-color: antiquewhite;
       padding: 3px;
-     
     }
     .content_button_upload {
       display: flex;
@@ -34,32 +34,30 @@
     }
     .modal {
       width: 50%;
-  
+
       .title_model {
         font-size: 35px;
         font-weight: 400;
         text-align: center;
       }
     }
-   
   }
-//   ::-webkit-scrollbar {
-//     height: 8px;
-//     width: 8px;
-// }
+  //   ::-webkit-scrollbar {
+  //     height: 8px;
+  //     width: 8px;
+  // }
 
-// ::-webkit-scrollbar-track {
-//     background: transparent;
-// }
+  // ::-webkit-scrollbar-track {
+  //     background: transparent;
+  // }
 
-// ::-webkit-scrollbar-thumb {
-//     background-color: rgba(#333, .2);
-//     border: 3px solid transparent;
-//     border-radius: 4px;
-// }
-.text_colum{
-  font-size: 16px;
-  color: #264653;
+  // ::-webkit-scrollbar-thumb {
+  //     background-color: rgba(#333, .2);
+  //     border: 3px solid transparent;
+  //     border-radius: 4px;
+  // }
+  .text_colum {
+    font-size: 16px;
+    color: #264653;
+  }
 }
-}
-

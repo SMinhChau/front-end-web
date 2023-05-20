@@ -660,12 +660,12 @@ const GroupDetail = () => {
 
             <Row className={cls('lecturer')} justify={'space-between'}>
               <Col span={12}>
-                <Card title={<div className={cls('_title')}>Nhóm Giảng Viên chấm 'PHẢN BIỆN'</div>} bordered={false}>
+                <Card title={<div className={cls('_title')}>Nhóm hội đồng chấm 'PHẢN BIỆN'</div>} bordered={false}>
                   {renderFormAssignReview}
                 </Card>
               </Col>
               <Col span={12}>
-                <Card title={<div className={cls('_title')}>Nhóm Giảng Viên chấm 'HỘI ĐỒNG</div>} bordered={false}>
+                <Card title={<div className={cls('_title')}>Nhóm hội đồng chấm 'HỘI ĐỒNG</div>} bordered={false}>
                   {renderFormAssignSessionHost}
                 </Card>
               </Col>

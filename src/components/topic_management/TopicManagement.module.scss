@@ -1,4 +1,3 @@
-
 .topic_management {
   margin-left: 10px;
   .semester_func {
@@ -6,19 +5,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .selectTerm {
-      width: 200px;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-around;
+      .name {
+        font-size: 1.2rem;
+        color: #264653;
+        padding-right: 20px;
+      }
     }
     .modal {
       font-size: 18px;
     }
   }
-  .text_colum{
+  .text_colum {
     font-size: 16px;
     color: #264653;
   }
- 
 }

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './TopicManagement.module.scss';
 import { useAppSelector } from '../../redux/hooks';
-import { Table, Button, Modal, Form, Input, Row, Tag, Space, Tooltip } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Input, Row, Tag, Space, Tooltip, Col } from 'antd';
+import { CheckOutlined, CloseOutlined, DatabaseFilled, ExportOutlined } from '@ant-design/icons';
 import topicService from '../../services/topic';
 import Topic from '../../entities/topic';
 
@@ -11,6 +11,8 @@ import { ToastContainer } from 'react-toastify';
 
 import { getNameStatus, showMessage } from '../../constant';
 import { ColumnsType } from 'antd/es/table';
+import Select from 'react-select';
+import { log } from 'console';
 const { TextArea } = Input;
 
 const cls = classNames.bind(style);
@@ -19,17 +21,23 @@ interface TopicData extends Topic {
   key: number;
 }
 
+interface Filter {
+  value: number;
+  label: string;
+}
 const HEADTopicManagement = () => {
-  const [topic, setTopic] = useState<Array<TopicData>>([]);
+  const [topic, setTopic] = useState<Array<Topic>>([]);
   const [open, setOpen] = useState(false);
 
   const [status, setStatus] = useState<'ACCEPT' | 'REFUSE'>('ACCEPT');
   const [idUpdate, setIdUpdate] = useState<number | null>(null);
   const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
+  const [listLerturer, setListLecturer] = useState<Array<Filter>>([]);
+  const [data, setData] = useState<Array<Topic>>([]);
 
   const termState = useAppSelector((state) => state.term);
 
-  const baseColumns: ColumnsType<any> = [
+  const baseColumns: ColumnsType<Topic> = [
     {
       title: 'Tên đề tài',
       dataIndex: 'name',
@@ -106,6 +114,18 @@ const HEADTopicManagement = () => {
       ),
     },
     {
+      title: 'Giảng viên',
+      dataIndex: 'lecturer',
+      key: 'lecturer',
+
+      filterSearch: true,
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text.name}
+        </div>
+      ),
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       render: (status: any) => {
@@ -161,14 +181,19 @@ const HEADTopicManagement = () => {
       topicService
         .getTopic({ termId: termState.termIndex.id })
         .then((response) => {
-          setTopic(
-            response.data.map((value: Topic) => {
-              return {
-                ...value,
-                key: value.id,
-              };
-            }),
+          setTopic(response.data);
+          setData(response.data);
+          const _data: Filter[] = response.data.reduce(
+            (accumulator: { value: number; label: string }[], current: { lecturer: { id: number; name: string } }) => {
+              const existingItem = accumulator.find((item) => item.value === current.lecturer.id);
+              if (!existingItem) {
+                accumulator.push({ value: current.lecturer.id, label: current.lecturer.name });
+              }
+              return accumulator;
+            },
+            [],
           );
+          setListLecturer(_data);
         })
         .catch((error) => {
           console.log(error);
@@ -206,14 +231,60 @@ const HEADTopicManagement = () => {
     showModal();
   };
 
+  const handleSelectChange = (selectedOptionReview: any) => {
+    const id = selectedOptionReview.value;
+    console.log('name');
+    const m = topic.filter((value) => value.lecturer?.id === id);
+    setData(m);
+    console.log('m ->', m);
+  };
+  const handleGetAll = (selectedOptionReview: any) => {
+    setData(topic);
+  };
+  const renderTable = useMemo(() => {
+    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} />;
+  }, [data, handleSelectChange]);
+
   return (
     <div className={cls('topic_management')}>
       <ToastContainer />
 
       <div className={cls('semester_func')}>
-        <div className={cls('selectTerm')}></div>
-        <div style={{ display: 'flex', alignItems: 'center' }}></div>
+        <Button
+          type="dashed"
+          onClick={handleGetAll}
+          icon={<ExportOutlined />}
+          size="large"
+          style={{
+            animation: 'none',
+            color: 'rgb(80, 72, 229)',
+            fontWeight: '600',
+          }}
+          className={cls('btn')}
+        >
+          Tất cả
+        </Button>
+        <div className={cls('selectTerm')}>
+          <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+            <div className={cls('name')}>Chọn giảng viên</div>
+            <Col>
+              <div style={{ width: '200px' }}>
+                <Select
+                  onChange={handleSelectChange}
+                  options={listLerturer.map((val) => {
+                    console.log('val', val.label);
 
+                    return {
+                      value: val.value,
+                      label: val.label,
+                    };
+                  })}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}></div>
         <Modal
           destroyOnClose
           open={open}
@@ -240,7 +311,7 @@ const HEADTopicManagement = () => {
         </Modal>
       </div>
 
-      <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 2 }} />
+      {renderTable}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { useAppSelector } from '../../redux/hooks';
 import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col, Tag } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import topicService from '../../services/topic';
-import Topic from '../../entities/topic';
+
 import { default as base_column } from './column';
 import { toast, ToastContainer } from 'react-toastify';
 import Config from '../../utils/config';
@@ -17,18 +17,15 @@ import { ErrorCodeDefine, getNameStatus, showMessage, showMessageEror } from '..
 import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
 import { ColumnsType } from 'antd/es/table';
+import Topic from 'src/entities/topic';
 
 const cls = classNames.bind(style);
-
-interface TopicData extends Topic {
-  key: number;
-}
 
 const TopicManagement = () => {
   const userState = useAppSelector((state) => state.user).user;
   const _userState = useAppSelector((state) => state.user);
 
-  const [topic, setTopic] = useState<Array<TopicData>>([]);
+  const [topic, setTopic] = useState<Array<Topic>>([]);
   const [open, setOpen] = useState(false);
 
   const [status, setStatus] = useState('insert');
@@ -114,6 +111,16 @@ const TopicManagement = () => {
       ),
     },
     {
+      title: 'Giảng viên',
+      dataIndex: 'lecturer',
+      key: 'lecturer',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+          {text.name}
+        </div>
+      ),
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       render: (status: any) => {
@@ -153,14 +160,8 @@ const TopicManagement = () => {
         lecturerId: userState.id,
       })
       .then((response) => {
-        setTopic(
-          response.data.map((value: Topic) => {
-            return {
-              ...value,
-              key: value.id,
-            };
-          }),
-        );
+        setTopic(response.data);
+        console.log('response.data', response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -331,7 +332,7 @@ const TopicManagement = () => {
             </Form>
           </Modal>
         </div>
-        <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 2 }} />
+        <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} />
       </div>
     </>
   );

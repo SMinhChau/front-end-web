@@ -12,13 +12,12 @@
 
   .empty {
     height: 25%;
-    margin: 5px 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     width: 100%;
-
     .username {
       font-weight: 500;
       font-size: 1.4rem;
@@ -34,8 +33,8 @@
       }
     }
     img {
-      width: 70px;
-      height: 70px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       box-shadow: #caf2f8 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
       transition-duration: 2s;
@@ -76,7 +75,7 @@
     flex-direction: row;
     justify-content: center;
     .name_term {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
       text-shadow: 0px 2px 1px #caf0f8;
       text-transform: uppercase;
@@ -192,6 +191,7 @@
 
         font-weight: 600;
         text-transform: uppercase;
+
         transition-duration: 2s;
         &:hover {
           cursor: pointer;

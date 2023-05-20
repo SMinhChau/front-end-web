@@ -292,3 +292,21 @@ export const getStatusGroup = (status: string) => {
       return 'Đậu hội dồng';
   }
 };
+export const getStatusGroupColor = (status: string) => {
+  switch (status) {
+    case 'OPEN':
+      return 'green';
+    case 'FAIL_ADVISOR':
+      return 'red';
+    case 'FAIL_REVIEWER':
+      return 'red';
+    case 'red':
+      return 'Rớt hội đồng';
+    case 'green':
+      return 'Đậu phản biện';
+    case 'PASS_REVIEWER':
+      return 'green';
+    case 'PASS_SESSION_HOST':
+      return 'green';
+  }
+};
