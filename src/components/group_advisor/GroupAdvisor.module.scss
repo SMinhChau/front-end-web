@@ -1,4 +1,5 @@
 .list_evaluation {
+  padding: 0 20px;
   padding-top: 30px;
   flex-direction: column;
   flex: 1;
@@ -13,6 +14,14 @@
     font-size: 1.3rem;
     font-weight: 600;
   }
+  .title_point {
+    font-size: 15px;
+
+    color: #264653;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
   .info {
     margin-top: 10px;
     .title_group_left {
@@ -25,15 +34,7 @@
       font-weight: 600;
     }
     margin-top: 10px;
-    .title_group_right {
-      width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      text-transform: uppercase;
-      color: gray;
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
+
     .left {
       margin: 10px;
       .text_colum {
@@ -59,9 +60,29 @@
         font-size: 16px;
       }
     }
-    .rignt {
+    .right {
+      background-color: #fff;
       width: 100%;
-      margin: 10px;
+      margin: 20px;
+      padding: 20px;
+      .title_group_right {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        text-transform: uppercase;
+        color: gray;
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+      .type_evalution {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+
+        .btn_radio {
+          text-transform: uppercase;
+        }
+      }
       .text_colum {
         font-size: 16px;
         color: #264653;

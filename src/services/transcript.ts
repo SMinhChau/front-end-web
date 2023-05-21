@@ -27,6 +27,17 @@ class TranscriptService {
       method: 'post',
     });
   }
+  getTranscriptsBýtudent(groupId: number, lecturerId: number, studentId: number, typeEvaluation: string) {
+    const params: Record<string, any> = {};
+    params['groupId'] = groupId;
+    params['typeEvaluation'] = typeEvaluation;
+    params['lecturerId'] = lecturerId;
+    return axiosAuth({
+      url: `/lecturer/transcripts/students/${studentId}`,
+      params,
+      method: 'get',
+    });
+  }
 }
 
 const studentService = new TranscriptService();
