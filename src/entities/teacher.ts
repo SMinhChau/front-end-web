@@ -1,5 +1,6 @@
 import { EnumRole, EnumGender } from '../enum';
 interface Teacher {
+  lecturer: any;
   id: any;
   username: string;
   avatar: string;
