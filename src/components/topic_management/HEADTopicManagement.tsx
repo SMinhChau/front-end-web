@@ -242,7 +242,7 @@ const HEADTopicManagement = () => {
     setData(topic);
   };
   const renderTable = useMemo(() => {
-    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} />;
+    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
   }, [data, handleSelectChange]);
 
   return (
@@ -272,8 +272,6 @@ const HEADTopicManagement = () => {
                 <Select
                   onChange={handleSelectChange}
                   options={listLerturer.map((val) => {
-                    console.log('val', val.label);
-
                     return {
                       value: val.value,
                       label: val.label,

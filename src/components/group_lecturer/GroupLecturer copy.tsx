@@ -25,30 +25,15 @@ import { DeleteOutlined, EditOutlined, GroupOutlined, MoreOutlined, PlusOutlined
 import lecturerService from '../../services/lecturer';
 import Teacher from '../../entities/teacher';
 import Meta from 'antd/es/card/Meta';
-import {
-  ErrorCodeDefine,
-  TypeEvaluation,
-  checkDegree,
-  checkTypeTraining,
-  getColorLecturer,
-  getStatusGroup,
-  getStatusGroupColor,
-  getTypeGroupLecturer,
-  showMessage,
-  showMessageEror,
-} from '../../constant';
+import { ErrorCodeDefine, TypeEvaluation, checkDegree, showMessage, showMessageEror } from '../../constant';
 import { Link } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 import Select from 'react-select';
-import { TypeEvalution } from 'src/entities/assign';
-import Student from 'src/entities/student';
-import AssignAdvisor from 'src/entities/assign_advisor';
 
 const cls = classNames.bind(style);
 interface GroupLecturer {
   id: number;
   name: string;
-  type: TypeEvaluation;
   members: {
     id: number;
     lecturer: Teacher;
@@ -72,7 +57,6 @@ interface GroupStudent {
   groupLecturer: {
     id: number;
   };
-  members: Array<Student>;
 }
 interface GroupLecturerTable extends GroupLecturer {
   key: number;
@@ -85,7 +69,6 @@ interface SelectOption {
 
 const GroupLecturer = () => {
   const [groupLecturers, setGroupLecturers] = useState<Array<GroupLecturerTable>>([]);
-  const [data, setData] = useState<Array<GroupLecturerTable>>([]);
 
   const [loadingListGroup, setLoadingListGroup] = useState(true);
   const [open, setOpen] = useState(false);
@@ -105,7 +88,6 @@ const GroupLecturer = () => {
   const termState = useAppSelector((state) => state.term);
   const [defaultValue, setDefaultValue] = useState([{ value: '', label: '' }]);
   const { user } = useAppSelector((state) => state.user);
-  const [typeCreate, setTypeCreate] = useState('');
 
   useEffect(() => {
     getGroupLecturer();
@@ -115,6 +97,7 @@ const GroupLecturer = () => {
     if (termState.term.length > 0) {
       lecturerService.getWithTerm(termState.termIndex.id).then((response) => {
         console.log('setListLecturer ->', response.data);
+
         setListLecturer(response.data);
       });
     }
@@ -126,10 +109,8 @@ const GroupLecturer = () => {
         const _data = response.data.map((value: GroupLecturer, index: number) => {
           return { ...value, key: index };
         });
-        console.log('getGroupLecturer', _data);
         setLoadingListGroup(false);
         setGroupLecturers(_data);
-        setData(_data);
       });
     }
   };
@@ -151,10 +132,9 @@ const GroupLecturer = () => {
   const getGroupStudentOfLecturer = (_id: number) => {
     setLoading(true);
     lecturerService
-      .getGroupssignById(_id)
+      .getGroupStudentOfLecturer(termState.termIndex.id, _id)
       .then((result) => {
         setLoading(false);
-        console.log('getGroupStudentOfLecturer', result?.data);
 
         setGroupStudents(result?.data);
       })
@@ -168,8 +148,6 @@ const GroupLecturer = () => {
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
     setGroupDes(m);
-    console.log(' id group lecture', id);
-
     setLoadingInfoGroup(false);
     setGroupIdDelete(m?.id);
     getGroupStudentOfLecturer(Number(m?.id));
@@ -225,22 +203,14 @@ const GroupLecturer = () => {
       ),
     },
     {
-      title: 'Loại nhóm',
-      dataIndex: 'type',
-      key: 'type',
-      render: (text: string) => {
-        const name = getTypeGroupLecturer(text);
-        console.log('name ->>>>...', name);
-
-        const color = getColorLecturer(text);
-        return (
-          <Tag color={color} key={getColorLecturer(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
-              <div style={{ color: color }}> {name}</div>
-            </div>
-          </Tag>
-        );
-      },
+      title: 'Tên nhóm',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Xóa',
@@ -372,15 +342,15 @@ const GroupLecturer = () => {
     id.forEach((i) => {
       lecturerIds.push(i.value);
     });
+    console.log('lecturerIds', lecturerIds);
+    console.log('value', value);
 
     if (status === 'insert')
       lecturerService
         .createGroupLecturer({
           ...value,
-          name: `${getTypeGroupLecturer(typeCreate)} ${value.name}`,
           termId: termState.termIndex.id,
           lecturerIds: `[${lecturerIds}]`,
-          type: typeCreate,
         })
         .then((result) => {
           showMessage('Tạo thành công', 3000);
@@ -399,7 +369,6 @@ const GroupLecturer = () => {
           ...value,
           termId: termState.termIndex.id,
           lecturerIds: `[${lecturerIds}]`,
-          type: typeCreate,
         })
         .then((result) => {
           showMessage('Cập nhật thành công', 2000);
@@ -417,54 +386,74 @@ const GroupLecturer = () => {
   };
 
   const renderGroupStudent = useMemo(() => {
-    const baseColumns: ColumnsType<GroupStudent> = [
-      {
-        title: 'Mã nhóm',
-        dataIndex: 'id',
-        key: 'id',
-
-        render: (text) => {
-          return <div className={cls('text_colum')}>{text}</div>;
-        },
-      },
-
-      {
-        title: 'Tình tạng',
-        dataIndex: 'status',
-        key: 'status',
-
-        render: (text) => {
-          const name = getStatusGroup(text);
-          const color = getStatusGroupColor(text);
-          return (
-            <Tag color={color}>
-              <div style={{ color: color, fontSize: '16px' }}>{name}</div>
-            </Tag>
-          );
-        },
-      },
-      {
-        title: 'Chi tiết',
-        dataIndex: 'id',
-        key: 'id',
-
-        render: (text) => {
-          return <Link to={'/group/' + id}> Chi tiết...</Link>;
-        },
-      },
-    ];
-
     return (
       <>
         {groupStudents?.length > 0 ? (
           <>
-            <Table columns={baseColumns} dataSource={groupStudents} scroll={{ x: 50, y: 90 }} />
+            <Card className={cls('scroll')}>
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+              {groupStudents?.map((item, index) => {
+                return (
+                  <Card.Grid className={cls('item_group')} hoverable>
+                    <div>
+                      <Avatar style={{ backgroundColor: '#87d068', marginBottom: '10px' }} icon={<UserSwitchOutlined />} />
+                      {/* <GroupOutlined size={30} className={cls('icon')} /> */}
+                    </div>
+                    <Meta
+                      title={item?.group?.name}
+                      description={
+                        <div className={cls('group_more')}>
+                          <Link to={'/group/' + item?.group?.id}> Chi tiết...</Link>
+                        </div>
+                      }
+                    />
+                  </Card.Grid>
+                );
+              })}
+            </Card>
           </>
         ) : (
           <>
-            <div className={cls('group_student')}>
-              <Badge.Ribbon text="Chưa có nhóm" color="red"></Badge.Ribbon>
-            </div>
+            <Badge.Ribbon text="Thông báo" color="red">
+              <Card title="Nhóm Sinh Viên" size="default">
+                Chưa có nhóm nào
+              </Card>
+            </Badge.Ribbon>
           </>
         )}
       </>
@@ -472,7 +461,7 @@ const GroupLecturer = () => {
   }, [groupStudents, groupDes, loading, groupLecturers]);
 
   const renderTable = useMemo(() => {
-    return <Table dataSource={data} columns={columns} scroll={{ x: 400 }} pagination={{ pageSize: 7 }} />;
+    return <Table dataSource={groupLecturers} columns={columns} scroll={{ x: 400 }} pagination={{ pageSize: 7 }} />;
   }, [groupLecturers, columns, lecturer]);
 
   const renderTableGroupDes = useMemo(() => {
@@ -495,21 +484,8 @@ const GroupLecturer = () => {
         pagination={{ pageSize: 2 }}
       />
     );
-  }, [groupLecturers, groupDes, loading, data]);
+  }, [groupLecturers, groupDes, loading]);
 
-  const handleSelectChangeFilter = (value: any) => {
-    const _data = groupLecturers.filter((item) => item.type === value.value);
-    console.log('data filter', _data);
-
-    setData(_data);
-  };
-  const handleSelectChangeFilterCreate = (value: any) => {
-    setTypeCreate(value.value);
-  };
-
-  const getAllGroup = () => {
-    setData(groupLecturers);
-  };
   return (
     <div className={cls('group_lecturer_management')}>
       <ToastContainer />
@@ -531,38 +507,6 @@ const GroupLecturer = () => {
                 >
                   Tạo
                 </Button>
-
-                <div className={cls('select_content')}>
-                  <Row justify={'center'} align={'middle'} style={{ marginBottom: '20px' }}>
-                    <Col>
-                      <p className={cls('title_info_lecturer')}>Loại nhóm:</p>
-                    </Col>
-                    <Col>
-                      <div style={{ width: '200px' }}>
-                        <Select
-                          onChange={handleSelectChangeFilter}
-                          options={[
-                            { value: TypeEvalution.ADVISOR, label: getTypeGroupLecturer(TypeEvalution.ADVISOR) },
-                            { value: TypeEvalution.REVIEWER, label: getTypeGroupLecturer(TypeEvalution.REVIEWER) },
-                            { value: TypeEvalution.SESSION_HOST, label: getTypeGroupLecturer(TypeEvalution.SESSION_HOST) },
-                          ]}
-                        />
-                      </div>
-                    </Col>
-                    <Button
-                      type="dashed"
-                      size="large"
-                      style={{
-                        margin: '0 10px',
-                        animation: 'none',
-                        color: 'rgb(80, 72, 229)',
-                      }}
-                      onClick={getAllGroup}
-                    >
-                      Tất cả
-                    </Button>
-                  </Row>
-                </div>
               </div>
 
               {renderTable}
@@ -573,23 +517,23 @@ const GroupLecturer = () => {
           <div className={cls('left')}>
             <Col span={24}>
               <div className={cls('info_item_des')}>
+                <Descriptions title={<h3 className={cls('title_info')}>Thông tin nhóm</h3>}></Descriptions>
                 <Skeleton loading={loadingInfoGroup} avatar active>
                   <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
-                    <Col span={12}>
-                      <p className={cls('title_info_lecturer')}>Mã nhóm:</p>
+                    <Col span={6}>
+                      <p className={cls('title_info_lecturer')}>Tên nhóm:</p>
                     </Col>
-                    <Col span={12}>
-                      <h4 className={cls('name_group')}>{groupDes?.id}</h4>
-                    </Col>
-                  </Row>
-                  <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
-                    <Col span={12}>
-                      <p className={cls('title_info_lecturer')}>Tên nhóm hội đồng:</p>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={6}>
                       <h4 className={cls('name_group')}>{groupDes?.name}</h4>
                     </Col>
                   </Row>
+
+                  <Descriptions
+                    bordered
+                    layout="horizontal"
+                    column={2}
+                    title={<h3 className={cls('title_group')}>Thông tin giảng viên</h3>}
+                  ></Descriptions>
 
                   {renderTableGroupDes}
                 </Skeleton>
@@ -598,7 +542,7 @@ const GroupLecturer = () => {
             <Col span={24}>
               <div className={cls('info_group_student')}>
                 <Skeleton loading={loading} avatar active>
-                  <Descriptions title={<h3 className={cls('title_info')}>danh sách nhóm sinh viên đang quản lý</h3>}></Descriptions>
+                  <Descriptions title={<h3 className={cls('title_info')}>Nhóm được quản lý</h3>}></Descriptions>
                   {renderGroupStudent}
                 </Skeleton>
               </div>
@@ -627,7 +571,7 @@ const GroupLecturer = () => {
           style={{ maxWidth: 600 }}
         >
           <Form.Item label="Tên nhóm" rules={[{ required: true, message: 'Vui lòng nhập tên' }]} name="name">
-            <Input placeholder={getTypeGroupLecturer(typeCreate)} />
+            <Input />
           </Form.Item>
 
           <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]}>
@@ -649,33 +593,11 @@ const GroupLecturer = () => {
             />
           </Form.Item>
 
-          {status === 'insert' ? (
-            <>
-              <Row>
-                <Col>
-                  <p className={cls('title_info_lecturer')}>Loại nhóm Hội đồng:</p>
-                </Col>
-                <Col>
-                  <div style={{ width: '200px', marginLeft: '20px' }}>
-                    <Select
-                      onChange={handleSelectChangeFilterCreate}
-                      options={[
-                        { value: TypeEvalution.REVIEWER, label: getTypeGroupLecturer(TypeEvalution.REVIEWER) },
-                        { value: TypeEvalution.SESSION_HOST, label: getTypeGroupLecturer(TypeEvalution.SESSION_HOST) },
-                      ]}
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </>
-          ) : (
-            <></>
-          )}
           <Form.Item wrapperCol={{ span: 24 }}>
             <Row>
               <Col span={24} offset={20}>
                 <Button type="primary" htmlType="submit">
-                  {status === 'insert' ? ' Tạo' : ' Sửa'}
+                  Tạo
                 </Button>
               </Col>
             </Row>

@@ -8,11 +8,12 @@ class LecturerService {
       method: 'get',
     });
   }
-  async getWithTerm(termId: number) {
+  async getWithTerm(termId: number, majorsId?: number) {
     return await axiosAuth({
       url: '/lecturer/lecturers',
       params: {
         termId,
+        majorsId,
       },
     });
   }
@@ -38,7 +39,7 @@ class LecturerService {
     });
   }
 
-  async createGroupLecturer(data: { termId: number; name: string; lecturerIds: string }) {
+  async createGroupLecturer(data: { termId: number; name: string; lecturerIds: string; type?: string }) {
     return await axiosAuth({
       url: '/lecturer/group-lecturer',
       method: 'post',
@@ -52,6 +53,7 @@ class LecturerService {
       termId: number;
       name: string;
       lecturerIds: string;
+      type?: string;
     },
   ) {
     return await axiosAuth({
@@ -130,6 +132,12 @@ class LecturerService {
       url: `/lecturer/lecturers/${id}/reset-password`,
       method: 'patch',
       data,
+    });
+  }
+  async getGroupssignById(id: number) {
+    return await axiosAuth({
+      url: `/lecturer/groups/group-lecturer/${id}`,
+      method: 'get',
     });
   }
 }

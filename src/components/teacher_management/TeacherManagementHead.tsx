@@ -18,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import Search from 'antd/es/input/Search';
 import { MdOutlinePassword } from 'react-icons/md';
 import majorService from 'src/services/major';
+import Major from 'src/entities/major';
 const avatarDefault = 'assets/avatars/avatarDefault.png';
 
 const cls = classNames.bind(style);
@@ -27,7 +28,7 @@ interface LecturerTable extends Teacher {
   majorId: number;
 }
 
-const TeacherManagement = () => {
+const TeacherManagementHead = () => {
   const baseColumns: ColumnsType<any> = [
     {
       title: '',
@@ -168,6 +169,16 @@ const TeacherManagement = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [listMajor, setListMajor] = useState<Array<Filter>>([]);
+  const [major, setMajor] = useState<Major>();
+
+  useEffect(() => {
+    majorService
+      .getMajorById(user?.majors?.id)
+      .then((result) => {
+        setMajor(result?.data);
+      })
+      .catch((errer) => console.log('errr', errer));
+  }, []);
 
   const [data, setData] = useState<Array<LecturerTable>>([]);
   useEffect(() => {
@@ -215,7 +226,7 @@ const TeacherManagement = () => {
 
   const getListLecturer = () => {
     if (termState.termIndex.id) {
-      lecturerService.getWithTerm(termState.termIndex.id).then((response) => {
+      lecturerService.getWithTerm(termState.termIndex.id, user.id).then((response) => {
         const _data = response.data.map((value: Teacher, index: number) => {
           return { ...value, key: index, majorId: value.majors.id };
         });
@@ -316,10 +327,12 @@ const TeacherManagement = () => {
   };
 
   const onFinish = (value: any) => {
+    console.log('value', value);
+
     lecturerService
       .addLecturer({
         ...value,
-        majorsId: majorId,
+        majorsId: user.id,
         termId: termState.termIndex.id,
         username: value?.username,
         name: value?.name,
@@ -351,16 +364,11 @@ const TeacherManagement = () => {
   const handleChangeSelectedOptionDegree = (value: any) => {
     SetDegree(value.value);
   };
-  const handleSelectChangeMajor = (value: any) => {
-    SetMajorId(value.value);
-  };
-
-  const handleSelectChangeMajorFilter = (value: any) => {
-    const _data = lecturer.filter((item) => item.majors.id === value.value);
-    setData(_data);
-  };
 
   const showEditModal = (id: number) => {
+    console.log('update id -> ', id);
+    console.log('lecturer -> ', lecturer);
+
     setUpdateId(id);
     setOpen(true);
     setStatus('update');
@@ -471,18 +479,20 @@ const TeacherManagement = () => {
               />
             </div>
           </Col>
-          <div className={cls('name')}>Chọn chuyên ngành:</div>
-          <div style={{ width: '200px' }}>
-            <Select
-              onChange={handleSelectChangeMajorFilter}
-              options={listMajor.map((val) => {
-                return {
-                  value: val.value,
-                  label: `${val.label} - Mã: ${val.value}`,
-                };
-              })}
-            />
-          </div>
+
+          <Button
+            type="dashed"
+            size="large"
+            style={{
+              margin: '0 10px',
+              animation: 'none',
+              color: 'rgb(80, 72, 229)',
+            }}
+            disabled={true}
+            onClick={() => setData(lecturer)}
+          >
+            {major?.name} - Mã : {major?.id}
+          </Button>
           <Button
             type="dashed"
             size="large"
@@ -565,18 +575,6 @@ const TeacherManagement = () => {
                       />
                     </Form.Item>
 
-                    <Form.Item label="Chuyên ngành" rules={[{ required: true, message: 'Vui lòng  chuyên ngành' }]}>
-                      <Select
-                        onChange={handleSelectChangeMajor}
-                        options={listMajor.map((val) => {
-                          return {
-                            value: val.value,
-                            label: val.label,
-                          };
-                        })}
-                      />
-                    </Form.Item>
-
                     <Form.Item wrapperCol={{ span: 24 }}>
                       <Row>
                         <Col span={24} offset={19}>
@@ -597,4 +595,4 @@ const TeacherManagement = () => {
   );
 };
 
-export default TeacherManagement;
+export default TeacherManagementHead;

@@ -124,11 +124,11 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.user.isAdmin === true) {
+      if (state.isRole === 'ADMIN') {
         state.functions = menusAdmin.ADMIN;
         state.errorCheck = true;
       } else {
-        switch (state.user.role) {
+        switch (state.isRole) {
           case EnumRole.HEAD_LECTURER:
             if (state.isRole === 'HEAD_LECTURER') {
               state.functions = menus.HEAD_LECTURER;

@@ -310,3 +310,25 @@ export const getStatusGroupColor = (status: string) => {
       return 'green';
   }
 };
+
+export const getTypeGroupLecturer = (typeEvalution: string) => {
+  switch (typeEvalution) {
+    case 'ADVISOR':
+      return 'Hướng dẫn';
+    case 'REVIEWER':
+      return 'Phản biện';
+    case 'SESSION_HOST':
+      return 'Hội đồng';
+  }
+};
+
+export const getColorLecturer = (typeEvalution: string) => {
+  switch (typeEvalution) {
+    case 'ADVISOR':
+      return 'green';
+    case 'REVIEWER':
+      return 'blue';
+    case 'SESSION_HOST':
+      return 'red';
+  }
+};
