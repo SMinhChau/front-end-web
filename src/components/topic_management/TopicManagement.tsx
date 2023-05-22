@@ -332,7 +332,7 @@ const TopicManagement = () => {
             </Form>
           </Modal>
         </div>
-        <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} />
+        <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />
       </div>
     </>
   );

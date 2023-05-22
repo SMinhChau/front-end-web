@@ -306,7 +306,7 @@ const StudentManagement = () => {
   };
 
   const RenderStudent = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
   }, [student, baseColumns, data]);
 
   const reSetPasss = (id: number) => {

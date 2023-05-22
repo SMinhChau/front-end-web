@@ -24,6 +24,7 @@ import { TypeNotificationPath, showMessage } from 'src/constant';
 import Notify from 'src/entities/notify';
 import { ToastContainer } from 'react-toastify';
 import { EnumRole } from 'src/enum';
+import { RoleCheck } from 'src/enum';
 const { Search } = Input;
 const cls = classNames.bind(style);
 const logo = 'assets/Logo_IUH.png';
@@ -47,12 +48,14 @@ function FooterEnd() {
     if (userState.admin === true) {
       return 'Người quản lý';
     } else {
-      switch (userState.user.role) {
-        case EnumRole.HEAD_LECTURER:
+      switch (userState.isRole) {
+        case RoleCheck.ADMIN:
+          return 'Người quản lý';
+        case RoleCheck.HEAD_LECTURER:
           return 'Trưởng bộ môn';
-        case EnumRole.SUB_HEAD_LECTURER:
+        case RoleCheck.SUB_HEAD_LECTURER:
           return 'Phó trưởng bộ môn';
-        case EnumRole.LECTURER:
+        case RoleCheck.LECTURER:
           return 'Giảng viên';
       }
     }

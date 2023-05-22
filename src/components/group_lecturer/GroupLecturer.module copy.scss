@@ -10,13 +10,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .select_content {
-        .title_info_lecturer {
-          font-size: 1rem;
-          padding-right: 30px;
-          color: #264653;
-        }
-      }
     }
   }
   .left {
@@ -34,7 +27,7 @@
       align-items: center;
       background-color: white;
       .title_info {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
 
         color: #264653;
         text-transform: uppercase;
@@ -86,13 +79,6 @@
       align-items: center;
       flex: 2;
 
-      .group_student {
-        padding: 20px;
-
-        background-color: white;
-
-        width: 100%;
-      }
       .title_info {
         font-size: 15px;
 
