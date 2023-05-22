@@ -76,7 +76,7 @@ const GroupAdvisor = () => {
       title: 'Mã nhóm',
       dataIndex: 'id',
       key: 'id',
-      width: 100,
+
       render: (text) => {
         return <div className={cls('text_colum')}>{text}</div>;
       },

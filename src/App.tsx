@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'antd/dist/reset.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,6 +32,8 @@ import SemesterInfo from './pages/semester/SemesterInfo';
 import GroupAdvisorOfLecture from './pages/group_advisor/GroupAdvisorOfLecturer';
 import ItemGroupAdvisor from './pages/group_advisor_item/GroupAdvisorItem';
 import TopicofLecture from './pages/topic/TopicofLecture';
+import { setChecked, setLogin } from './redux/slices/user_slice';
+import { showMessageEror } from './constant';
 
 function App() {
   const userState = useAppSelector((state) => state.user);
@@ -39,7 +41,17 @@ function App() {
 
   useEffect(() => {
     if (tokenService.getRefreshToken() && userState.user.username === '') {
-      dispatch(authAPI.getInfo()());
+      const roleFormLocal = localStorage.getItem('role');
+      console.log('roleFormLocal', roleFormLocal);
+      if (roleFormLocal) {
+        dispatch(setChecked(roleFormLocal));
+        dispatch(authAPI.getInfo()());
+      } else {
+        dispatch(setLogin(false));
+        tokenService.reset();
+        window.location.href = '/login';
+        showMessageEror('Vui lòng đăng nhập lại xác định quyền truy cập', 5000);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userState]);

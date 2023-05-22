@@ -9,11 +9,16 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import authAPI from '../../redux/apis/auth';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, Col, Form, Input, Row } from 'antd';
+import { Checkbox, Col, Form, Input, Radio, RadioChangeEvent, Row } from 'antd';
 import { showMessage, showMessageEror } from '../../constant';
 import { checkString } from '../../constant';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { setLoginIsAdmin } from 'src/redux/slices/user_slice';
+import { setChecked, setLogin, setLoginIsAdmin } from 'src/redux/slices/user_slice';
+import { CheckboxValueType } from 'antd/es/checkbox/Group';
+import { EnumRole } from 'src/enum';
+import { MdPersonOutline } from 'react-icons/md';
+import { UserOutlined } from '@ant-design/icons';
+import tokenService from 'src/services/token';
 
 const logo = 'assets/Logo_IUH.png';
 const bgImg = 'assets/bg.webp';
@@ -24,6 +29,16 @@ function Login() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [value, setValue] = useState(EnumRole.LECTURER);
+
+  const onChangeCheckbox = (e: RadioChangeEvent) => {
+    setValue(e.target.value);
+    localStorage.setItem('role', e.target.value);
+    console.log('radio checked', e.target.value);
+    dispatch(setChecked(e.target.value));
+  };
+  console.log('userState.isRole', userState.isRole);
 
   const login = (values: any) => {
     const check = checkString(values.username);
@@ -37,14 +52,20 @@ function Login() {
 
   useEffect(() => {
     if (userState.is_login === true) {
-      showMessage('Đăng nhập thành công', 3000);
-      navigate('/');
+      if (userState.errorCheck === true) {
+        showMessage('Đăng nhập thành công', 3000);
+        navigate('/');
+      } else {
+        showMessageEror('Bạn không thuộc quyền này vui lòng đăng nhập lại', 5000);
+        dispatch(setLogin(false));
+        tokenService.reset();
+      }
     } else {
       if (userState.error === true) {
         showMessageEror('Thông tin đăng nhập không chính xác', 5000);
       }
     }
-  }, [userState]);
+  }, [userState.is_login, userState.errorCheck, userState.error, userState.isRole]);
 
   const onChange = (e: CheckboxChangeEvent) => {
     console.log('userState.admin -> ', userState.admin);
@@ -60,25 +81,57 @@ function Login() {
       <Form action="" labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} onFinish={login} size="large">
         <img src={logo} alt="" />
         <div className={cls('form_header')}>Đăng nhập</div>
-        <Row justify={'space-between'} style={{ width: '100%' }}>
+        <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
           <Col span={24}>
-            <Form.Item label="Tên đăng nhập" name="username" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
-              <Input />
+            <Form.Item
+              label={<div className={cls('lable')}>Tên đăng nhập</div>}
+              name="username"
+              rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+            >
+              <Input style={{ fontSize: '1.3rem' }} />
             </Form.Item>
 
-            <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}>
-              <Input.Password />
+            <Form.Item
+              label={<div className={cls('lable')}>Mật khẩu</div>}
+              name="password"
+              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}
+            >
+              <Input.Password style={{ fontSize: '1.3rem' }} />
             </Form.Item>
+
+            <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
+              <Col span={6}>
+                <div className={cls('lable_radio')}>
+                  Đăng nhập với quyền <UserOutlined sizes="30" />
+                </div>
+              </Col>
+              <Col span={18}>
+                <Radio.Group size="large" onChange={onChangeCheckbox} value={value}>
+                  <Radio value={'ADMIN'}>
+                    <div className={cls('_lable')}>Người quản lý</div>
+                  </Radio>
+                  <Radio value={EnumRole.HEAD_LECTURER}>
+                    <div className={cls('_lable')}>Trưởng bộ môn</div>
+                  </Radio>
+                  <Radio value={EnumRole.SUB_HEAD_LECTURER}>
+                    <div className={cls('_lable')}>Phó bộ môn</div>
+                  </Radio>
+                  <Radio value={EnumRole.LECTURER}>
+                    <div className={cls('_lable')}>Giảng viên</div>
+                  </Radio>
+                </Radio.Group>
+              </Col>
+            </Row>
             <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
               <Col span={18}>
                 <div className={cls('content_function')}>
-                  <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
-                    <Col offset={4}>
+                  <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+                    {/* <Col offset={4}>
                       <Checkbox onChange={onChange}> Quản lý</Checkbox>
-                    </Col>
+                    </Col> */}
                     <Col offset={4}>
                       <Link to="/forgot-password" className={cls('forgot_password')}>
-                        Quên mật khẩu?
+                        <div className={cls('lable')}> Quên mật khẩu?</div>
                       </Link>
                     </Col>
                   </Row>
@@ -87,7 +140,9 @@ function Login() {
             </Row>
 
             <Row justify={'center'}>
-              <button type="submit">Đăng nhập</button>
+              <button type="submit">
+                <div className={cls('btn')}>Đăng nhập</div>
+              </button>
             </Row>
           </Col>
         </Row>
