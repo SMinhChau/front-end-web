@@ -36,6 +36,13 @@ class EvaluateService {
       responseType: 'blob', // Important
     });
   }
+  async exportFileByAssignId(id: number) {
+    return await axiosAuth({
+      url: `/lecturer/evaluations/pdf/assigns/${id}/download`,
+      method: 'get',
+      responseType: 'blob', // Important
+    });
+  }
 }
 
 const evaluateService = new EvaluateService();

@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Button, Col, Descriptions, Divider, InputNumber, Row, Skeleton, Spin, Table, Typography } from 'antd';
 import groupService from '../../services/group';
 import { useAppSelector } from '../../redux/hooks';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, ExportOutlined } from '@ant-design/icons';
 import transcriptService from '../../services/transcript';
 import Teacher from '../../entities/teacher';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Student from '../../pages/student/Student';
 import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
 import studentService from '../../services/student';
 import TranscriptSumMary from '../../entities/transcript';
+import evaluateService from 'src/services/evaluate';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
@@ -343,6 +344,25 @@ const GroupEvaluation = () => {
     );
   }, [avgSummary, transcriptsSummary, listAvgGrader]);
 
+  const handleDownload = () => {
+    evaluateService
+      .exportFileByAssignId(param.id)
+      .then((result) => {
+        console.log('result', result);
+        const url = window.URL.createObjectURL(new Blob([result.data], { type: 'application/pdf' }));
+        const link = document.createElement('a');
+        link.href = url;
+        const fileName = `${getEvalutionName()}.pdf`;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch((er) => {
+        console.log('er ->', er);
+      });
+  };
+
   return (
     <div className={cls('group_evaluation')}>
       <ToastContainer />
@@ -350,6 +370,20 @@ const GroupEvaluation = () => {
         <Col span={9} className={cls('group-col')}>
           <Row justify={'space-between'} style={{ height: '100%' }}>
             <Col span={24}>
+              <Button
+                type="dashed"
+                icon={<ExportOutlined />}
+                size="large"
+                disabled={avgGrader > 10 ? true : false}
+                style={{
+                  animation: 'none',
+                  color: 'rgb(80, 72, 229)',
+                  fontWeight: '600',
+                }}
+                onClick={handleDownload}
+              >
+                Xuất phiếu chấm
+              </Button>
               <div className={cls('title_group')}>Thông tin nhóm</div>
               <div className={cls('info_item_des')}>
                 <Skeleton loading={!loadingInfoGroup} active paragraph={{ rows: 5 }}>

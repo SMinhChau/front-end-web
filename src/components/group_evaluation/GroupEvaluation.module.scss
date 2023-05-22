@@ -11,6 +11,7 @@
     padding: 10px 0;
     text-transform: uppercase;
     color: gray;
+    background-color: '#fff';
     font-size: 1.3rem;
     font-weight: 600;
   }
@@ -34,6 +35,15 @@
     padding: 20px;
     justify-content: center;
     align-items: center;
+    .title_group {
+      text-align: center;
+      padding: 10px 0;
+      text-transform: uppercase;
+      color: gray;
+      background-color: '#fff';
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
 
     height: 100%;
     .top_des {
