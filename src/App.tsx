@@ -42,17 +42,17 @@ function App() {
   useEffect(() => {
     if (tokenService.getRefreshToken() && userState.user.username === '') {
       const roleFormLocal = localStorage.getItem('role');
-      console.log('roleFormLocal', roleFormLocal);
+
       if (roleFormLocal) {
         dispatch(setChecked(roleFormLocal));
         dispatch(authAPI.getInfo()());
       } else {
-        dispatch(setLogin(false));
         tokenService.reset();
         window.location.href = '/login';
-        showMessageEror('Vui lòng đăng nhập lại xác định quyền truy cập', 5000);
+        showMessageEror('Vui lòng đăng nhập lại', 5000);
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userState]);
 

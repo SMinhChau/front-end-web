@@ -35,14 +35,13 @@ function Login() {
   const onChangeCheckbox = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     localStorage.setItem('role', e.target.value);
-    console.log('radio checked', e.target.value);
     dispatch(setChecked(e.target.value));
   };
-  console.log('userState.isRole', userState.isRole);
 
   const login = (values: any) => {
     const check = checkString(values.username);
-    console.log('login .admin -> ', userState.admin);
+    localStorage.setItem('role', value);
+    dispatch(setChecked(value));
     if (check === false) {
       showMessageEror('Tên không chứa ký tự đặt biệt', 3000);
     } else {
@@ -66,13 +65,6 @@ function Login() {
       }
     }
   }, [userState.is_login, userState.errorCheck, userState.error, userState.isRole]);
-
-  const onChange = (e: CheckboxChangeEvent) => {
-    console.log('userState.admin -> ', userState.admin);
-
-    console.log(`checked = ${e.target.checked}`);
-    dispatch(setLoginIsAdmin(true));
-  };
 
   return (
     <div className={cls('login_container')}>
@@ -100,25 +92,33 @@ function Login() {
             </Form.Item>
 
             <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
-              <Col span={6}>
+              <Col span={8}>
                 <div className={cls('lable_radio')}>
                   Đăng nhập với quyền <UserOutlined sizes="30" />
                 </div>
               </Col>
-              <Col span={18}>
+
+              <Col span={16}>
                 <Radio.Group size="large" onChange={onChangeCheckbox} value={value}>
-                  <Radio value={'ADMIN'}>
-                    <div className={cls('_lable')}>Người quản lý</div>
-                  </Radio>
-                  <Radio value={EnumRole.HEAD_LECTURER}>
-                    <div className={cls('_lable')}>Trưởng bộ môn</div>
-                  </Radio>
-                  <Radio value={EnumRole.SUB_HEAD_LECTURER}>
-                    <div className={cls('_lable')}>Phó bộ môn</div>
-                  </Radio>
-                  <Radio value={EnumRole.LECTURER}>
-                    <div className={cls('_lable')}>Giảng viên</div>
-                  </Radio>
+                  <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
+                    <Col>
+                      <Radio value={'ADMIN'} style={{ marginRight: '40px' }}>
+                        <div className={cls('_lable')}>Người quản lý</div>
+                      </Radio>
+                      <Radio value={EnumRole.HEAD_LECTURER}>
+                        <div className={cls('_lable')}>Trưởng bộ môn</div>
+                      </Radio>
+                    </Col>
+
+                    <Col>
+                      <Radio value={EnumRole.SUB_HEAD_LECTURER} style={{ marginRight: '60px' }}>
+                        <div className={cls('_lable')}>Phó bộ môn</div>
+                      </Radio>
+                      <Radio value={EnumRole.LECTURER}>
+                        <div className={cls('_lable')}>Giảng viên</div>
+                      </Radio>
+                    </Col>
+                  </Row>
                 </Radio.Group>
               </Col>
             </Row>
