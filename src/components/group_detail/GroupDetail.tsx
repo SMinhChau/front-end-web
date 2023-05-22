@@ -19,6 +19,7 @@ import { BiGroup } from 'react-icons/bi';
 import { MdOutlineTopic } from 'react-icons/md';
 import Select, { StylesConfig } from 'react-select';
 import { userInfo } from 'os';
+import { TypeEvalution } from 'src/entities/assign';
 
 const cls = classNames.bind(style);
 
@@ -153,17 +154,17 @@ const GroupDetail = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       lecturerService
-        .getGroupLecturers({ termId: termState.termIndex.id, typeEvaluation: 'REVIEWER' })
+        .getGroupLecturersDetail({ termId: termState.termIndex.id, type: TypeEvalution.REVIEWER })
         .then((resutl) => {
           setGroupLecturerReview(resutl?.data);
         })
-        .catch((er) => console.log('getGroupLecturers REVIEW', er));
+        .catch((er) => console.log('getGroupLecturersDetail REVIEW', er));
       lecturerService
-        .getGroupLecturers({ termId: termState.termIndex.id, typeEvaluation: 'SESSION_HOST' })
+        .getGroupLecturersDetail({ termId: termState.termIndex.id, type: TypeEvalution.SESSION_HOST })
         .then((resutl) => {
           setGroupLecturerHost(resutl?.data);
         })
-        .catch((er) => console.log('getGroupLecturers Host', er));
+        .catch((er) => console.log('getGroupLecturersDetail Host', er));
     }
   }, [termState]);
 
@@ -490,7 +491,6 @@ const GroupDetail = () => {
     );
   }, [status, groupLecturerReview, handleSelectChangeReview, infoReview]);
 
-  console.log('statusHost ->>> ', statusHost);
   const renderFormAssignSessionHost = useMemo(() => {
     console.log('statusHost ->>> ', statusHost);
     return (

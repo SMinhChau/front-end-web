@@ -79,9 +79,27 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.user.isAdmin === true && state.isRole === 'ADMIN') {
-        state.functions = menusAdmin.ADMIN;
-        state.errorCheck = true;
+      if (state.user.isAdmin === true) {
+        switch (state.isRole) {
+          case RoleCheck.ADMIN:
+            state.functions = menusAdmin.ADMIN;
+            state.errorCheck = true;
+            break;
+          case EnumRole.HEAD_LECTURER:
+            state.functions = menus.HEAD_LECTURER;
+            state.errorCheck = true;
+            break;
+          case EnumRole.SUB_HEAD_LECTURER:
+            state.functions = menus.SUB_HEAD_LECTURER;
+            state.errorCheck = true;
+            break;
+          case EnumRole.LECTURER:
+            state.functions = menus.LECTURER;
+            state.errorCheck = true;
+
+            break;
+          default:
+        }
       } else {
         switch (state.user.role) {
           case EnumRole.HEAD_LECTURER:
@@ -124,9 +142,27 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.isRole === 'ADMIN') {
-        state.functions = menusAdmin.ADMIN;
-        state.errorCheck = true;
+      if (state.user.isAdmin === true) {
+        switch (state.isRole) {
+          case RoleCheck.ADMIN:
+            state.functions = menusAdmin.ADMIN;
+            state.errorCheck = true;
+            break;
+          case EnumRole.HEAD_LECTURER:
+            state.functions = menus.HEAD_LECTURER;
+            state.errorCheck = true;
+            break;
+          case EnumRole.SUB_HEAD_LECTURER:
+            state.functions = menus.SUB_HEAD_LECTURER;
+            state.errorCheck = true;
+            break;
+          case EnumRole.LECTURER:
+            state.functions = menus.LECTURER;
+            state.errorCheck = true;
+
+            break;
+          default:
+        }
       } else {
         switch (state.isRole) {
           case EnumRole.HEAD_LECTURER:

@@ -45,10 +45,10 @@ const HEADTopicManagement = () => {
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
     {
-      title: 'Số lượng',
+      title: 'SL',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 80,
+      width: 60,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -128,6 +128,7 @@ const HEADTopicManagement = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'status',
+      width: 80,
       render: (status: any) => {
         return (
           <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
@@ -140,6 +141,7 @@ const HEADTopicManagement = () => {
     },
     {
       title: '',
+      width: 60,
       render: (row: any) => {
         return row.status === 'PEDING' ? (
           <Space wrap>
@@ -156,9 +158,10 @@ const HEADTopicManagement = () => {
     },
     {
       title: '',
+      width: 60,
       render: (row: any) => {
         return row.status === 'PEDING' ? (
-          <Space wrap>
+          <Space wrap style={{ marginLeft: '5px' }}>
             <Tooltip title="Từ chối đề tài" color={'volcano'}>
               <Button onClick={() => reject(row.id)}>
                 <CloseOutlined style={{ color: '#30a3f1' }} />
@@ -253,7 +256,6 @@ const HEADTopicManagement = () => {
         <Button
           type="dashed"
           onClick={handleGetAll}
-          icon={<ExportOutlined />}
           size="large"
           style={{
             animation: 'none',

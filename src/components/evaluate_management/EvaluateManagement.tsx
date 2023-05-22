@@ -9,6 +9,7 @@ import Table, { ColumnsType } from 'antd/es/table';
 import { DeleteOutlined, EditOutlined, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import { ToastContainer } from 'react-toastify';
 import { ErrorCodeDefine, checkPoint, showMessage, showMessageEror } from '../../constant';
+import TextArea from 'antd/es/input/TextArea';
 
 interface EvaluateTableType extends Evaluate {
   key: number;
@@ -321,7 +322,7 @@ const EvaluateManagement = () => {
               <Input />
             </Form.Item>
             <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
-              <Input />
+              <TextArea rows={2} />
             </Form.Item>
             <Form.Item label="Điểm" name="gradeMax" rules={[{ required: true, message: 'Vui lòng nhập điểm' }]}>
               <Input type="number" />
@@ -330,7 +331,7 @@ const EvaluateManagement = () => {
             <Row justify={'end'}>
               <Form.Item label="">
                 <Button type="primary" htmlType="submit">
-                  Tạo
+                  {status === 'insert' ? 'Tạo' : 'Cập nhật'}
                 </Button>
               </Form.Item>
             </Row>
@@ -340,7 +341,7 @@ const EvaluateManagement = () => {
 
       <Row justify={'center'} style={{ width: '100%' }}>
         <Col span={21}>
-          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} pagination={{ pageSize: 3 }} />
+          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} pagination={{ pageSize: 7 }} />
         </Col>
 
         <Col span={3}>
