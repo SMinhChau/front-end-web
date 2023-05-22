@@ -103,7 +103,7 @@ export const userSlice = createSlice({
             break;
 
           case EnumRole.LECTURER:
-            if (state.isRole === 'SUB_HEAD_LECTURER') {
+            if (state.isRole === 'LECTURER') {
               state.functions = menus.LECTURER;
               state.errorCheck = true;
             } else {
@@ -124,7 +124,7 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.user.isAdmin === true && state.isRole === 'ADMIN') {
+      if (state.user.isAdmin === true) {
         state.functions = menusAdmin.ADMIN;
         state.errorCheck = true;
       } else {
@@ -148,7 +148,7 @@ export const userSlice = createSlice({
             break;
 
           case EnumRole.LECTURER:
-            if (state.isRole === 'SUB_HEAD_LECTURER') {
+            if (state.isRole === 'LECTURER') {
               state.functions = menus.LECTURER;
               state.errorCheck = true;
             } else {

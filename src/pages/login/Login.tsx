@@ -35,13 +35,13 @@ function Login() {
   const onChangeCheckbox = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     localStorage.setItem('role', e.target.value);
-
     dispatch(setChecked(e.target.value));
   };
 
   const login = (values: any) => {
     const check = checkString(values.username);
-
+    localStorage.setItem('role', value);
+    dispatch(setChecked(value));
     if (check === false) {
       showMessageEror('Tên không chứa ký tự đặt biệt', 3000);
     } else {
