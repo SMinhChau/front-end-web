@@ -49,21 +49,20 @@ const ForgotPassword = () => {
           </Row>
 
           <Col span={24}>
-            <Form.Item name="username" rules={[{ required: true, message: 'Vui lòng nhập mã' }]}>
-              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            <Form.Item label={<div className={cls('lable')}>Tên đăng nhập</div>} rules={[{ required: true, message: 'Vui lòng nhập mã' }]}>
+              <Input style={{ fontSize: '1.3rem' }} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Link to="/login" className={cls('forgot_password')}>
-              <DoubleRightOutlined size={20} />
-              Quay lại
+              <div className={cls('lable')}> Quay lại</div>
             </Link>
           </Col>
           <Col span={24}>
             <Row justify={'center'} align={'middle'}>
               <Col span={12}>
                 <Button type="primary" htmlType="submit" className="login-form-button" style={{ height: '50px' }}>
-                  Gửi
+                  <div className={cls('btn')}>Gửi</div>
                 </Button>
               </Col>
             </Row>
