@@ -150,12 +150,13 @@ const GroupLecturer = () => {
 
   const getGroupStudentOfLecturer = (_id: number) => {
     setLoading(true);
+    setLoadingInfoGroup(true);
     lecturerService
       .getGroupssignById(_id)
       .then((result) => {
         setLoading(false);
         console.log('getGroupStudentOfLecturer', result?.data);
-
+        setLoadingInfoGroup(false);
         setGroupStudents(result?.data);
       })
       .catch((er) => {
@@ -167,10 +168,10 @@ const GroupLecturer = () => {
 
   const setInfoGroupLecturer = (id: number) => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
+
     setGroupDes(m);
     console.log(' id group lecture', id);
 
-    setLoadingInfoGroup(false);
     setGroupIdDelete(m?.id);
     getGroupStudentOfLecturer(Number(m?.id));
   };
@@ -571,38 +572,43 @@ const GroupLecturer = () => {
         </Col>
         <Col span={12}>
           <div className={cls('left')}>
-            <Col span={24}>
-              <div className={cls('info_item_des')}>
-                <Skeleton loading={loadingInfoGroup} avatar active>
-                  <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
-                    <Col span={12}>
-                      <p className={cls('title_info_lecturer')}>Mã nhóm:</p>
-                    </Col>
-                    <Col span={12}>
-                      <h4 className={cls('name_group')}>{groupDes?.id}</h4>
-                    </Col>
-                  </Row>
-                  <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
-                    <Col span={12}>
-                      <p className={cls('title_info_lecturer')}>Tên nhóm hội đồng:</p>
-                    </Col>
-                    <Col span={12}>
-                      <h4 className={cls('name_group')}>{groupDes?.name}</h4>
-                    </Col>
-                  </Row>
+            <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
+              <Col span={24}>
+                <div className={cls('info_item_des')}>
+                  <Skeleton loading={loadingInfoGroup} paragraph={{ rows: 5 }} avatar active>
+                    <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
+                      <Col span={12}>
+                        <p className={cls('title_info_lecturer')}>Mã nhóm:</p>
+                      </Col>
+                      <Col span={12}>
+                        <h4 className={cls('name_group')}>{groupDes?.id}</h4>
+                      </Col>
+                    </Row>
+                    <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
+                      <Col span={12}>
+                        <p className={cls('title_info_lecturer')}>Tên nhóm hội đồng:</p>
+                      </Col>
+                      <Col span={12}>
+                        <h4 className={cls('name_group')}>{groupDes?.name}</h4>
+                      </Col>
+                    </Row>
 
-                  {renderTableGroupDes}
-                </Skeleton>
-              </div>
-            </Col>
-            <Col span={24}>
+                    {renderTableGroupDes}
+                  </Skeleton>
+                </div>
+              </Col>
+            </Row>
+
+            <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
               <div className={cls('info_group_student')}>
                 <Skeleton loading={loading} avatar active>
-                  <Descriptions title={<h3 className={cls('title_info')}>danh sách nhóm sinh viên đang quản lý</h3>}></Descriptions>
-                  {renderGroupStudent}
+                  <Col span={24}>
+                    <Descriptions title={<h3 className={cls('title_info')}>danh sách nhóm sinh viên đang quản lý</h3>}></Descriptions>
+                    {renderGroupStudent}
+                  </Col>
                 </Skeleton>
               </div>
-            </Col>
+            </Row>
           </div>
         </Col>
       </Row>
