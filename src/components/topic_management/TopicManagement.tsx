@@ -39,13 +39,14 @@ const TopicManagement = () => {
       title: 'Tên đề tài',
       dataIndex: 'name',
       key: 'name',
+
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
     {
-      title: 'Số lượng',
+      title: 'SL',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 80,
+      width: 60,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -53,6 +54,7 @@ const TopicManagement = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
+
       render: (text) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}
@@ -74,6 +76,7 @@ const TopicManagement = () => {
       title: 'Mục tiêu',
       dataIndex: 'target',
       key: 'target',
+
       render: (text) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}
@@ -84,6 +87,7 @@ const TopicManagement = () => {
       title: 'Chuẩn đầu ra',
       dataIndex: 'standradOutput',
       key: 'standradOutput',
+
       render: (text) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}
@@ -94,6 +98,7 @@ const TopicManagement = () => {
       title: 'Yếu cầu đầu vào',
       dataIndex: 'requireInput',
       key: 'requireInput',
+
       render: (text) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}
@@ -104,6 +109,7 @@ const TopicManagement = () => {
       title: 'Bình luận',
       dataIndex: 'comment',
       key: 'comment',
+      width: 200,
       render: (text) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}
@@ -123,6 +129,7 @@ const TopicManagement = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'status',
+      width: 100,
       render: (status: any) => {
         return (
           <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
@@ -134,6 +141,7 @@ const TopicManagement = () => {
     {
       title: '',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => (
         <Button onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
           <DeleteOutlined style={{ color: 'red' }} />
@@ -143,6 +151,7 @@ const TopicManagement = () => {
     {
       title: '',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => {
         return (
           <Button onClick={() => showEditModal(id)}>
@@ -275,14 +284,15 @@ const TopicManagement = () => {
                 Hủy
               </Button>,
             ]}
+            width={1000}
           >
             <Form
               labelCol={{ span: 6 }}
-              wrapperCol={{ span: 15 }}
+              wrapperCol={{ span: 18 }}
               layout="horizontal"
               onFinish={onFinish}
               size="large"
-              style={{ maxWidth: 600 }}
+              style={{ maxWidth: 1000 }}
               initialValues={initData}
             >
               <Row justify={'space-between'} style={{ width: '100%' }}>
@@ -322,8 +332,8 @@ const TopicManagement = () => {
                   </Form.Item>
                   <Row justify={'end'}>
                     <Form.Item label=" ">
-                      <Button type="primary" htmlType="submit">
-                        Tạo
+                      <Button type="primary" htmlType="submit" style={{ marginRight: '30px' }}>
+                        {status === 'insert' ? 'Tạo đề tài' : 'Cập nhật đề tài'}
                       </Button>
                     </Form.Item>
                   </Row>

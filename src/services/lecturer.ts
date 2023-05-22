@@ -140,6 +140,13 @@ class LecturerService {
       method: 'get',
     });
   }
+  async getGroupLecturersDetail(params: { termId: number; type: string }) {
+    return await axiosAuth({
+      url: `/lecturer/group-lecturer`,
+      method: 'get',
+      params: params,
+    });
+  }
 }
 
 const lecturerService = new LecturerService();
