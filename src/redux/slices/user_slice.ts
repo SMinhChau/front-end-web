@@ -3,7 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import authAPI from '../apis/auth';
 import tokenService from '../../services/token';
 import Teacher from '../../entities/teacher';
-import { EnumRole, EnumGender } from '../../enum';
+import { EnumRole, EnumGender, RoleCheck } from '../../enum';
 import MenuItemType from '../../entities/menu';
 import menus from '../../constant/menu';
 import { log } from 'console';
@@ -19,6 +19,8 @@ interface StateType {
   allow: boolean;
   notify: Array<Notify>;
   admin: boolean;
+  isRole: string;
+  errorCheck: boolean;
 }
 
 const initialState = {
@@ -44,6 +46,8 @@ const initialState = {
   allow: true,
   notify: [] as Notify[],
   admin: false,
+  isRole: EnumRole.LECTURER,
+  errorCheck: false,
 } as StateType;
 
 export const userSlice = createSlice({
@@ -51,7 +55,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setAllow: (state, action) => {
-      console.log('-> setAllow', action);
       state.allow = action.payload;
     },
     setNotyfy: (state, action: PayloadAction<Array<Notify>>) => {
@@ -59,6 +62,12 @@ export const userSlice = createSlice({
     },
     setLoginIsAdmin: (state, action: PayloadAction<boolean>) => {
       state.admin = action.payload;
+    },
+    setChecked: (state, action: PayloadAction<string>) => {
+      state.isRole = action.payload;
+    },
+    setLogin: (state, action: PayloadAction<boolean>) => {
+      state.is_login = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -70,13 +79,38 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.user.isAdmin === false && state.admin === false) {
-        state.functions = menus[state.user.role];
+      if (state.user.isAdmin === true && state.isRole === 'ADMIN') {
+        state.functions = menusAdmin.ADMIN;
+        state.errorCheck = true;
       } else {
-        if (state.admin === true && state.user.isAdmin === true) {
-          state.functions = menusAdmin.ADMIN;
-        } else {
-          state.functions = menus[state.user.role];
+        switch (state.user.role) {
+          case EnumRole.HEAD_LECTURER:
+            if (state.isRole === 'HEAD_LECTURER') {
+              state.functions = menus.HEAD_LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+
+          case EnumRole.SUB_HEAD_LECTURER:
+            if (state.isRole === 'SUB_HEAD_LECTURER') {
+              state.functions = menus.SUB_HEAD_LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+
+          case EnumRole.LECTURER:
+            if (state.isRole === 'SUB_HEAD_LECTURER') {
+              state.functions = menus.LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+          default:
         }
       }
     });
@@ -90,15 +124,50 @@ export const userSlice = createSlice({
       state.error = false;
       state.is_login = true;
 
-      if (state.user.isAdmin === false && state.admin === false) {
-        state.functions = menus[state.user.role];
+      if (state.user.isAdmin === true && state.isRole === 'ADMIN') {
+        state.functions = menusAdmin.ADMIN;
+        state.errorCheck = true;
       } else {
-        if (state.admin === true && state.user.isAdmin === true) {
-          state.functions = menusAdmin.ADMIN;
-        } else {
-          state.functions = menus[state.user.role];
+        switch (state.user.role) {
+          case EnumRole.HEAD_LECTURER:
+            if (state.isRole === 'HEAD_LECTURER') {
+              state.functions = menus.HEAD_LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+
+          case EnumRole.SUB_HEAD_LECTURER:
+            if (state.isRole === 'SUB_HEAD_LECTURER') {
+              state.functions = menus.SUB_HEAD_LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+
+          case EnumRole.LECTURER:
+            if (state.isRole === 'SUB_HEAD_LECTURER') {
+              state.functions = menus.LECTURER;
+              state.errorCheck = true;
+            } else {
+              state.errorCheck = false;
+            }
+            break;
+          default:
         }
       }
+
+      // if (state.user.isAdmin === false && state.admin === false) {
+      //   state.functions = menus[state.user.role];
+      // } else {
+      //   if (state.admin === true && state.user.isAdmin === true) {
+      //     state.functions = menusAdmin.ADMIN;
+      //   } else {
+      //     state.functions = menus[state.user.role];
+      //   }
+      // }
     });
 
     builder.addCase(authAPI.updateInfo().pending, (state) => {
@@ -118,4 +187,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setAllow, setNotyfy, setLoginIsAdmin } = userSlice.actions;
+export const { setAllow, setNotyfy, setLoginIsAdmin, setChecked, setLogin } = userSlice.actions;

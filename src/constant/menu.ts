@@ -40,11 +40,6 @@ const menus = {
       url: '/topic',
     },
     {
-      name: 'Quản lý Đề tài',
-      image: FcViewDetails,
-      url: '/management-topic',
-    },
-    {
       name: 'Quản lý Đánh giá',
       image: FcTodoList,
       url: '/evaluate',
@@ -59,21 +54,11 @@ const menus = {
       image: FcManager,
       url: '/group-lecturer',
     },
-    {
-      name: 'Quản lý Nhóm hướng dẫn',
-      image: FcGrid,
-      url: '/group-advisor-of-lecturer',
-    },
-    {
-      name: 'Quản Lý Chấm Điểm',
-      image: FcNews,
-      url: '/evaluation-group-of-lecturer',
-    },
   ],
   SUB_HEAD_LECTURER: [
     {
       name: 'Quản lý Học Kỳ',
-      image: AiOutlineCalendar,
+      image: FcCalendar,
       url: '/term',
     },
     {
@@ -92,11 +77,6 @@ const menus = {
       url: '/topic',
     },
     {
-      name: 'Quản lý Đề tài',
-      image: FcViewDetails,
-      url: '/management-topic',
-    },
-    {
       name: 'Quản lý Đánh giá',
       image: FcTodoList,
       url: '/evaluate',
@@ -110,16 +90,6 @@ const menus = {
       name: 'Quản lý Nhóm hội đồng',
       image: FcManager,
       url: '/group-lecturer',
-    },
-    {
-      name: 'Quản lý Nhóm hướng dẫn',
-      image: FcGrid,
-      url: '/group-advisor-of-lecturer',
-    },
-    {
-      name: 'Quản Lý Chấm Điểm',
-      image: FcNews,
-      url: '/evaluation-group-of-lecturer',
     },
   ],
   LECTURER: [
@@ -138,11 +108,7 @@ const menus = {
       image: FcGrid,
       url: '/group-advisor-of-lecturer',
     },
-    // {
-    //   name: 'Quản lý Đánh giá',
-    //   image: AiOutlineCalendar,
-    //   url: '/empty',
-    // },
+
     {
       name: 'Quản Lý Chấm Điểm',
       image: FcNews,
