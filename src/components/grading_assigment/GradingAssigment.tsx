@@ -1,17 +1,48 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
-import style from './GradingAssigment.module.scss';
-import { Avatar, Col, Result, Row, Skeleton, Typography } from 'antd';
-import { Link } from 'react-router-dom';
+import styled from './GradingAssigment.module.scss';
+import {
+  Avatar,
+  Button,
+  Col,
+  Descriptions,
+  Divider,
+  Radio,
+  Result,
+  Row,
+  Skeleton,
+  Space,
+  Spin,
+  Table,
+  Tabs,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
+
 import { useAppSelector } from '../../redux/hooks';
-import studentService from '../../services/student';
-
-import { GroupOutlined, SnippetsOutlined, UserOutlined } from '@ant-design/icons';
+import assignService from '../../services/assign';
+import { BookOutlined, EditOutlined, ExportOutlined, MoreOutlined, SnippetsOutlined } from '@ant-design/icons';
 import Meta from 'antd/es/card/Meta';
+import { Link } from 'react-router-dom';
 
+import { TypeEvalution } from '../../entities/assign';
+
+import { AiOutlineEdit } from 'react-icons/ai';
+
+import AssignAdvisor from 'src/entities/assign_advisor';
+import AssignAdvisorOfLecturer from 'src/entities/assign_advisor';
+import { checkDegree, checkGender, getStatusGroup, getStatusGroupColor } from 'src/constant';
+import GroupLecturer from '../group_lecturer/GroupLecturer';
+import { ColumnsType } from 'antd/es/table';
+import transcriptService from '../../services/transcript';
+import studentService from 'src/services/student';
+import TranscriptSumMary from 'src/entities/transcript';
+import Student from 'src/entities/student';
+import Teacher from 'src/entities/teacher';
 import Topic from 'src/entities/topic';
 
-const cls = classNames.bind(style);
+const cls = classNames.bind(styled);
 const { Text } = Typography;
 
 interface InfoAll {
@@ -48,171 +79,269 @@ interface InfoAll {
   groupReview: string;
   groupHost: string;
 }
+
 const GradingAssigment = () => {
-  const { user } = useAppSelector((state) => state.user);
-  const [listGroup, setListGroup] = useState<Array<InfoAll>>([]);
-  const [loading, setLoading] = useState(true);
+  const [listAssign, setListAssign] = useState<Array<InfoAll>>([]);
+  // const [data, setData] = useState<Array<AssignAdvisor>>([]);
+  // const [loading, setLoading] = useState(true);
+  const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
   const termState = useAppSelector((state) => state.term);
+  const user = useAppSelector((state) => state.user.user);
+  const [isShow, setIssShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingDetail, setLoadingDetail] = useState(true);
+  const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
+  const [lectureAdvisor, setLectureAdvisor] = useState<Array<Teacher>>([]);
+  const [groupStudent, setGroupStudent] = useState<InfoAll>();
 
   useEffect(() => {
     if (termState.term.length > 0) {
-      getDataFromApi();
+      console.log('user.id', user.id);
+
+      studentService
+        .getGroupStudents(termState.termIndex.id)
+
+        .then((result) => {
+          console.log('getlist -> result.data', result.data);
+
+          const _data = result.data.map((value: InfoAll, index: number) => {
+            return {
+              ...value,
+            };
+          });
+          console.log(_data);
+
+          setListAssign(_data);
+          console.log('_data', _data);
+        })
+        .catch((error) => {
+          console.log('getlist -> error', error);
+        });
     }
   }, [termState]);
 
-  const getDataFromApi = () => {
+  const baseColumns: ColumnsType<InfoAll> = [
+    {
+      title: 'Mã nhóm',
+      dataIndex: 'id',
+      key: 'id',
+
+      render: (text) => {
+        return <div className={cls('text_colum')}>{text}</div>;
+      },
+    },
+
+    {
+      title: 'Tình tạng',
+      dataIndex: 'status',
+      key: 'status',
+
+      render: (text) => {
+        const name = getStatusGroup(text);
+        const color = getStatusGroupColor(text);
+        return (
+          <Tag color={color}>
+            <div style={{ color: color, fontSize: '16px' }}>{name}</div>
+          </Tag>
+        );
+      },
+    },
+    {
+      title: <div className={cls('text_colum')}>Thành viên nhóm hội đồng</div>,
+      dataIndex: 'id',
+      key: 'id',
+      render: (text) => {
+        return (
+          <>
+            <Tag color={'blue'}>
+              <div className={cls('group_more_more')}>
+                <Link to={'/group/' + text}>
+                  {' '}
+                  <div style={{ fontSize: '1rem' }}>Xem chi tiết...</div>
+                </Link>
+              </div>
+            </Tag>
+          </>
+        );
+      },
+    },
+
+    {
+      title: '',
+      dataIndex: 'id',
+      width: 50,
+      render: (id: any) => (
+        <Space wrap>
+          <Tooltip title="Xem chi tiết" color={'geekblue'}>
+            <Button
+              onClick={() => {
+                handleGetInfoStudent(id);
+              }}
+            >
+              <MoreOutlined style={{ color: '#30a3f1' }} />
+            </Button>
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
+  const handleGetInfoStudent = (id: number) => {
+    console.log('id student', id);
+    setLoadingDetail(true);
+    setLoading(true);
     studentService
-      .getGroupStudents(termState.termIndex.id)
+      .getGroupStudentByID(id)
+
       .then((result) => {
+        console.log('handleGetInfoStudent -> result.data', result.data);
+        setLoadingDetail(false);
         setLoading(false);
-
-        const promises = result.data.map((item: any) => {
-          let groupR = '';
-          let groupH = '';
-
-          return Promise.all([
-            studentService
-              .getGroupLecturerOfStudentByType(Number(item.id), termState.termIndex.id, 'REVIEWER')
-              .then((result) => {
-                groupR = result?.data?.[0].groupLecturer.name;
-              })
-              .catch((error) => console.log('error REVIEWER', error)),
-            studentService
-              .getGroupLecturerOfStudentByType(Number(item.id), termState.termIndex.id, 'SESSION_HOST')
-              .then((result) => {
-                groupH = result?.data?.[0].groupLecturer.name;
-              })
-              .catch((error) => console.log('error SESSION_HOST', error)),
-          ]).then(() => ({ ...item, groupReview: groupR, groupHost: groupH }));
-        });
-
-        Promise.all(promises)
-          .then((results) => setListGroup(results))
-          .catch((error) => console.log('error', error));
+        setGroupStudent(result.data);
       })
       .catch((error) => {
-        console.log('error', error);
+        console.log('getlist -> error', error);
       });
   };
 
-  const renderInfoGroup = useMemo(() => {
+  const renderTable = useMemo(() => {
+    return <Table columns={baseColumns} pagination={isShow === true ? { pageSize: 1 } : { pageSize: 7 }} dataSource={listAssign} />;
+  }, [listAssign]);
+
+  const columnsLecturer: ColumnsType<any> = [
+    {
+      title: 'Mã SV',
+      dataIndex: 'username',
+      key: 'username',
+      width: 100,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '50px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: 'Tên sinh viên',
+      dataIndex: 'name',
+      key: 'name',
+      width: 150,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'gender',
+      width: 100,
+      render: (text: string) => {
+        const _name = checkGender(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkGender(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
+    },
+    {
+      title: 'SĐT',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      width: 120,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      width: 150,
+      render: (text: string) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
+          {text}
+        </div>
+      ),
+    },
+  ];
+
+  const renderInfoForStudent = useMemo(() => {
     return (
       <>
-        <Skeleton loading={loading} avatar active>
-          {listGroup.length > 0 ? (
-            <>
-              <Row gutter={[24, 24]} style={{ width: '100%' }}>
-                {listGroup.map((item, index) => {
-                  const renderInfoGroup = () => (
-                    <>
-                      <Row justify={'start'} align={'top'}>
-                        <Col span={12}>
-                          <Text strong className={cls('title')}>
-                            Nhóm hội đồng phản biện
-                          </Text>
-                        </Col>
-                        <Col span={10} offset={1}>
-                          {item?.groupReview ? (
-                            <Text className={cls('_name')}>{item?.groupReview}</Text>
-                          ) : (
-                            <Text mark className={cls('no_name')}>
-                              Chưa có nhóm
-                            </Text>
-                          )}
-                        </Col>
-                      </Row>
-                      <Row justify={'start'} align={'top'} style={{ paddingTop: '10px' }}>
-                        <Col span={12}>
-                          <Text strong className={cls('title')}>
-                            Nhóm hội đồng hướng dẫn
-                          </Text>
-                        </Col>
-                        <Col span={10} offset={1}>
-                          {item?.groupHost ? (
-                            <Text className={cls('_name')}>{item?.groupHost}</Text>
-                          ) : (
-                            <Text mark className={cls('no_name')}>
-                              Chưa có nhóm
-                            </Text>
-                          )}
-                        </Col>
-                      </Row>
-                    </>
-                  );
+        <Spin spinning={loading}>
+          <Skeleton active paragraph={{ rows: 5 }} loading={loadingDetail}>
+            <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
+              <Col span={6}>
+                <p className={cls('title_info_lecturer')}>Mã nhóm:</p>
+              </Col>
+              <Col span={12}>
+                <h4 className={cls('name_group')}>{groupStudent?.id}</h4>
+              </Col>
+            </Row>
+            <Row justify={'start'} align={'middle'} style={{ marginBottom: '20px' }}>
+              <Col span={6}>
+                <p className={cls('title_info_lecturer')}>Tên nhóm :</p>
+              </Col>
+              <Col span={12}>
+                <h4 className={cls('name_group')}>{groupStudent?.name}</h4>
+              </Col>
+            </Row>
 
-                  const getNameGroup = () => (
-                    <>
-                      <Row justify={'end'} style={{ width: '100%' }}>
-                        <div className={cls('group_more_more')}>
-                          <Link to={'/group/' + item?.id}> Chi tiết...</Link>
-                        </div>
-                      </Row>
-                    </>
-                  );
-                  return (
-                    <Col span={8}>
-                      <div key={index} className={cls('group')}>
-                        <Avatar style={{ backgroundColor: '#87d068' }} icon={<SnippetsOutlined />} />
-                        <div className={cls('lecturer_info')}>{renderInfoGroup()}</div>
-                        {getNameGroup()}
-                        <Col span={24}>
-                          <Meta
-                            title={
-                              <div className={cls('group_name')}>
-                                <div className={cls('name_info')}>Nhóm: {item?.name}</div>
+            <Table
+              dataSource={groupStudent?.members.map((value) => {
+                return {
+                  id: value?.student.id,
+                  username: value?.student.username,
+                  name: value?.student.name,
+                  gender: value?.student.gender,
 
-                                <div className={cls('member')}>Thành viên</div>
-
-                                <Row gutter={[24, 24]}>
-                                  <div className={cls('item')}>
-                                    <Col span={24}>
-                                      {item?.members.map((i, d) => {
-                                        console.log('members.map', i);
-
-                                        return (
-                                          <div key={d} className={cls('item_name')}>
-                                            <Text className={cls('_item')}>{i?.student?.name}</Text>
-                                          </div>
-                                        );
-                                      })}
-                                    </Col>
-                                  </div>
-                                </Row>
-                              </div>
-                            }
-                            description={''}
-                          />
-                        </Col>
-                      </div>
-                    </Col>
-                  );
-                })}
-              </Row>
-            </>
-          ) : (
-            <>
-              <Result status="warning" title={''}>
-                <Text type="danger" style={{ fontSize: '18px' }}>
-                  Chưa có nhóm cho học kỳ này
-                </Text>
-              </Result>
-            </>
-          )}
-        </Skeleton>
+                  email: value?.student.email,
+                  phoneNumber: value?.student.phoneNumber,
+                };
+              })}
+              columns={columnsLecturer}
+              scroll={{ x: 400, y: 150 }}
+              pagination={{ pageSize: 2 }}
+            />
+          </Skeleton>
+        </Spin>
       </>
     );
-  }, [listGroup, loading]);
+  }, [groupStudent, loading, loadingDetail]);
 
   return (
-    <div className={cls('grading_assigment')}>
-      <div className={cls('top')}>
-        <h3 className={cls('title_group')}>Danh sách nhóm Sinh Viên</h3>
+    <>
+      <div className={cls('list_evaluation')}>
+        <div className={cls('info')}>
+          <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
+            <Col span={10}>
+              <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
+                <Col span={20}>
+                  <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
+                </Col>
+              </Row>
+
+              <div className={cls('left')}>{renderTable}</div>
+            </Col>
+            <Col span={14}>
+              <div className={cls('right')}>
+                <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
+                  <Col span={24}>
+                    <div className={cls('title_group')}>Thành viên nhóm</div>
+                    {renderInfoForStudent}
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </div>
-      <div title={''} className={cls('list_group')}>
-        {renderInfoGroup}
-      </div>
-    </div>
+    </>
   );
 };
-
 export default GradingAssigment;

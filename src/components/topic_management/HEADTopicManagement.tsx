@@ -242,7 +242,7 @@ const HEADTopicManagement = () => {
     setData(topic);
   };
   const renderTable = useMemo(() => {
-    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
+    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} scroll={{ x: 430, y: 530 }} />;
   }, [data, handleSelectChange]);
 
   return (
