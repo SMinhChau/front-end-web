@@ -231,12 +231,11 @@ const GroupLecturer = () => {
       key: 'type',
       render: (text: string) => {
         const name = getTypeGroupLecturer(text);
-        console.log('name ->>>>...', name);
 
         const color = getColorLecturer(text);
         return (
           <Tag color={color} key={getColorLecturer(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '100px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '100px' }}>
               <div style={{ color: color }}> {name}</div>
             </div>
           </Tag>
@@ -313,7 +312,7 @@ const GroupLecturer = () => {
         const _name = checkDegree(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkDegree(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
               {_name}
             </div>
           </Tag>

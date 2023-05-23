@@ -292,7 +292,7 @@ const GroupAdvisor = () => {
           const _name = checkDegree(text)?.toLocaleUpperCase();
           return (
             <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkDegree(text)}>
-              <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+              <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
                 {_name}
               </div>
             </Tag>
