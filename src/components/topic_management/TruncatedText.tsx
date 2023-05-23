@@ -112,7 +112,7 @@ const TruncatedText: React.FC<Props> = ({ id, listOfTopic }) => {
           {DATA.map((i) => {
             if (i.lable == 'Tên đề tài') {
               return (
-                <div style={{ paddingBottom: '10px' }}>
+                <div key={i.lable} style={{ paddingBottom: '10px' }}>
                   <Row>
                     <Col>
                       <div className={cls('lable')}> {`*** ${i.lable}`}</div>

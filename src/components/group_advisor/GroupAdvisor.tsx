@@ -29,7 +29,7 @@ const { Text } = Typography;
 
 const GroupAdvisor = () => {
   const [listAssign, setListAssign] = useState<Array<AssignAdvisorOfLecturer>>([]);
-  // const [data, setData] = useState<Array<AssignAdvisor>>([]);
+  const [data, setData] = useState<Array<AssignAdvisor>>([]);
   // const [loading, setLoading] = useState(true);
   const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
   const termState = useAppSelector((state) => state.term);
@@ -52,16 +52,19 @@ const GroupAdvisor = () => {
 
           const _data = result.data.map((value: AssignAdvisor, index: number) => {
             return {
+              key: index,
+              id: value.id,
               name: value.group.name,
               status: value.group.status,
               member: value.group.members,
               groupOfLecturer: value.groupLecturer.members,
             };
           });
-          console.log(_data);
+          console.log('setListAssign', _data);
 
           setListAssign(_data);
           console.log('_data', _data);
+          setData(_data);
 
           // setData(result.data);
         })
@@ -100,7 +103,9 @@ const GroupAdvisor = () => {
 
   const handleClseShow = () => {
     setIssShow(false);
+    setData(listAssign);
   };
+
   const handleGetInfoStudent = (id: number) => {
     console.log('id student', id);
     getTranscriptByStudent(id);
@@ -158,19 +163,24 @@ const GroupAdvisor = () => {
     );
   };
 
+  console.log('isShowRender', isShow);
+
   const renderTable = useMemo(() => {
+    console.log('isShow', isShow);
+
     return (
       <Table
         columns={baseColumns}
         expandable={{
           expandedRowRender: (i) => <p style={{ margin: 0 }}>{viewMember(i.id)}</p>,
           rowExpandable: (record) => record.name !== 'Not Expandable',
+          expandRowByClick: false,
         }}
-        pagination={isShow === true ? { pageSize: 1 } : { pageSize: 7 }}
-        dataSource={listAssign}
+        pagination={{ pageSize: 7 }}
+        dataSource={data}
       />
     );
-  }, [listAssign]);
+  }, [data]);
 
   const handlerChangeType = (props: any) => {
     console.log('props.target.value', props.target.value);
