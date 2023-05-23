@@ -332,3 +332,12 @@ export const getColorLecturer = (typeEvalution: string) => {
       return 'red';
   }
 };
+
+export const getStatusViewPoint = (status: number) => {
+  switch (status) {
+    case 1:
+      return 'Đã công bố';
+    case 0:
+      return 'Chưa';
+  }
+};

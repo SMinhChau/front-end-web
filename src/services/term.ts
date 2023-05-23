@@ -42,6 +42,13 @@ class TermService {
       params,
     });
   }
+  async updateStatus(id: any, data: { isPublicResult: boolean }) {
+    return await axiosAuth({
+      url: `/lecturer/terms/${id}/public-result`,
+      method: 'patch',
+      data,
+    });
+  }
 }
 
 const termService = new TermService();

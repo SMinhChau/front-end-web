@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Modal, Form, DatePicker, Select, Row, Col, Card, Typography } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, DatePicker, Select, Row, Col, Card, Typography, Tag, Space, Tooltip } from 'antd';
+import { PlusOutlined, DeleteOutlined, EditOutlined, UpSquareOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import style from './SemesterManagement.module.scss';
 import termService from '../../services/term';
 import moment from 'moment';
 import { ToastContainer } from 'react-toastify';
 import Term from '../../entities/term';
-import ColumnSetting from '../column_setting/ColumnSetting';
-import Config from '../../utils/config';
+
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setTermSlice } from '../../redux/slices/term_slice';
-import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, getStatusViewPoint, showMessage, showMessageEror } from '../../constant';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
@@ -175,6 +174,48 @@ const SemesterManagement = () => {
         );
       },
     },
+
+    {
+      title: 'Công bố điểm',
+      dataIndex: 'isPublicResult',
+      key: 'isPublicResult',
+      render: (t: number) => {
+        return (
+          <Tag color={t === 1 ? 'green' : 'red'} key={'isPublicResult'}>
+            <div className={cls('text_piont')} style={{ color: t === 1 ? 'green' : 'red' }}>
+              {getStatusViewPoint(t)}
+            </div>
+          </Tag>
+        );
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
+      key: 'id',
+      render: (id: any) => {
+        return (
+          <Space wrap>
+            <Tooltip title="Cập nhật tình trạng điểm" color={'geekblue'}>
+              <Button
+                className={cls('btn')}
+                type="dashed"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  updateStatus(id);
+                }}
+                size="large"
+                style={{
+                  animation: 'none',
+                  color: 'blue',
+                  fontWeight: '600',
+                }}
+              ></Button>
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
     {
       title: '',
       dataIndex: 'id',
@@ -205,6 +246,7 @@ const SemesterManagement = () => {
   const user = useAppSelector((state) => state.user.user);
   const termState = useAppSelector((state) => state.term);
   const dispatch = useAppDispatch();
+  const [status, setStatus] = useState<number | null>(null);
 
   useEffect(() => {
     getListOfTerm();
@@ -348,6 +390,25 @@ const SemesterManagement = () => {
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+
+  const updateStatus = (id: number) => {
+    console.log('id', id);
+
+    const _data = terms?.filter((value) => value.id === id)[0];
+    const statusNow = _data.isPublicResult;
+
+    termService
+      .updateStatus(id, { isPublicResult: !statusNow })
+      .then(() => {
+        showMessage('Đã cập nhập tình trạng', 3000);
+        getListOfTerm();
+      })
+      .catch((er) => {
+        console.log('er', er);
+        showMessageEror('Lỗi cập nhật tình tạng', 3000);
+      });
+  };
+
   const data = [
     {
       value: 'Học Kỳ 1',

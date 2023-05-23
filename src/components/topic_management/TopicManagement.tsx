@@ -4,8 +4,8 @@ import style from './TopicManagement.module.scss';
 import Term from '../../entities/term';
 import termService from '../../services/term';
 import { useAppSelector } from '../../redux/hooks';
-import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col, Tag } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col, Tag, Typography } from 'antd';
+import { PlusOutlined, DeleteOutlined, EditOutlined, MoreOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import topicService from '../../services/topic';
 
 import { default as base_column } from './column';
@@ -18,6 +18,7 @@ import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
 import { ColumnsType } from 'antd/es/table';
 import Topic from 'src/entities/topic';
+import TruncatedText from './TruncatedText';
 
 const cls = classNames.bind(style);
 
@@ -39,14 +40,19 @@ const TopicManagement = () => {
       title: 'Tên đề tài',
       dataIndex: 'name',
       key: 'name',
-
-      render: (text) => <div className={cls('text_colum')}>{text}</div>,
+      fixed: 'left',
+      width: 200,
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto', fontWeight: '500' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'SL',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 60,
+      width: 50,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -55,76 +61,86 @@ const TopicManagement = () => {
       dataIndex: 'description',
       key: 'description',
 
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Ghi chú',
       dataIndex: 'note',
       key: 'note',
-
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Mục tiêu',
       dataIndex: 'target',
       key: 'target',
 
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Chuẩn đầu ra',
       dataIndex: 'standradOutput',
       key: 'standradOutput',
 
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
-      title: 'Yếu cầu đầu vào',
+      title: 'Yêu cầu đầu vào',
       dataIndex: 'requireInput',
       key: 'requireInput',
 
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>
+          </>
+        );
+      },
     },
     {
       title: 'Bình luận',
       dataIndex: 'comment',
       key: 'comment',
       width: 200,
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}</div>{' '}
+          </>
+        );
+      },
     },
     {
-      title: 'Giảng viên',
-      dataIndex: 'lecturer',
-      key: 'lecturer',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text.name}
-        </div>
-      ),
+      title: 'Xem chi tiết',
+      dataIndex: 'id',
+      key: 'id',
+      width: 150,
+      render: (id: any) => {
+        return <TruncatedText id={id} listOfTopic={topic} />;
+      },
     },
     {
       title: 'Trạng thái',
@@ -141,24 +157,18 @@ const TopicManagement = () => {
     {
       title: '',
       dataIndex: 'id',
-      width: 50,
+      fixed: 'left',
+      width: 120,
       render: (id: any) => (
-        <Button onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
-          <DeleteOutlined style={{ color: 'red' }} />
-        </Button>
-      ),
-    },
-    {
-      title: '',
-      dataIndex: 'id',
-      width: 50,
-      render: (id: any) => {
-        return (
-          <Button onClick={() => showEditModal(id)}>
+        <div className={cls('button')}>
+          <Button className={cls('btn')} onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
+            <DeleteOutlined style={{ color: 'red' }} />
+          </Button>
+          <Button className={cls('btn')} onClick={() => showEditModal(id)}>
             <EditOutlined style={{ color: '#30a3f1' }} />
           </Button>
-        );
-      },
+        </div>
+      ),
     },
   ];
 
@@ -342,7 +352,13 @@ const TopicManagement = () => {
             </Form>
           </Modal>
         </div>
-        <Table columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />
+        <Table
+          className={cls('custom-table')}
+          columns={baseColumns}
+          dataSource={topic}
+          pagination={{ pageSize: 7 }}
+          scroll={{ x: 450, y: 530 }}
+        />
       </div>
     </>
   );
