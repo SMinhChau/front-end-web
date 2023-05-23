@@ -1,0 +1,46 @@
+.name {
+  font-size: 1.1rem;
+  color: #264653;
+  padding-right: 20px;
+  white-space: pre-wrap;
+}
+.lableModal {
+  font-size: 1.3rem;
+  color: #312507;
+  text-transform: uppercase;
+  padding-right: 20px;
+  font-weight: 700;
+
+  padding: 10px;
+  text-align: center;
+}
+.content_modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  padding-left: 20px;
+  .value {
+    font-size: 1.2rem;
+    color: #264653;
+    padding-right: 20px;
+    white-space: pre-wrap;
+  }
+  .lable_title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #a36712;
+    text-transform: uppercase;
+    padding-right: 20px;
+
+    white-space: pre-wrap;
+  }
+  .lable {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #264653;
+    text-transform: uppercase;
+    padding-right: 20px;
+    white-space: pre-wrap;
+  }
+}

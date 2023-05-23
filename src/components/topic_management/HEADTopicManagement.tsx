@@ -13,6 +13,7 @@ import { getNameStatus, showMessage } from '../../constant';
 import { ColumnsType } from 'antd/es/table';
 import Select from 'react-select';
 import { log } from 'console';
+import TruncatedText from './TruncatedText';
 const { TextArea } = Input;
 
 const cls = classNames.bind(style);
@@ -42,13 +43,19 @@ const HEADTopicManagement = () => {
       title: 'Tên đề tài',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <div className={cls('text_colum')}>{text}</div>,
+      fixed: 'left',
+      width: 200,
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto', fontWeight: '500' }}>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'SL',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 60,
+      width: 50,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -56,62 +63,78 @@ const HEADTopicManagement = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Ghi chú',
       dataIndex: 'note',
       key: 'note',
-
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Mục tiêu',
       dataIndex: 'target',
       key: 'target',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Chuẩn đầu ra',
       dataIndex: 'standradOutput',
       key: 'standradOutput',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+          </>
+        );
+      },
     },
     {
-      title: 'Yếu cầu đầu vào',
+      title: 'Yêu cầu đầu vào',
       dataIndex: 'requireInput',
       key: 'requireInput',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>
+          </>
+        );
+      },
     },
     {
       title: 'Bình luận',
       dataIndex: 'comment',
       key: 'comment',
-      render: (text) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
+      width: 200,
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')}>{text && text.slice(0, 90)}</div>{' '}
+          </>
+        );
+      },
     },
     {
       title: 'Giảng viên',
@@ -124,6 +147,15 @@ const HEADTopicManagement = () => {
           {text.name}
         </div>
       ),
+    },
+    {
+      title: 'Xem chi tiết',
+      dataIndex: 'id',
+      key: 'id',
+      width: 150,
+      render: (id: any) => {
+        return <TruncatedText id={id} listOfTopic={topic} />;
+      },
     },
     {
       title: 'Trạng thái',
