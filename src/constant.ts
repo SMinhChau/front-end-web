@@ -245,6 +245,43 @@ export const ErrorCodeDefine: Record<string, IErrorCodeInfo> = {
     key: 'TERM_DUPLICATE_NAME',
     message: 'Tên học kỳ đã tồn tại',
   },
+
+  TERM_HAS_NOT_STARTED: {
+    key: 'TERM_HAS_NOT_STARTED',
+    message: 'Học kỳ chưa bắt đầu',
+  },
+  TERM_HAS_EXPRIED: {
+    key: 'TERM_HAS_EXPRIED',
+    message: 'Học kỳ đã hết hạn',
+  },
+  TERM_SUBMIT_TOPIC_HAS_EXPRIED: {
+    key: 'TERM_SUBMIT_TOPIC_HAS_EXPRIED',
+    message: 'Chọn đề tài đã hết hạn',
+  },
+  TERM_CHOOSE_TOPIC_HAS_NOT_STARTED: {
+    key: 'TERM_CHOOSE_TOPIC_HAS_NOT_STARTED',
+    message: 'Thời gian chọn đề tài chưa bắt đầu',
+  },
+  TERM_CHOOSE_TOPIC_HAS_EXPRIED: {
+    key: 'TERM_CHOOSE_TOPIC_HAS_EXPRIED',
+    message: 'Thời gian chọn đề tài đã hết hạn ',
+  },
+  TERM_DISCUSSION_HAS_NOT_STARTED: {
+    key: 'TERM_DISCUSSION_HAS_NOT_STARTED',
+    message: 'Thời gian phân công, tạo nhóm hội đồng - Phản Biện chưa bắt đầu',
+  },
+  TERM_DISCUSSION_HAS_EXPRIED: {
+    key: 'TERM_DISCUSSION_HAS_EXPRIED',
+    message: 'Thời gian phân công, tạo nhóm hội đồng - Phản Biện đã hết hạn',
+  },
+  TERM_REPORT_HAS_EXPRIED: {
+    key: 'TERM_REPORT_HAS_EXPRIED',
+    message: 'Thời gian phân công, tạo nhóm hội đồng - Hội đông đã hết hạn',
+  },
+  TERM_REPORT_HAS_NOT_STARTED: {
+    key: 'TERM_REPORT_HAS_NOT_STARTED',
+    message: 'Thời gian phân công, tạo nhóm hội đồng - Hội đông chưa bắt đầu',
+  },
 };
 
 export type ITypeNotificationLecturer =
