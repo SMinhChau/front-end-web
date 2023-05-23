@@ -239,7 +239,7 @@ const GradingAssigment = () => {
         const _name = checkGender(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'THẠC SĨ' ? 'green' : 'red'} key={checkGender(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px' }}>
               {_name}
             </div>
           </Tag>
