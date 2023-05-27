@@ -165,6 +165,8 @@ const GroupLecturer = () => {
         setLoading(false);
 
         setLoadingInfoGroup(false);
+        console.log('getGroupStudentOfLecturer', result?.data);
+
         setGroupStudents(result?.data);
       })
       .catch((er) => {
@@ -455,9 +457,8 @@ const GroupLecturer = () => {
         title: 'Chi tiết',
         dataIndex: 'id',
         key: 'id',
-
         render: (text) => {
-          return <Link to={'/group/' + id}> Chi tiết...</Link>;
+          return <Link to={'/group/' + text}> Chi tiết...</Link>;
         },
       },
     ];

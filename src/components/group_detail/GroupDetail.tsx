@@ -20,6 +20,7 @@ import { MdOutlineTopic } from 'react-icons/md';
 import Select, { StylesConfig } from 'react-select';
 import { userInfo } from 'os';
 import { TypeEvalution } from 'src/entities/assign';
+import TruncatedText from '../topic_management/TruncatedText';
 
 const cls = classNames.bind(style);
 
@@ -119,7 +120,7 @@ const GroupDetail = () => {
       .getGroupLecturerOfStudentByType(Number(idGroup), termState.termIndex.id, 'REVIEWER')
       .then((resutl) => {
         setInfoReview(resutl?.data?.[0]?.groupLecturer);
-        console.log('resutl?.data?.[0]?.groupLecturer', resutl?.data?.[0]?.groupLecturer);
+
         if (resutl?.data?.[0]?.groupLecturer?.id !== undefined) {
           setStatus('update');
         }
@@ -296,41 +297,17 @@ const GroupDetail = () => {
   }, [inforGroup?.members?.length]);
 
   const renderTopic = useMemo(() => {
-    const items: MenuProps['items'] = [
-      {
-        label: 'Mô tả: ' + topic?.description,
-        key: 1,
-      },
-      {
-        label: 'Yều cầu đầu vào: ' + topic?.requireInput,
-        key: 2,
-      },
-      {
-        label: 'Yều cầu đầu ra:  ' + topic?.standradOutput,
-        key: 3,
-      },
-      {
-        label: 'Ghi chú: ' + topic?.note,
-        key: 4,
-      },
-    ];
-
     if (topic)
       return (
         <>
           <div className={cls('_lable')} style={{ paddingBottom: '10px' }}>
             <AiOutlineBars style={{ fontSize: '24px', alignItems: 'center', marginRight: '20px' }} /> {topic?.name}
           </div>
-          <Dropdown menu={{ items }} className={cls('_topic_hover')}>
-            <p onClick={(e) => e.preventDefault()}>
-              <Space>
-                <div className={cls('member')}>
-                  Chi tiết đề tài
-                  <DownOutlined />
-                </div>
-              </Space>
-            </p>
-          </Dropdown>
+          <Space>
+            <div className={cls('member')}>
+              <TruncatedText id={topic.id} topicInfo={topic} topicfromDetail={true} />
+            </div>
+          </Space>
         </>
       );
     else
@@ -394,6 +371,7 @@ const GroupDetail = () => {
               <Form.Item label="" rules={[{ required: true }]}>
                 <Select
                   onChange={handleSelectChangeReview}
+                  placeholder={infoReview?.name ? infoReview?.name : 'Chọn nhóm Hội đồng'}
                   options={groupLecturerReview.map((val) => {
                     let me = '';
                     if (val.id === user.id) {
@@ -493,6 +471,7 @@ const GroupDetail = () => {
 
   const renderFormAssignSessionHost = useMemo(() => {
     console.log('statusHost ->>> ', statusHost);
+
     return (
       <>
         <Form
@@ -506,6 +485,7 @@ const GroupDetail = () => {
               <Form.Item label="" rules={[{ required: true }]}>
                 <Select
                   onChange={handleSelectChangeHost}
+                  placeholder={infoHost?.name ? infoHost?.name : 'Chọn nhóm Hội đồng'}
                   options={groupLecturerHost.map((val) => {
                     let me = '';
                     if (val.id === user.id) {
@@ -513,7 +493,7 @@ const GroupDetail = () => {
                     }
                     return {
                       value: val.id,
-                      label: `${val.name} ${me}`,
+                      label: `${val.name} ${me} `,
                     };
                   })}
                 />
