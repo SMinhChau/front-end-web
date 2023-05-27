@@ -147,6 +147,13 @@ class LecturerService {
       params: params,
     });
   }
+  async getGroupLecturerDontHaveByType(params: { termId: number; type: string }) {
+    return await axiosAuth({
+      url: `/lecturer/lecturers/available-group`,
+      method: 'get',
+      params: params,
+    });
+  }
 }
 
 const lecturerService = new LecturerService();

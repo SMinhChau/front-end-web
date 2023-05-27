@@ -400,7 +400,7 @@ const TeacherManagementHead = () => {
   };
 
   const renderTableLecturer = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} />;
   }, [lecturer, baseColumns, data]);
 
   const reSetPasss = (id: number) => {

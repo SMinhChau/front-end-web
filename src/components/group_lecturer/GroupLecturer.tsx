@@ -105,7 +105,8 @@ const GroupLecturer = () => {
   const termState = useAppSelector((state) => state.term);
   const [defaultValue, setDefaultValue] = useState([{ value: '', label: '' }]);
   const { user } = useAppSelector((state) => state.user);
-  const [typeCreate, setTypeCreate] = useState('');
+  const [typeCreate, setTypeCreate] = useState(TypeEvalution.REVIEWER);
+  const [lecturerGroupbyType, setListLecturerGroupByType] = useState<Array<Teacher>>([]);
 
   useEffect(() => {
     getGroupLecturer();
@@ -114,11 +115,18 @@ const GroupLecturer = () => {
   useEffect(() => {
     if (termState.term.length > 0) {
       lecturerService.getWithTerm(termState.termIndex.id).then((response) => {
-        console.log('setListLecturer ->', response.data);
         setListLecturer(response.data);
       });
     }
   }, [termState]);
+
+  const getGroupLecturerDontHaveGroup = (type: TypeEvalution) => {
+    lecturerService.getGroupLecturerDontHaveByType({ termId: termState.termIndex.id, type: type }).then((response) => {
+      console.log('setListLecturerGroupByType', response.data);
+
+      setListLecturerGroupByType(response.data);
+    });
+  };
 
   const getGroupLecturer = () => {
     if (termState.term.length > 0) {
@@ -126,7 +134,7 @@ const GroupLecturer = () => {
         const _data = response.data.map((value: GroupLecturer, index: number) => {
           return { ...value, key: index };
         });
-        console.log('getGroupLecturer', _data);
+
         setLoadingListGroup(false);
         setGroupLecturers(_data);
         setData(_data);
@@ -155,7 +163,7 @@ const GroupLecturer = () => {
       .getGroupssignById(_id)
       .then((result) => {
         setLoading(false);
-        console.log('getGroupStudentOfLecturer', result?.data);
+
         setLoadingInfoGroup(false);
         setGroupStudents(result?.data);
       })
@@ -170,7 +178,6 @@ const GroupLecturer = () => {
     const m = groupLecturers.filter((value) => value.id === id)[0];
 
     setGroupDes(m);
-    console.log(' id group lecture', id);
 
     setGroupIdDelete(m?.id);
     getGroupStudentOfLecturer(Number(m?.id));
@@ -355,6 +362,7 @@ const GroupLecturer = () => {
   const showModal = () => {
     setOpen(true);
     setStatus('insert');
+    getGroupLecturerDontHaveGroup(typeCreate);
   };
 
   const handleCancel = () => {
@@ -504,6 +512,8 @@ const GroupLecturer = () => {
     setData(_data);
   };
   const handleSelectChangeFilterCreate = (value: any) => {
+    console.log('selectedOption', value.value);
+    getGroupLecturerDontHaveGroup(value.value);
     setTypeCreate(value.value);
   };
 
@@ -540,6 +550,7 @@ const GroupLecturer = () => {
                     <Col>
                       <div style={{ width: '200px' }}>
                         <Select
+                          placeholder={'Tất cả'}
                           onChange={handleSelectChangeFilter}
                           options={[
                             { value: TypeEvalution.ADVISOR, label: getTypeGroupLecturer(TypeEvalution.ADVISOR) },
@@ -638,10 +649,11 @@ const GroupLecturer = () => {
           <Form.Item label="Giảng viên" rules={[{ required: true, message: 'Vui lòng chọn giảng viên' }]}>
             <Select
               defaultValue={status === 'insert' ? [] : defaultValue}
+              placeholder={`Nhóm Hội đồng ${getTypeGroupLecturer(typeCreate)}`}
               onChange={handleSelectChange}
               closeMenuOnSelect={false}
               isMulti
-              options={lecturer.map((val) => {
+              options={lecturerGroupbyType.map((val) => {
                 let me = '';
                 if (val.id === user.id) {
                   me = '(Bạn)';
@@ -663,6 +675,7 @@ const GroupLecturer = () => {
                 <Col>
                   <div style={{ width: '200px', marginLeft: '20px' }}>
                     <Select
+                      placeholder={getTypeGroupLecturer(typeCreate)}
                       onChange={handleSelectChangeFilterCreate}
                       options={[
                         { value: TypeEvalution.REVIEWER, label: getTypeGroupLecturer(TypeEvalution.REVIEWER) },

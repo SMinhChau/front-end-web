@@ -4,14 +4,11 @@
 .management {
   width: 100%;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
+
   box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
 
   .empty {
-    height: 25%;
+    height: 20%;
 
     display: flex;
     align-items: center;
@@ -51,10 +48,7 @@
       margin-top: 20px;
     }
     .logo {
-      width: 100%;
-
-      margin-left: 50px;
-
+      margin: 0 20px;
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
@@ -69,9 +63,9 @@
 
   .filter_term {
     width: 100%;
-    height: 10%;
+    height: 5%;
     display: flex;
-    align-items: center;
+    align-items: start;
     flex-direction: row;
     justify-content: center;
     .name_term {
@@ -103,7 +97,7 @@
   }
   .menu {
     width: 100%;
-    height: 100%;
+    height: 60%;
     background-color: #fff;
 
     overflow-y: auto;
@@ -141,7 +135,7 @@
 
     .menu_item {
       display: flex;
-      align-items: center;
+      align-items: start;
       justify-content: space-between;
       color: rgba(0, 0, 0, 0.85);
       padding: 15px;
@@ -203,9 +197,30 @@
       }
     }
   }
+  hr {
+    margin: 24px 0px;
+    flex-shrink: 0;
+    border-width: 0px 0px thin;
+    border-style: solid;
+    border-color: rgba(24, 144, 255, 0.2);
+    display: block;
+    unicode-bidi: isolate;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    overflow: hidden;
+  }
   .footer {
-    height: 10%;
-    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: red;
     hr {
       margin: 24px 0px;
       flex-shrink: 0;
@@ -221,13 +236,6 @@
       overflow: hidden;
     }
 
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-
-    font-size: 1.9rem;
-    font-weight: 600;
-    color: red;
     .btn {
       .menu_title_logout {
         font-size: 1.1rem;

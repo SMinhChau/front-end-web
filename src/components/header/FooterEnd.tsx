@@ -67,17 +67,19 @@ function FooterEnd() {
     <div className={cls('header')}>
       <ToastContainer />
       <div className={cls('content')}>
-        <Space wrap>
-          <Popover content={content} trigger="hover" placement="left">
-            <Badge>
-              <Avatar
-                size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 80 }}
-                style={{ backgroundColor: '#87d068' }}
-                icon={<UserOutlined />}
-              />
-            </Badge>
-          </Popover>
-        </Space>
+        <div className={cls('left')}>
+          <Space wrap>
+            <Popover content={content} trigger="hover" placement="left">
+              <Badge>
+                <Avatar
+                  size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 80 }}
+                  style={{ backgroundColor: '#87d068' }}
+                  icon={<UserOutlined />}
+                />
+              </Badge>
+            </Popover>
+          </Space>
+        </div>
       </div>
 
       {!userState.is_login && (

@@ -1,15 +1,13 @@
 @import '../../Variables.scss';
 
 .header {
-  height: $headerHeight;
+  // height: $headerHeight;
   width: 100%;
   display: flex;
   position: fixed;
-  align-items: center;
-  justify-content: space-between;
   z-index: 999;
-  row-gap: -3px !important;
   background-color: $white;
+  flex-flow: row wrap-reverse;
   .login {
     position: relative;
     top: -10px;
@@ -35,21 +33,20 @@
       margin-right: 10px;
       padding: 10px;
       border-radius: 5px;
-
+      box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
       cursor: pointer;
 
       svg {
         font-size: 24px;
         margin-right: 5px;
       }
-      .menu_lable{
+      .menu_lable {
         font-size: 1.1rem;
 
         color: #264653;
         text-transform: uppercase;
         font-weight: 600;
       }
-    
     }
     .account {
       display: flex;

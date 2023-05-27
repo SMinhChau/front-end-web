@@ -4,8 +4,11 @@
   background-color: #f0f2f5;
 }
 .menu_left {
-  width: 100%;
+  width: 290px;
   // height: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
   background-color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(45, 2, 162, 0.3) 0px 18px 36px -18px;
 }
@@ -13,8 +16,8 @@
   height: 100vh;
   background-color: #f0f2f5;
   position: relative;
-
-  width: 100%;
+  margin-left: 290px;
+  width: calc(100vw - 290px);
   .info {
     display: flex;
     justify-content: end;

@@ -140,7 +140,7 @@ const Management = () => {
         </>
       ) : (
         <div className={cls('management')}>
-          <Row justify={'start'} style={{ width: '100%' }}>
+          <Row justify={'center'} style={{ width: '100%' }}>
             <Col span={24} offset={1}>
               <div className={cls('logo')}>
                 <img src={logo} alt="" style={{ width: '150px' }} />
@@ -156,9 +156,8 @@ const Management = () => {
           </div>
 
           {renderTerm}
-
+          <hr />
           <div className={cls('menu')} id="menu">
-            <hr />
             {userState.functions.map(({ name, image: Image, url }, index) => {
               return (
                 <Link
@@ -181,9 +180,8 @@ const Management = () => {
               );
             })}
           </div>
-
+          <hr />
           <div className={cls('footer')} onClick={logout}>
-            <hr />
             <Row justify={'center'} align={'middle'}>
               <Col className={cls('btn')}>
                 <BiLogOutCircle style={{ fontSize: 22, marginRight: 10, color: 'red' }} />

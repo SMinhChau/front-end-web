@@ -106,6 +106,7 @@ export interface IErrorCodeInfo {
   key: string;
   message: string;
 }
+
 export const ErrorCodeDefine: Record<string, IErrorCodeInfo> = {
   SERVER: {
     key: 'SERVER',
@@ -282,6 +283,30 @@ export const ErrorCodeDefine: Record<string, IErrorCodeInfo> = {
     key: 'TERM_REPORT_HAS_NOT_STARTED',
     message: 'Thời gian phân công, tạo nhóm hội đồng - Hội đông chưa bắt đầu',
   },
+  DUPLICATE_EMAIL: {
+    key: 'DUPLICATE_EMAIL',
+    message: 'Email đã tồn tại',
+  },
+  STUDENT_ALREADY_EXIST_GROUP: {
+    key: 'STUDENT_ALREADY_EXIST_GROUP',
+    message: 'Sinh viên đã có nhóm',
+  },
+  GROUP_ALREADY_EXIST_TOPIC: {
+    key: 'GROUP_ALREADY_EXIST_TOPIC',
+    message: 'Nhóm đã có đề tài',
+  },
+  GROUP_MAX_QUALITY: {
+    key: 'GROUP_MAX_QUALITY',
+    message: 'Đề tài đã đủ số lượng',
+  },
+  STUDENT_DONT_HAVE_PERMISSIONS: {
+    key: 'STUDENT_DONT_HAVE_PERMISSIONS',
+    message: 'Bạn không có quyền',
+  },
+  TERM_SUBMIT_TOPIC_HAS_NOT_STARTED: {
+    key: 'TERM_SUBMIT_TOPIC_HAS_NOT_STARTED',
+    message: 'Thời gian chọn đề tài chưa đế',
+  },
 };
 
 export type ITypeNotificationLecturer =
@@ -300,16 +325,6 @@ export const TypeNotificationPath: Record<ITypeNotificationLecturer | string, st
   LECTURER: '/group-lecturer', // khi thêm giảng viên vào học kỳ hoặc đôi role của lecturer
   GROUP_STUDENT: '/group-advisor-of-lecturer',
 };
-
-// // Khi nhận được thông báo
-// const notification = {
-//   message: "Hello",
-//   type: "LECTURER",
-// };
-
-// const path = TypeNotificationPath[notification.type];
-
-// window.location.href = path;
 
 export const getStatusGroup = (status: string) => {
   switch (status) {
