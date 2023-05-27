@@ -15,21 +15,17 @@ const Wrapper = ({ children }: { children: React.ReactElement }) => {
   return (
     <div className={cls('wrapper')}>
       <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
-        <Col span={4}>
-          <div className={cls('menu_left')}>
-            <Management />
-          </div>
-        </Col>
-        <Col span={20}>
-          <div className={cls('menu_right')}>
-            <AppHeader />
+        <div className={cls('menu_left')}>
+          <Management />
+        </div>
+        <div className={cls('menu_right')}>
+          <AppHeader />
 
-            <div className={cls('content')}>{children}</div>
-            <Row justify={'end'}>
-              <FooterEnd />
-            </Row>
-          </div>
-        </Col>
+          <div className={cls('content')}>{children}</div>
+          <Row justify={'end'}>
+            <FooterEnd />
+          </Row>
+        </div>
       </Row>
     </div>
   );

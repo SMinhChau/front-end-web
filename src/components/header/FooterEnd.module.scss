@@ -2,29 +2,38 @@
 
 .header {
   height: $headerHeight;
-  width: 50px;
+  width: 100%;
   display: flex;
-  position: fixed;
-  align-items: center;
-  justify-content: start;
-  z-index: 999;
-  right: 40px;
+
+  justify-items: end;
+  align-items: end;
+  flex-direction: row-reverse;
+  flex-wrap: wrap-reverse;
+  // z-index: 999;
+  // right: 40px;
 
   background-color: #f0f2f5;
   .login {
-    position: relative;
+    // position: relative;
   }
   .content {
-    background-color: aqua;
+    background-color: transparent;
     border-radius: 50px;
+    position: fixed;
+    display: flex;
+
+    justify-items: stretch;
+    align-items: stretch;
+    flex-direction: row-reverse;
+    flex-wrap: wrap-reverse;
+    top: 80vh; /* Đặt vị trí từ đỉnh cửa sổ trình duyệt */
+
     .name {
       font-size: 1.1rem;
     }
     transition-duration: 3s;
     &:hover {
       cursor: pointer;
-      background-color: '#e9edc9';
-      background: conic-gradient(from 20deg, transparent, green);
     }
   }
 }
