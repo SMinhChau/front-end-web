@@ -306,7 +306,7 @@ const StudentManagement = () => {
   };
 
   const RenderStudent = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} />;
   }, [student, baseColumns, data]);
 
   const reSetPasss = (id: number) => {
@@ -397,6 +397,18 @@ const StudentManagement = () => {
                             />
                         )} */}
           </Col>
+          <Button
+            type="dashed"
+            size="large"
+            style={{
+              margin: '0 10px',
+              animation: 'none',
+              color: 'rgb(80, 72, 229)',
+            }}
+            onClick={() => setData(student)}
+          >
+            Tất cả
+          </Button>
         </Row>
 
         <div className={cls('modal')}>

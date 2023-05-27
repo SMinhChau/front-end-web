@@ -140,13 +140,9 @@ const Management = () => {
         </>
       ) : (
         <div className={cls('management')}>
-          <Row justify={'center'} style={{ width: '100%' }}>
-            <Col span={24} offset={1}>
-              <div className={cls('logo')}>
-                <img src={logo} alt="" style={{ width: '150px' }} />
-              </div>
-            </Col>
-          </Row>
+          <div className={cls('logo')}>
+            <img src={logo} alt="" style={{ width: '150px' }} />
+          </div>
 
           <div className={cls('empty')}>
             <Link to="/user-info">
@@ -180,6 +176,7 @@ const Management = () => {
               );
             })}
           </div>
+
           <hr />
           <div className={cls('footer')} onClick={logout}>
             <Row justify={'center'} align={'middle'}>

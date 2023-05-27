@@ -20,14 +20,14 @@ const SemesterInfo = () => {
   const _data = [
     { lable: 'Ngày bắt đầu', value: termState.startDate },
     { lable: 'Ngày kết thúc', value: termState.endDate },
+    { lable: 'Bắt đầu submit đề tài', value: termState.startDateSubmitTopic },
+    { lable: 'Kết thúc submit đề tài', value: termState.endDateSubmitTopic },
     { lable: 'Bắt đầu chọn đề tài', value: termState.startDateChooseTopic },
     { lable: 'Kết thúc chọn đề tài', value: termState.endDateChooseTopic },
     { lable: 'Thời gian bắt đầu phản biện', value: termState.startDateDiscussion },
     { lable: 'Thời gian kết thúc phản biện', value: termState.endDateDiscussion },
-    { lable: 'Ngày phản biện', value: termState.dateDiscussion },
     { lable: 'Thời gian bắt đầu báo cáo', value: termState.startDateReport },
     { lable: 'Thời gian kết thúc báo cáo', value: termState.endDateReport },
-    { lable: 'Báo cáo hội đồng', value: termState.dateReport },
   ];
 
   return (
