@@ -11,19 +11,25 @@ const { Text } = Typography;
 interface Props {
   text?: string;
   listOfTopic?: Array<Topic>;
+  topicInfo?: Topic;
+  topicfromDetail?: boolean;
   id?: number;
 }
 const cls = classNames.bind(style);
 
-const TruncatedText: React.FC<Props> = ({ id, listOfTopic }) => {
+const TruncatedText: React.FC<Props> = ({ id, listOfTopic, topicInfo, topicfromDetail }) => {
   const [modal, setShowModal] = useState(false);
   const [rows, setRows] = useState(7);
   const [topic, setTopic] = useState<Topic>();
 
   useEffect(() => {
-    const __data = listOfTopic?.filter((value) => value.id === id)[0];
-    setTopic(__data);
-  }, [topic]);
+    if (topicfromDetail === true) {
+      setTopic(topicInfo);
+    } else {
+      const __data = listOfTopic?.filter((value) => value.id === id)[0];
+      setTopic(__data);
+    }
+  }, [topic, topicInfo, topicfromDetail]);
 
   const toggleExpand = () => {
     setShowModal(!modal);

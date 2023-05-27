@@ -156,7 +156,6 @@ const GradingAssigment = () => {
             <Tag color={'blue'}>
               <div className={cls('group_more_more')}>
                 <Link to={'/group/' + text}>
-                  {' '}
                   <div style={{ fontSize: '1rem' }}>Xem chi tiết...</div>
                 </Link>
               </div>
