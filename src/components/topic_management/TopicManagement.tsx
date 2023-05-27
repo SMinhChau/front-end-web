@@ -49,10 +49,10 @@ const TopicManagement = () => {
       ),
     },
     {
-      title: 'SL',
+      title: 'SL nhóm tối đa',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 50,
+      width: 100,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -352,13 +352,7 @@ const TopicManagement = () => {
             </Form>
           </Modal>
         </div>
-        <Table
-          className={cls('custom-table')}
-          columns={baseColumns}
-          dataSource={topic}
-          pagination={{ pageSize: 7 }}
-          scroll={{ x: 450, y: 530 }}
-        />
+        <Table className={cls('custom-table')} columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} />
       </div>
     </>
   );

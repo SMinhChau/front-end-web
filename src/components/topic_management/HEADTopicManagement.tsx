@@ -52,10 +52,10 @@ const HEADTopicManagement = () => {
       ),
     },
     {
-      title: 'SL',
+      title: 'SL nhóm tối đa',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 50,
+      width: 100,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 
@@ -277,7 +277,7 @@ const HEADTopicManagement = () => {
     setData(topic);
   };
   const renderTable = useMemo(() => {
-    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} scroll={{ x: 430, y: 530 }} />;
+    return <Table columns={baseColumns} dataSource={data} pagination={{ pageSize: 7 }} />;
   }, [data, handleSelectChange]);
 
   return (
@@ -304,6 +304,7 @@ const HEADTopicManagement = () => {
             <Col>
               <div style={{ width: '200px' }}>
                 <Select
+                  placeholder={'Tất cả'}
                   onChange={handleSelectChange}
                   options={listLerturer.map((val) => {
                     return {
