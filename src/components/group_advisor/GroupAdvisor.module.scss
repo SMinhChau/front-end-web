@@ -1,6 +1,6 @@
 .list_evaluation {
   padding: 0 20px;
-  padding-top: 30px;
+  padding-top: 20px;
   flex-direction: column;
   flex: 1;
   width: 100%;
@@ -23,7 +23,14 @@
   }
 
   .info {
-    margin-top: 10px;
+    // margin-top: 10px;
+
+    .name {
+      color: gray;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-right: '10px';
+    }
     .title_group_left {
       width: 100%;
       text-align: center;

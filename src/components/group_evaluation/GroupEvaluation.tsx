@@ -14,6 +14,7 @@ import { ErrorCodeDefine, showMessage, showMessageEror } from '../../constant';
 import studentService from '../../services/student';
 import TranscriptSumMary from '../../entities/transcript';
 import evaluateService from 'src/services/evaluate';
+import { log } from 'console';
 
 const cls = classNames.bind(style);
 const { Text } = Typography;
@@ -90,6 +91,7 @@ const GroupEvaluation = () => {
 
   const [studentIdSelect, setStudentIdSelect] = useState<number | null>(null);
   const param: any = useParams();
+  const { assignId } = useParams();
   const termState = useAppSelector((state) => state.term);
 
   const [listAvgGrader, setListAvgGrader] = useState<Array<ListAvg>>([]);
@@ -97,6 +99,7 @@ const GroupEvaluation = () => {
   const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
   const [avgSummary, setAvgSummary] = useState<number | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(true);
+  const [loadDown, setLoadDown] = useState(false);
 
   useEffect(() => {
     groupService
@@ -134,11 +137,8 @@ const GroupEvaluation = () => {
 
   useEffect(() => {
     let sum = 0;
-    console.log('listAvgGrader', listAvgGrader);
 
     listAvgGrader.forEach((i) => {
-      console.log('i.grade', i.grade);
-
       sum += i.grade;
       setAvgGrader(sum);
     });
@@ -222,7 +222,7 @@ const GroupEvaluation = () => {
       .postTranscripts(data)
       .then((result) => {
         getTranscriptsSummaryBhyStudentId(studentIdSelect);
-        showMessage('Chấm điểm thành công', 3000);
+        showMessage('Đánh giá thành công', 3000);
         setLoadingTranscript(false);
         setListAvgGrader(
           result?.data.map((i: any) => {
@@ -231,7 +231,7 @@ const GroupEvaluation = () => {
         );
       })
       .catch((error) => {
-        showMessageEror(JSON.stringify(ErrorCodeDefine[error.response.data.code].message) || 'Chấm điểm thất bại', 5000);
+        showMessageEror(JSON.stringify(ErrorCodeDefine[error.response.data.code].message) || 'Đánh giá thất bại', 5000);
         setLoadingTranscript(false);
       });
   };
@@ -297,15 +297,8 @@ const GroupEvaluation = () => {
         </div>
       ),
     },
-    // {
-    //     title: "Trạng thái",
-    //     dataIndex: "status",
-    //     render: () => (
-    //         <CheckSquareFilled style={{ color: "#73d13d" }} />
-    //     ),
-    // },
     {
-      title: 'Chấm điểm',
+      title: 'Đánh giá',
       dataIndex: 'id',
       render: (id: any) => (
         <Button onClick={() => loadTranscriptStudent(id)}>
@@ -345,10 +338,14 @@ const GroupEvaluation = () => {
   }, [avgSummary, transcriptsSummary, listAvgGrader]);
 
   const handleDownload = () => {
+    console.log("searchParams.get('assignId')", searchParams.get('assignId'));
+
+    setLoadDown(true);
     evaluateService
-      .exportFileByAssignId(param.id)
+      .exportFileByAssignId(Number(searchParams.get('assignId')))
       .then((result) => {
-        console.log('result', result);
+        setLoadDown(false);
+
         const url = window.URL.createObjectURL(new Blob([result.data], { type: 'application/pdf' }));
         const link = document.createElement('a');
         link.href = url;
@@ -359,6 +356,7 @@ const GroupEvaluation = () => {
         link.remove();
       })
       .catch((er) => {
+        setLoadDown(false);
         console.log('er ->', er);
       });
   };
@@ -366,114 +364,116 @@ const GroupEvaluation = () => {
   return (
     <div className={cls('group_evaluation')}>
       <ToastContainer />
-      <Row className={cls('row')}>
-        <Col span={9} className={cls('group-col')}>
-          <Row justify={'space-between'} style={{ height: '100%' }}>
-            <Col span={24}>
-              <Button
-                type="dashed"
-                icon={<ExportOutlined />}
-                size="large"
-                disabled={avgGrader > 10 ? true : false}
-                style={{
-                  animation: 'none',
-                  color: 'rgb(80, 72, 229)',
-                  fontWeight: '600',
-                }}
-                onClick={handleDownload}
-              >
-                Xuất phiếu chấm
-              </Button>
-              <div className={cls('title_group')}>Thông tin nhóm</div>
-              <div className={cls('info_item_des')}>
-                <Skeleton loading={!loadingInfoGroup} active paragraph={{ rows: 5 }}>
-                  <div className={cls('top_des')}>
-                    <Row justify={'start'} align={'middle'}>
-                      <Col span={6}>
-                        <p className={cls('title_info_group')}>Tên nhóm :</p>
-                      </Col>
-                      <Col span={6}>
-                        <h4 className={cls('name_group')}>{group?.name}</h4>
-                      </Col>
-                    </Row>
+      <Spin spinning={loadDown}>
+        <Row className={cls('row')}>
+          <Col span={9} className={cls('group-col')}>
+            <Row justify={'space-between'} style={{ height: '100%' }}>
+              <Col span={24}>
+                <Button
+                  type="dashed"
+                  icon={<ExportOutlined />}
+                  size="large"
+                  disabled={avgGrader > 10 ? true : false}
+                  style={{
+                    animation: 'none',
+                    color: 'rgb(80, 72, 229)',
+                    fontWeight: '600',
+                  }}
+                  onClick={handleDownload}
+                >
+                  Xuất phiếu chấm
+                </Button>
+                <div className={cls('title_group')}>Thông tin nhóm</div>
+                <div className={cls('info_item_des')}>
+                  <Skeleton loading={!loadingInfoGroup} active paragraph={{ rows: 5 }}>
+                    <div className={cls('top_des')}>
+                      <Row justify={'start'} align={'middle'}>
+                        <Col span={6}>
+                          <p className={cls('title_info_group')}>Tên nhóm :</p>
+                        </Col>
+                        <Col span={6}>
+                          <h4 className={cls('name_group')}>{group?.name}</h4>
+                        </Col>
+                      </Row>
 
-                    <Divider className={cls('title_point')} plain>
-                      Danh sách sinh viên
-                    </Divider>
-                    <Table
-                      dataSource={group?.members.map((value) => {
-                        return {
-                          id: value?.student?.id,
-                          username: value?.student?.username,
-                          name: value?.student?.name,
-                        };
-                      })}
-                      columns={columnsLecturer}
-                      pagination={{ pageSize: 2 }}
-                    />
+                      <Divider className={cls('title_point')} plain>
+                        Danh sách sinh viên
+                      </Divider>
+                      <Table
+                        dataSource={group?.members.map((value) => {
+                          return {
+                            id: value?.student?.id,
+                            username: value?.student?.username,
+                            name: value?.student?.name,
+                          };
+                        })}
+                        columns={columnsLecturer}
+                        pagination={{ pageSize: 2 }}
+                      />
+                    </div>
+                  </Skeleton>
+                </div>
+              </Col>
+            </Row>
+          </Col>
+
+          <Col span={15} style={{ backgroundColor: '#ffff' }}>
+            <div className={cls('transcript-col')}>
+              <div className={cls('title_group')}>Bảng điểm - {getEvalutionName()}</div>
+
+              <Spin spinning={loadingTranscript}>
+                <Descriptions title={<></>}>
+                  <Descriptions.Item label={<p className={cls('title_info_student')}>MSSV</p>} span={1}>
+                    <h4 className={cls('name_group')}>{studentTranscript?.username}</h4>
+                  </Descriptions.Item>
+                  <Descriptions.Item label={<p className={cls('title_info_student')}>Tên SV</p>} span={1}>
+                    <h4 className={cls('name_group')}>{studentTranscript?.name}</h4>
+                  </Descriptions.Item>
+                  <Descriptions.Item label={<p className={cls('title_info_student')}>Email</p>} span={1}>
+                    <h4 className={cls('name_group')}>{studentTranscript?.email}</h4>
+                  </Descriptions.Item>
+                </Descriptions>
+                <Divider className={cls('title_point')} plain>
+                  Danh sách Tiêu chí : {transcripts?.length}
+                </Divider>
+                <Skeleton loading={loadingDetail} active paragraph={{ rows: 5 }}>
+                  <div className={cls('group_content')}>
+                    <Table dataSource={transcripts} columns={columns} scroll={{ x: 400, y: 290 }} />
                   </div>
                 </Skeleton>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-
-        <Col span={15} style={{ backgroundColor: '#ffff' }}>
-          <div className={cls('transcript-col')}>
-            <div className={cls('title_group')}>Bảng điểm - {getEvalutionName()}</div>
-
-            <Spin spinning={loadingTranscript}>
-              <Descriptions title={<></>}>
-                <Descriptions.Item label={<p className={cls('title_info_student')}>MSSV</p>} span={1}>
-                  <h4 className={cls('name_group')}>{studentTranscript?.username}</h4>
-                </Descriptions.Item>
-                <Descriptions.Item label={<p className={cls('title_info_student')}>Tên SV</p>} span={1}>
-                  <h4 className={cls('name_group')}>{studentTranscript?.name}</h4>
-                </Descriptions.Item>
-                <Descriptions.Item label={<p className={cls('title_info_student')}>Email</p>} span={1}>
-                  <h4 className={cls('name_group')}>{studentTranscript?.email}</h4>
-                </Descriptions.Item>
-              </Descriptions>
-              <Divider className={cls('title_point')} plain>
-                Danh sách Tiêu chí : {transcripts?.length}
-              </Divider>
-              <Skeleton loading={loadingDetail} active paragraph={{ rows: 5 }}>
-                <div className={cls('group_content')}>
-                  <Table dataSource={transcripts} columns={columns} scroll={{ x: 400, y: 290 }} />
-                </div>
-              </Skeleton>
-              {studentIdSelect && (
-                <>
-                  <Row
-                    justify={'start'}
-                    style={{
-                      marginTop: '20px',
-                    }}
-                  >
-                    <Col span={7} offset={11}>
-                      <Text mark strong type="danger" className={cls('title_point')}>
-                        Tổng điểm:
-                      </Text>
-                    </Col>
-                    <Col>{getPointAvg}</Col>
-                  </Row>
-
-                  <div className={cls('submit-grade')}>
-                    <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
-                      <div className={cls('avg_content')}>{renderAvgSumTranscript}</div>
-                      <Col>
-                        <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
-                          Chấm điểm
-                        </Button>
+                {studentIdSelect && (
+                  <>
+                    <Row
+                      justify={'start'}
+                      style={{
+                        marginTop: '20px',
+                      }}
+                    >
+                      <Col span={7} offset={11}>
+                        <Text mark strong type="danger" className={cls('title_point')}>
+                          Tổng điểm:
+                        </Text>
                       </Col>
+                      <Col>{getPointAvg}</Col>
                     </Row>
-                  </div>
-                </>
-              )}
-            </Spin>
-          </div>
-        </Col>
-      </Row>
+
+                    <div className={cls('submit-grade')}>
+                      <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
+                        <div className={cls('avg_content')}>{renderAvgSumTranscript}</div>
+                        <Col>
+                          <Button type="primary" size="large" onClick={handlerSubmitTranscript}>
+                            Đánh giá
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </>
+                )}
+              </Spin>
+            </div>
+          </Col>
+        </Row>
+      </Spin>
     </div>
   );
 };

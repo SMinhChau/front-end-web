@@ -320,9 +320,7 @@ const GradingAssigment = () => {
           <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
             <Col span={10}>
               <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
-                <Col span={20}>
-                  <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
-                </Col>
+                <Col span={20}>{/* <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3> */}</Col>
               </Row>
 
               <div className={cls('left')}>{renderTable}</div>

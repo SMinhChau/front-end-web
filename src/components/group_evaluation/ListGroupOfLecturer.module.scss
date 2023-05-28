@@ -41,10 +41,31 @@
   .info {
     width: 100%;
     height: calc(100vh - 260px);
+    .text_colum {
+      font-size: 16px;
+      line-height: 1.8;
+      text-align: left;
 
-    display: flex;
+      color: #264653;
+    }
     padding: 0 20px;
-
+    .member {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #0096c7;
+    }
+    .content_link {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      .icon_evaluation {
+        font-size: 1.1rem;
+        margin-right: 5px;
+        color: blue;
+      }
+    }
     overflow-y: auto;
     overflow-x: auto;
     .group {

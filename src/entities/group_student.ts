@@ -7,6 +7,7 @@ export default interface GroupStudent {
     id: number;
   };
   topic: Topic;
+  status: string;
   members: [
     {
       id: number;

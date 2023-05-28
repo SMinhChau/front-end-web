@@ -337,9 +337,9 @@ export const getStatusGroup = (status: string) => {
     case 'FAIL_SESSION_HOST':
       return 'Rớt hội đồng';
     case 'PASS_ADVISOR':
-      return 'Đậu phản biện';
-    case 'PASS_REVIEWER':
       return 'Đậu hướng dẫn';
+    case 'PASS_REVIEWER':
+      return 'Đậu phản biện';
     case 'PASS_SESSION_HOST':
       return 'Đậu hội dồng';
   }
@@ -392,4 +392,34 @@ export const getStatusViewPoint = (status: number) => {
     case 0:
       return 'Chưa';
   }
+};
+
+export const checkDisableButton = (status: string) => {
+  switch (status) {
+    case 'OPEN':
+      return false;
+    case 'FAIL_ADVISOR':
+      return true;
+    case 'FAIL_REVIEWER':
+      return true;
+    case 'FAIL_SESSION_HOST':
+      return true;
+    case 'PASS_ADVISOR':
+      return false;
+    case 'PASS_REVIEWER':
+      return false;
+    case 'PASS_SESSION_HOST':
+      return false;
+  }
+};
+
+export const formatString = (text: string) => {
+  return text
+    ?.replace(/2\./g, '\n2.' || '\n-')
+    .replace(/3\./g, '\n3.' || '\n-')
+    .replace(/4\./g, '\n4.' || '\n-')
+    .replace(/5\./g, '\n5.' || '\n-')
+    .replace(/6\./g, '\n6.' || '\n-')
+    .replace(/7\./g, '\n7.' || '\n-')
+    .replace(/8\./g, '\n8.' || '\n-');
 };

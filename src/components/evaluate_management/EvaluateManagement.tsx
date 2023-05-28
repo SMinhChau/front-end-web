@@ -302,7 +302,7 @@ const EvaluateManagement = () => {
         <Modal
           destroyOnClose
           open={open}
-          title="Tạo tiêu chí chấm điểm"
+          title="Tạo tiêu chí Đánh giá"
           onCancel={handleCancel}
           footer={[
             <Button key="back" onClick={handleCancel}>

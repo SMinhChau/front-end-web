@@ -154,6 +154,13 @@ class LecturerService {
       params: params,
     });
   }
+  async asignTopicForStudent(data: { topicId: number; studentId: number }) {
+    return await axiosAuth({
+      url: `/lecturer/groups/grant-topic`,
+      method: 'post',
+      data,
+    });
+  }
 }
 
 const lecturerService = new LecturerService();

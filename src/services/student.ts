@@ -1,7 +1,7 @@
 import { axiosAuth, axiosFormData } from '../utils/axiosConfig';
 import qs from 'qs';
 class StudentService {
-  getStudent(filter: { majorsId?: number }) {
+  getStudent(filter: { termId?: number }) {
     return axiosAuth({
       url: '/lecturer/students',
       params: filter,

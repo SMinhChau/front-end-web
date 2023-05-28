@@ -1,24 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import style from './TopicManagement.module.scss';
 import Term from '../../entities/term';
 import termService from '../../services/term';
 import { useAppSelector } from '../../redux/hooks';
-import { Select, Table, Button, Modal, Form, Input, InputNumber, Row, Col, Tag, Typography } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined, MoreOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Input, InputNumber, Row, Col, Tag, Typography } from 'antd';
+import { PlusOutlined, DeleteOutlined, EditOutlined, MoreOutlined, ArrowRightOutlined, ArrowsAltOutlined } from '@ant-design/icons';
 import topicService from '../../services/topic';
-
+import Select from 'react-select';
 import { default as base_column } from './column';
 import { toast, ToastContainer } from 'react-toastify';
 import Config from '../../utils/config';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import TextArea from 'antd/es/input/TextArea';
-import { ErrorCodeDefine, getNameStatus, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, formatString, getNameStatus, showMessage, showMessageEror } from '../../constant';
 import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
 import { ColumnsType } from 'antd/es/table';
 import Topic from 'src/entities/topic';
 import TruncatedText from './TruncatedText';
+import studentService from 'src/services/student';
+import Student from 'src/entities/student';
+import lecturerService from 'src/services/lecturer';
 
 const cls = classNames.bind(style);
 
@@ -28,12 +31,28 @@ const TopicManagement = () => {
 
   const [topic, setTopic] = useState<Array<Topic>>([]);
   const [open, setOpen] = useState(false);
+  const [openModalAssign, setModalAssign] = useState(false);
 
   const [status, setStatus] = useState('insert');
   const [initData, setInitData] = useState({});
   const [idUpdate, setIdUpdate] = useState<number | null>(null);
+  const [asignId, setIdAssign] = useState<number | null>(null);
   const [columnVisible, setColumnVisible] = useState<Array<any>>([]);
   const termState = useAppSelector((state) => state.term);
+  const [studentOfList, setStudentOfList] = useState<Array<Student>>([]);
+  const [topicName, setTopicName] = useState<Topic>();
+
+  useEffect(() => {
+    getListLecturerOfMajor();
+  }, []);
+
+  const getListLecturerOfMajor = () => {
+    studentService.getStudent({ termId: termState.termIndex.id }).then((result) => {
+      console.log('result.data -> students', result.data);
+
+      setStudentOfList(result.data);
+    });
+  };
 
   const baseColumns: ColumnsType<any> = [
     {
@@ -60,66 +79,34 @@ const TopicManagement = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
+      width: 300,
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
+              {text && formatString(text)}
+            </div>
+          </>
+        );
+      },
+    },
 
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note',
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
     {
       title: 'Mục tiêu',
       dataIndex: 'target',
       key: 'target',
-
+      width: 300,
       render: (text) => {
         return (
           <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+            <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
+              {text && formatString(text)}
+            </div>
           </>
         );
       },
     },
-    {
-      title: 'Chuẩn đầu ra',
-      dataIndex: 'standradOutput',
-      key: 'standradOutput',
 
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Yêu cầu đầu vào',
-      dataIndex: 'requireInput',
-      key: 'requireInput',
-
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>
-          </>
-        );
-      },
-    },
     {
       title: 'Bình luận',
       dataIndex: 'comment',
@@ -148,9 +135,42 @@ const TopicManagement = () => {
       width: 100,
       render: (status: any) => {
         return (
-          <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
-            {getNameStatus(status)}
-          </Tag>
+          <div style={{ justifyItems: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+            <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
+              {getNameStatus(status)}
+            </Tag>
+          </div>
+        );
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
+      key: 'id',
+      width: 50,
+      render: (id: any) => {
+        const _data = topic.filter((i) => i.id == id)[0];
+        const isAssign = _data?.status === 'ACCEPT' ? true : false;
+        return (
+          <>
+            {isAssign === true && (
+              <Button
+                className={cls('btn')}
+                onClick={() => showAsign(id)}
+                type="dashed"
+                icon={<ArrowsAltOutlined color="blue" />}
+                size="small"
+                style={{
+                  animation: 'none',
+                  color: 'green',
+                  fontWeight: '600',
+                  marginTop: '5px',
+                }}
+              >
+                Gắn đề tài
+              </Button>
+            )}
+          </>
         );
       },
     },
@@ -201,9 +221,19 @@ const TopicManagement = () => {
     setOpen(true);
     setStatus('insert');
   };
+
+  const showAsign = (id: number) => {
+    const _name = topic.filter((i) => i.id === id)[0];
+    setTopicName(_name);
+    setModalAssign(true);
+  };
+
   const handleCancel = () => {
     setOpen(false);
     setInitData({});
+  };
+  const handleCancelModalAssign = () => {
+    setModalAssign(false);
   };
   const onFinish = (value: any) => {
     if (status === 'insert')
@@ -254,6 +284,51 @@ const TopicManagement = () => {
     const t = topic.filter((value) => value.id === id)[0];
     setInitData(t);
   };
+
+  const handleSelectChange = (selectedOptionReview: any) => {
+    const id = selectedOptionReview.value;
+
+    setIdAssign(id);
+  };
+
+  const handleAssignforStudent = () => {
+    console.log('í student', asignId);
+    lecturerService
+      .asignTopicForStudent({ topicId: Number(topicName?.id), studentId: Number(asignId) })
+      .then((result) => {
+        console.log('ré ->', result?.data);
+        showMessage('Gắn đề tài thành công', 3000);
+      })
+      .catch((error) => {
+        console.log('er', error);
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
+      });
+  };
+
+  const renderNameforTopicModal = useMemo(() => {
+    return (
+      <>
+        <Form.Item
+          label={
+            <div className={cls('title_model')} style={{ fontSize: '14px' }}>
+              Mã đề tài
+            </div>
+          }
+        >
+          <Input disabled style={{ fontSize: '16px', width: '100px', textAlign: 'center' }} placeholder={String(topicName?.id)} />
+        </Form.Item>
+        <Form.Item
+          label={
+            <div className={cls('title_model')} style={{ fontSize: '14px' }}>
+              Tên đề tài
+            </div>
+          }
+        >
+          <TextArea disabled style={{ fontSize: '16px' }} placeholder={String(topicName?.name)} />
+        </Form.Item>
+      </>
+    );
+  }, [topicName]);
 
   return (
     <>
@@ -353,6 +428,58 @@ const TopicManagement = () => {
           </Modal>
         </div>
         <Table className={cls('custom-table')} columns={baseColumns} dataSource={topic} pagination={{ pageSize: 7 }} />
+
+        <Modal
+          destroyOnClose
+          open={openModalAssign}
+          title={<div style={{ fontSize: '16px', marginBottom: '10px' }}>Gắn đề tài cho sinh viên</div>}
+          onCancel={handleCancelModalAssign}
+          footer={[
+            <Button key="back" onClick={handleCancelModalAssign}>
+              Hủy
+            </Button>,
+          ]}
+        >
+          <Form
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 20 }}
+            layout="horizontal"
+            onFinish={handleAssignforStudent}
+            style={{ maxWidth: 600 }}
+          >
+            {renderNameforTopicModal}
+
+            <Form.Item
+              label={
+                <div className={cls('title_model')} style={{ fontSize: '14px' }}>
+                  Sinh viên
+                </div>
+              }
+              rules={[{ required: true, message: 'Vui lòng chọn sinh viên' }]}
+            >
+              <Select
+                placeholder={'Chọn sinh viên'}
+                onChange={handleSelectChange}
+                options={studentOfList.map((val) => {
+                  return {
+                    value: val.id,
+                    label: `${val.name}  - (Mã: ${val.username})`,
+                  };
+                })}
+              />
+            </Form.Item>
+
+            <Form.Item label=" ">
+              <Row justify={'end'} align={'middle'}>
+                <Col offset={20}>
+                  <Button type="primary" htmlType="submit">
+                    Gắn đề tài
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </>
   );

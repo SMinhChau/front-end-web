@@ -110,7 +110,7 @@ const menus = {
     },
 
     {
-      name: 'Quản Lý Chấm Điểm',
+      name: 'Quản Lý Đánh giá',
       image: FcNews,
       url: '/evaluation-group-of-lecturer',
     },

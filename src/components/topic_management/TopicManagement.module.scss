@@ -4,6 +4,11 @@
     height: 60px;
     background-color: red;
   }
+  .title_model {
+    font-size: 1.1rem;
+    color: #264653;
+    padding-right: 20px;
+  }
   .semester_func {
     padding: 0 20px;
     padding-top: 10px;
@@ -31,7 +36,7 @@
     font-size: 16px;
     line-height: 1.8;
     text-align: left;
-
+    white-space: pre-wrap;
     color: #264653;
   }
   .button {
