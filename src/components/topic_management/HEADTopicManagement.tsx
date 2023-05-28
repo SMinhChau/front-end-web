@@ -9,7 +9,7 @@ import Topic from '../../entities/topic';
 
 import { ToastContainer } from 'react-toastify';
 
-import { getNameStatus, showMessage } from '../../constant';
+import { formatString, getNameStatus, showMessage } from '../../constant';
 import { ColumnsType } from 'antd/es/table';
 import Select from 'react-select';
 import { log } from 'console';
@@ -63,66 +63,34 @@ const HEADTopicManagement = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
+      width: 300,
+      render: (text) => {
+        return (
+          <>
+            <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
+              {text && formatString(text)}....
+            </div>
+          </>
+        );
+      },
+    },
 
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note',
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
     {
       title: 'Mục tiêu',
       dataIndex: 'target',
       key: 'target',
-
+      width: 300,
       render: (text) => {
         return (
           <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
+            <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
+              {text && formatString(text)}....
+            </div>
           </>
         );
       },
     },
-    {
-      title: 'Chuẩn đầu ra',
-      dataIndex: 'standradOutput',
-      key: 'standradOutput',
 
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>{' '}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Yêu cầu đầu vào',
-      dataIndex: 'requireInput',
-      key: 'requireInput',
-
-      render: (text) => {
-        return (
-          <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}....</div>
-          </>
-        );
-      },
-    },
     {
       title: 'Bình luận',
       dataIndex: 'comment',
@@ -160,7 +128,7 @@ const HEADTopicManagement = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      width: 80,
+      width: 60,
       render: (status: any) => {
         return (
           <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
@@ -173,7 +141,7 @@ const HEADTopicManagement = () => {
     },
     {
       title: '',
-      width: 60,
+      width: 50,
       render: (row: any) => {
         return row.status === 'PEDING' ? (
           <Space wrap>
@@ -190,7 +158,7 @@ const HEADTopicManagement = () => {
     },
     {
       title: '',
-      width: 60,
+      width: 50,
       render: (row: any) => {
         return row.status === 'PEDING' ? (
           <Space wrap style={{ marginLeft: '5px' }}>

@@ -1,8 +1,10 @@
 import { TypeEvalution } from './assign';
 import Student from './student';
 import Teacher from './teacher';
+import Topic from './topic';
 
 export default interface AssignAdvisor {
+  topic: any;
   id: number;
   typeEvaluation: TypeEvalution;
 

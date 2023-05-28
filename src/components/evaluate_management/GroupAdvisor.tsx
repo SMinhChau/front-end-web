@@ -19,6 +19,7 @@ import { getStatusGroup, getStatusGroupColor } from 'src/constant';
 import GroupLecturer from '../group_lecturer/GroupLecturer';
 import { ColumnsType } from 'antd/es/table';
 import Student from 'src/entities/student';
+import TruncatedText from '../topic_management/TruncatedText';
 
 const cls = classNames.bind(styled);
 const { Text } = Typography;
@@ -171,21 +172,7 @@ const GroupAdvisor = () => {
           <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
             <Col span={10}>
               <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
-                <Col span={4}>
-                  <Button
-                    type="dashed"
-                    onClick={handleClseShow}
-                    size="small"
-                    style={{
-                      animation: 'none',
-                      color: 'rgb(80, 72, 229)',
-                      fontWeight: '600',
-                    }}
-                    className={cls('btn')}
-                  >
-                    Mở rộng
-                  </Button>
-                </Col>
+                <Col span={4}></Col>
                 <Col span={20}>
                   <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
                 </Col>

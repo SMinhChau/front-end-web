@@ -192,7 +192,7 @@ const StudentManagement = () => {
 
   const getListOfStudent = () => {
     studentService
-      .getStudent({})
+      .getStudent({ termId: termState.termIndex.id })
       .then((result) => {
         setStudent(
           result.data.map((value: any) => {

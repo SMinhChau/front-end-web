@@ -253,7 +253,7 @@ const ItemAdvisor = () => {
     },
 
     {
-      title: 'Chấm điểm',
+      title: 'Đánh giá',
       dataIndex: 'id',
       render: (id: any) => (
         <Button onClick={() => loadTranscriptStudent(id)}>

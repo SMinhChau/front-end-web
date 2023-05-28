@@ -1,7 +1,23 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './GroupDetail.module.scss';
-import { Badge, Button, Card, Col, Descriptions, Divider, Dropdown, Form, MenuProps, Row, Skeleton, Space, Typography } from 'antd';
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Divider,
+  Dropdown,
+  Form,
+  MenuProps,
+  Row,
+  Skeleton,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 import { useParams } from 'react-router-dom';
 import studentService from '../../services/student';
 import GroupStudent from '../../entities/group_student';
@@ -12,7 +28,15 @@ import GroupLecturer from '../group_lecturer/GroupLecturer';
 import lecturerService from '../../services/lecturer';
 import { useAppSelector } from '../../redux/hooks';
 import { ToastContainer } from 'react-toastify';
-import { ErrorCodeDefine, checkDegree, checkGender, showMessage, showMessageEror } from '../../constant';
+import {
+  ErrorCodeDefine,
+  checkDegree,
+  checkGender,
+  getStatusGroup,
+  getStatusGroupColor,
+  showMessage,
+  showMessageEror,
+} from '../../constant';
 import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { AiOutlineBars, AiOutlineUser } from 'react-icons/ai';
 import { BiGroup } from 'react-icons/bi';
@@ -21,6 +45,7 @@ import Select, { StylesConfig } from 'react-select';
 import { userInfo } from 'os';
 import { TypeEvalution } from 'src/entities/assign';
 import TruncatedText from '../topic_management/TruncatedText';
+import { checkDisableButton } from '../../constant';
 
 const cls = classNames.bind(style);
 
@@ -106,6 +131,8 @@ const GroupDetail = () => {
         .then((result) => {
           setLoading(false);
           setInfoGroup(result.data);
+          console.log('result.data -> ìno', result.data);
+
           getTopic(result.data?.topic?.id);
         })
         .catch((errr) => console.log('erre', errr));
@@ -389,9 +416,11 @@ const GroupDetail = () => {
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Row justify={'end'} style={{ bottom: '0px' }}>
                   <Col>
-                    <Button type="primary" htmlType="submit">
-                      Cập nhật
-                    </Button>
+                    <Tooltip title={getStatusGroup(String(inforGroup?.status))} color={getStatusGroupColor(String(inforGroup?.status))}>
+                      <Button disabled={checkDisableButton(String(inforGroup?.status))} type="primary" htmlType="submit">
+                        Cập nhật
+                      </Button>
+                    </Tooltip>
                   </Col>
                 </Row>
               </Form.Item>
@@ -503,9 +532,13 @@ const GroupDetail = () => {
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Row justify={'end'} style={{ bottom: '0px' }}>
                   <Col>
-                    <Button type="primary" htmlType="submit">
-                      Cập nhật
-                    </Button>
+                    <Space wrap>
+                      <Tooltip title={getStatusGroup(String(inforGroup?.status))} color={getStatusGroupColor(String(inforGroup?.status))}>
+                        <Button disabled={checkDisableButton(String(inforGroup?.status))} type="primary" htmlType="submit">
+                          Cập nhật
+                        </Button>
+                      </Tooltip>
+                    </Space>
                   </Col>
                 </Row>
               </Form.Item>
@@ -582,7 +615,7 @@ const GroupDetail = () => {
       </>
     );
   }, [statusHost, groupLecturerHost, handleSelectChangeHost, infoHost]);
-
+  const color = getStatusGroupColor(String(inforGroup?.status));
   return (
     <div className={cls('group_detail')}>
       <ToastContainer />
@@ -592,12 +625,24 @@ const GroupDetail = () => {
             title={
               <Descriptions title="">
                 <Descriptions.Item label={''}>
-                  <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
+                  <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
                     <Col>
                       <div className={cls('group_name')}>Tên nhóm: </div>
                     </Col>
                     <Col>
                       <div className={cls('_name')}>{inforGroup?.name}</div>
+                    </Col>
+                  </Row>
+                  <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+                    <Col>
+                      <div className={cls('group_status')}>Tình trạng: </div>
+                    </Col>
+                    <Col>
+                      <div className={cls('_name_status')}>
+                        <Tag color={color}>
+                          <div style={{ color: color, fontSize: '16px' }}>{getStatusGroup(String(inforGroup?.status))}</div>
+                        </Tag>
+                      </div>
                     </Col>
                   </Row>
                 </Descriptions.Item>

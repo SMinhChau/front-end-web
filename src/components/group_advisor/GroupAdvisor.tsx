@@ -1,34 +1,54 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import styled from './GroupAdvisor.module.scss';
-import { Avatar, Button, Col, Descriptions, Divider, Radio, Result, Row, Skeleton, Spin, Table, Tabs, Tag, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Descriptions,
+  Divider,
+  Radio,
+  Result,
+  Row,
+  Skeleton,
+  Space,
+  Spin,
+  Table,
+  Tabs,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 
 import { useAppSelector } from '../../redux/hooks';
 import assignService from '../../services/assign';
 import { BookOutlined, EditOutlined, ExportOutlined, SnippetsOutlined } from '@ant-design/icons';
-import Meta from 'antd/es/card/Meta';
-import { Link } from 'react-router-dom';
-
+import Select from 'react-select';
 import { TypeEvalution } from '../../entities/assign';
-
-import { AiOutlineEdit } from 'react-icons/ai';
 
 import AssignAdvisor from 'src/entities/assign_advisor';
 import AssignAdvisorOfLecturer from 'src/entities/assign_advisor';
 import { checkDegree, checkGender, getStatusGroup, getStatusGroupColor } from 'src/constant';
-import GroupLecturer from '../group_lecturer/GroupLecturer';
+
 import { ColumnsType } from 'antd/es/table';
-import transcriptService from '../../services/transcript';
+
 import studentService from 'src/services/student';
 import TranscriptSumMary from 'src/entities/transcript';
-import Student from 'src/entities/student';
-import Teacher from 'src/entities/teacher';
+
+import TruncatedText from '../topic_management/TruncatedText';
+import Topic from 'src/entities/topic';
+import topicService from 'src/services/topic';
 
 const cls = classNames.bind(styled);
 const { Text } = Typography;
 
+interface Filter {
+  value: number;
+  label: string;
+}
+
 const GroupAdvisor = () => {
-  const [listAssign, setListAssign] = useState<Array<AssignAdvisorOfLecturer>>([]);
+  const [listAssign, setListAssign] = useState<Array<AssignAdvisor>>([]);
   const [data, setData] = useState<Array<AssignAdvisor>>([]);
   // const [loading, setLoading] = useState(true);
   const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
@@ -38,18 +58,15 @@ const GroupAdvisor = () => {
   const [loadingTranscript, setLoadingTranscript] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(true);
   const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
-  const [lectureAdvisor, setLectureAdvisor] = useState<Array<Teacher>>([]);
+  const [topic, setTopic] = useState<Array<Topic>>([]);
+  const [listTopic, setListTopic] = useState<Array<Filter>>([]);
 
   useEffect(() => {
     if (termState.term.length > 0) {
-      console.log('user.id', user.id);
-
       assignService
-        .getAssignByTypeAdvisor(user.id, { typeEvaluation: 'ADVISOR' })
+        .getAssignByTypeAdvisor(user.id, { typeEvaluation: TypeEvalution.ADVISOR })
 
         .then((result) => {
-          console.log('getlist -> result.data', result.data);
-
           const _data = result.data.map((value: AssignAdvisor, index: number) => {
             return {
               key: index,
@@ -57,22 +74,41 @@ const GroupAdvisor = () => {
               name: value.group.name,
               status: value.group.status,
               member: value.group.members,
+              topic: value.group.topic,
               groupOfLecturer: value.groupLecturer.members,
             };
           });
-          console.log('setListAssign', _data);
+          console.log('data->>>>>>>>>', data);
 
           setListAssign(_data);
-          console.log('_data', _data);
+
           setData(_data);
 
-          // setData(result.data);
+          const listTopicOfGroups = result.data.map((value: AssignAdvisor) => {
+            return value.group.topic;
+          });
+
+          const _dataListTopic: Filter[] = listTopicOfGroups.reduce(
+            (accumulator: { value: number; label: string }[], current: { id: number; name: string }) => {
+              const existingItem = accumulator.find((item) => item.value === current.id);
+              if (!existingItem) {
+                accumulator.push({ value: current.id, label: current.name });
+              }
+              return accumulator;
+            },
+            [],
+          );
+          setListTopic(_dataListTopic);
         })
         .catch((error) => {
           console.log('getlist -> error', error);
         });
     }
   }, [termState]);
+
+  // useEffect(() => {
+  //   getListOfTopic();
+  // }, [topic]);
 
   const baseColumns: ColumnsType<AssignAdvisorOfLecturer> = [
     {
@@ -96,6 +132,32 @@ const GroupAdvisor = () => {
           <Tag color={color}>
             <div style={{ color: color, fontSize: '16px' }}>{name}</div>
           </Tag>
+        );
+      },
+    },
+    {
+      title: 'Tên đề tài',
+      dataIndex: 'topic',
+      key: 'topic',
+      fixed: 'left',
+      render: (text) => (
+        <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto', fontWeight: '500' }}>
+          {text.name}
+        </div>
+      ),
+    },
+    {
+      title: '',
+      dataIndex: 'topic',
+      key: 'topic',
+      width: 100,
+      render: (topic) => {
+        return (
+          <Space wrap>
+            <Tooltip title="Xem chi tiết đề tài" color={'geekblue'}>
+              <TruncatedText id={topic.id} topicInfo={topic} topicfromDetail={true} />
+            </Tooltip>
+          </Space>
         );
       },
     },
@@ -180,7 +242,7 @@ const GroupAdvisor = () => {
         dataSource={data}
       />
     );
-  }, [data]);
+  }, [data, listAssign, listTopic]);
 
   const handlerChangeType = (props: any) => {
     console.log('props.target.value', props.target.value);
@@ -403,33 +465,61 @@ const GroupAdvisor = () => {
     );
   }, [loadingDetail, loadingTranscript, transcriptsSummary, getAvgByType(), typeEvalution]);
 
+  const handleSelectChange = (selectedOptionReview: any) => {
+    const id = selectedOptionReview.value;
+    console.log('id -> ', id);
+    console.log('listAssign', listAssign);
+
+    const m = listAssign.filter((value) => value.topic?.id === id);
+    setData(m);
+    console.log('m ->', m);
+  };
+
   return (
     <>
       <div className={cls('list_evaluation')}>
         <div className={cls('info')}>
-          <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
-            <Col span={12}>
+          <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
+          <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
+            <Col span={4}>
+              <div className={cls('name')}>Chọn đề tài:</div>
+            </Col>
+            <Col span={6}>
               <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
-                <Col span={4}>
-                  <Button
-                    type="dashed"
-                    onClick={handleClseShow}
-                    size="small"
-                    style={{
-                      animation: 'none',
-                      color: 'rgb(80, 72, 229)',
-                      fontWeight: '600',
-                    }}
-                    className={cls('btn')}
-                  >
-                    Mở rộng
-                  </Button>
-                </Col>
-                <Col span={20}>
-                  <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
+                <Col span={24}>
+                  <div className={cls('selectItem')} style={{ width: '300px', zIndex: 999, position: 'relative' }}>
+                    <Select
+                      placeholder={'Tất cả'}
+                      onChange={handleSelectChange}
+                      options={listTopic.map((val) => {
+                        return {
+                          value: val.value,
+                          label: val.label,
+                        };
+                      })}
+                    />
+                  </div>
                 </Col>
               </Row>
-
+            </Col>
+            <Col>
+              {' '}
+              <Button
+                type="dashed"
+                size="large"
+                style={{
+                  margin: '0 10px',
+                  animation: 'none',
+                  color: 'rgb(80, 72, 229)',
+                }}
+                onClick={() => setData(listAssign)}
+              >
+                Tất cả
+              </Button>
+            </Col>
+          </Row>
+          <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
+            <Col span={12}>
               <div className={cls('left')}>{renderTable}</div>
             </Col>
             <Col span={12}>
