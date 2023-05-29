@@ -26,6 +26,7 @@ import Topic from '../../entities/topic';
 import Teacher from '../../entities/teacher';
 import GroupLecturer from '../group_lecturer/GroupLecturer';
 import lecturerService from '../../services/lecturer';
+import groupService from '../../services/group';
 import { useAppSelector } from '../../redux/hooks';
 import { ToastContainer } from 'react-toastify';
 import {
@@ -42,10 +43,11 @@ import { AiOutlineBars, AiOutlineUser } from 'react-icons/ai';
 import { BiGroup } from 'react-icons/bi';
 import { MdOutlineTopic } from 'react-icons/md';
 import Select, { StylesConfig } from 'react-select';
-import { userInfo } from 'os';
+import { type, userInfo } from 'os';
 import { TypeEvalution } from 'src/entities/assign';
 import TruncatedText from '../topic_management/TruncatedText';
 import { checkDisableButton } from '../../constant';
+import { group } from 'console';
 
 const cls = classNames.bind(style);
 
@@ -53,6 +55,15 @@ interface SelectOption {
   value: number;
   lable: string;
 }
+interface SelectOptionTypeReport {
+  value: string;
+  label: string;
+}
+const optionsTypeReport: SelectOptionTypeReport[] = [
+  { value: 'OPEN', label: 'Chưa xác định' },
+  { value: 'POSTER', label: 'Poster' },
+  { value: 'SESSION_HOST', label: 'Báo cáo hội động' },
+];
 
 const { Text } = Typography;
 
@@ -93,6 +104,7 @@ const GroupDetail = () => {
 
   const [idReview, setIdReview] = useState<SelectOption>();
   const [idHost, setIdHost] = useState<SelectOption>();
+  const [typeReport, setTypeReport] = useState<SelectOptionTypeReport>(optionsTypeReport[0]);
 
   const handleSelectChangeReview = (selectedOptionReview: any) => {
     const id = selectedOptionReview.value;
@@ -106,6 +118,9 @@ const GroupDetail = () => {
     });
     setInfoReview(t);
     setIdReview(id);
+  };
+  const handleSelectTypeReport = (option: any) => {
+    setTypeReport(option);
   };
 
   const handleSelectChangeHost = (selectedOptionHost: any) => {
@@ -134,6 +149,8 @@ const GroupDetail = () => {
           console.log('result.data -> ìno', result.data);
 
           getTopic(result.data?.topic?.id);
+          const option = optionsTypeReport.find((option) => option.value == result.data.typeReport);
+          setTypeReport(option ? option : optionsTypeReport[0]);
         })
         .catch((errr) => console.log('erre', errr));
 
@@ -195,6 +212,15 @@ const GroupDetail = () => {
         .catch((er) => console.log('getGroupLecturersDetail Host', er));
     }
   }, [termState]);
+  const onFinishChosseTypeReport = () => {
+    const idGroup = id;
+    groupService
+      .updateTypeReport(Number(idGroup), typeReport.value)
+      .then((resutl) => {
+        console.log('update sucess');
+      })
+      .catch((er) => console.log('getGroupLecturersDetail Host', er));
+  };
 
   const onFinishChosseGroupReview = (value: { typeEvaluation: string; groupId: number }) => {
     const idGroup = id;
@@ -499,8 +525,6 @@ const GroupDetail = () => {
   }, [status, groupLecturerReview, handleSelectChangeReview, infoReview]);
 
   const renderFormAssignSessionHost = useMemo(() => {
-    console.log('statusHost ->>> ', statusHost);
-
     return (
       <>
         <Form
@@ -615,6 +639,42 @@ const GroupDetail = () => {
       </>
     );
   }, [statusHost, groupLecturerHost, handleSelectChangeHost, infoHost]);
+
+  const renderFormTypeReport = useMemo(() => {
+    return (
+      <>
+        <Form layout="vertical" onFinish={onFinishChosseTypeReport} style={{ maxWidth: 600 }}>
+          <Row>
+            <Col span={18}>
+              <Form.Item label="" rules={[{ required: true }]}>
+                <Select
+                  onChange={handleSelectTypeReport}
+                  placeholder={'Chọn loại báo cáo'}
+                  options={optionsTypeReport}
+                  value={typeReport}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item wrapperCol={{ span: 24 }}>
+                <Row justify={'end'} style={{ bottom: '0px' }}>
+                  <Col>
+                    <Space wrap>
+                      <Tooltip title={getStatusGroup(String(inforGroup?.status))} color={getStatusGroupColor(String(inforGroup?.status))}>
+                        <Button disabled={checkDisableButton(String(inforGroup?.status))} type="primary" htmlType="submit">
+                          Cập nhật
+                        </Button>
+                      </Tooltip>
+                    </Space>
+                  </Col>
+                </Row>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </>
+    );
+  }, [statusHost, groupLecturerHost, handleSelectChangeHost, infoHost]);
   const color = getStatusGroupColor(String(inforGroup?.status));
   return (
     <div className={cls('group_detail')}>
@@ -685,13 +745,20 @@ const GroupDetail = () => {
 
             <Row className={cls('lecturer')} justify={'space-between'}>
               <Col span={12}>
-                <Card title={<div className={cls('_title')}>Nhóm hội đồng chấm 'PHẢN BIỆN'</div>} bordered={false}>
+                <Card
+                  title={<div className={cls('_title')}>Nhóm hội đồng chấm 'PHẢN BIỆN'</div>}
+                  bordered={false}
+                  style={{ height: '100%' }}
+                >
                   {renderFormAssignReview}
                 </Card>
               </Col>
               <Col span={12}>
-                <Card title={<div className={cls('_title')}>Nhóm hội đồng chấm 'HỘI ĐỒNG</div>} bordered={false}>
+                <Card title={<div className={cls('_title')}>Nhóm hội đồng chấm 'HỘI ĐỒNG'</div>} bordered={false}>
                   {renderFormAssignSessionHost}
+                </Card>
+                <Card title={<div className={cls('_title')}>Loại báo cáo</div>} bordered={false}>
+                  {renderFormTypeReport}
                 </Card>
               </Col>
             </Row>
