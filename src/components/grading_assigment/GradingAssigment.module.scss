@@ -1,6 +1,6 @@
 .list_evaluation {
   padding: 0 20px;
-  padding-top: 30px;
+  padding-top: 10px;
   flex-direction: column;
   flex: 1;
   width: 100%;
@@ -32,6 +32,12 @@
       color: gray;
       font-size: 1.3rem;
       font-weight: 600;
+    }
+    .select {
+      color: gray;
+      font-size: 1.1rem;
+      font-weight: 400;
+      padding-right: 10px;
     }
     .text_colum {
       font-size: 1.1rem;
@@ -68,8 +74,8 @@
     }
     .right {
       background-color: #fff;
-      width: 100%;
-      margin: 20px;
+
+      margin: 30px 20px;
       padding: 20px;
       .title_group_right {
         width: 100%;

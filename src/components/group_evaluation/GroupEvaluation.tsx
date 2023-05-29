@@ -117,7 +117,6 @@ const GroupEvaluation = () => {
     studentService
       .getTranscriptsSummary(_id, termState.termIndex.id)
       .then((result) => {
-        console.log('getTranscriptsSummary -> result', result.data);
         setLoadingDetail(false);
         setTranscriptsSummary(result.data);
       })
@@ -165,7 +164,6 @@ const GroupEvaluation = () => {
             };
           }),
         );
-        console.log('setListAvgGrader', result?.data);
 
         setListAvgGrader(
           result?.data.map((i: any) => {
@@ -338,8 +336,6 @@ const GroupEvaluation = () => {
   }, [avgSummary, transcriptsSummary, listAvgGrader]);
 
   const handleDownload = () => {
-    console.log("searchParams.get('assignId')", searchParams.get('assignId'));
-
     setLoadDown(true);
     evaluateService
       .exportFileByAssignId(Number(searchParams.get('assignId')))

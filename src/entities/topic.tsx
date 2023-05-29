@@ -15,5 +15,7 @@ interface Topic {
   term: {
     id: number;
   };
+  totalGroupChoose: number;
+  level: string;
 }
 export default Topic;

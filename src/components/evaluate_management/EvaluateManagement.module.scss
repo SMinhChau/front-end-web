@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30px;
+  padding: 20px 30px;
   width: '100%';
   .content_button_upload {
     display: flex;
@@ -21,11 +21,11 @@
 
   .title_name {
     font-size: 1.2rem;
-font-weight: 700;
+    font-weight: 700;
     text-align: center;
   }
 }
-.text_colum{
+.text_colum {
   font-size: 16px;
   color: #264653;
 }

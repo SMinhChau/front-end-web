@@ -1,6 +1,7 @@
 import { EnumGender } from '../enum';
 interface Student {
   id: number;
+  isTopicExists: boolean;
   username: string;
   createdAt?: Date;
   email?: string;

@@ -110,9 +110,7 @@ const TeacherManagement = () => {
         const _name = checkGender(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'NAM' ? 'green' : 'blue'} key={checkDegree(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-              {_name}
-            </div>
+            <div className={cls('text_colum')}>{_name}</div>
           </Tag>
         );
       },
@@ -260,8 +258,6 @@ const TeacherManagement = () => {
       setFileList(newFileList);
     },
     beforeUpload: (file) => {
-      console.log(file);
-
       setFileList([...fileList, file]);
 
       return false;

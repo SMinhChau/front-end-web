@@ -41,6 +41,7 @@ import TranscriptSumMary from 'src/entities/transcript';
 import Student from 'src/entities/student';
 import Teacher from 'src/entities/teacher';
 import Topic from 'src/entities/topic';
+import Select from 'react-select';
 
 const cls = classNames.bind(styled);
 const { Text } = Typography;
@@ -51,6 +52,7 @@ interface InfoAll {
   term: {
     id: number;
   };
+  status: string;
   topic: Topic;
   members: [
     {
@@ -82,7 +84,7 @@ interface InfoAll {
 
 const GradingAssigment = () => {
   const [listAssign, setListAssign] = useState<Array<InfoAll>>([]);
-  // const [data, setData] = useState<Array<AssignAdvisor>>([]);
+  const [data, setData] = useState<Array<InfoAll>>([]);
   // const [loading, setLoading] = useState(true);
   const [typeEvalution, setTypeEvalution] = useState<TypeEvalution>(TypeEvalution.ADVISOR);
   const termState = useAppSelector((state) => state.term);
@@ -93,26 +95,23 @@ const GradingAssigment = () => {
   const [transcriptsSummary, setTranscriptsSummary] = useState<TranscriptSumMary>();
   const [lectureAdvisor, setLectureAdvisor] = useState<Array<Teacher>>([]);
   const [groupStudent, setGroupStudent] = useState<InfoAll>();
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     if (termState.term.length > 0) {
-      console.log('user.id', user.id);
-
       studentService
         .getGroupStudents(termState.termIndex.id)
 
         .then((result) => {
-          console.log('getlist -> result.data', result.data);
-
           const _data = result.data.map((value: InfoAll, index: number) => {
             return {
               ...value,
+              index,
             };
           });
-          console.log(_data);
 
           setListAssign(_data);
-          console.log('_data', _data);
+          setData(_data);
         })
         .catch((error) => {
           console.log('getlist -> error', error);
@@ -186,14 +185,12 @@ const GradingAssigment = () => {
   ];
 
   const handleGetInfoStudent = (id: number) => {
-    console.log('id student', id);
     setLoadingDetail(true);
     setLoading(true);
     studentService
       .getGroupStudentByID(id)
 
       .then((result) => {
-        console.log('handleGetInfoStudent -> result.data', result.data);
         setLoadingDetail(false);
         setLoading(false);
         setGroupStudent(result.data);
@@ -204,8 +201,8 @@ const GradingAssigment = () => {
   };
 
   const renderTable = useMemo(() => {
-    return <Table columns={baseColumns} pagination={isShow === true ? { pageSize: 1 } : { pageSize: 7 }} dataSource={listAssign} />;
-  }, [listAssign]);
+    return <Table columns={baseColumns} dataSource={data} />;
+  }, [data, listAssign]);
 
   const columnsLecturer: ColumnsType<any> = [
     {
@@ -304,8 +301,7 @@ const GradingAssigment = () => {
                 };
               })}
               columns={columnsLecturer}
-              scroll={{ x: 400, y: 150 }}
-              pagination={{ pageSize: 2 }}
+              pagination={{ pageSize: 7 }}
             />
           </Skeleton>
         </Spin>
@@ -313,14 +309,53 @@ const GradingAssigment = () => {
     );
   }, [groupStudent, loading, loadingDetail]);
 
+  const handleChangeSelectedOption = (value: any) => {
+    const _data = listAssign.filter((i) => i.status === value.value);
+    setData(_data);
+  };
+
   return (
     <>
       <div className={cls('list_evaluation')}>
         <div className={cls('info')}>
           <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
             <Col span={10}>
-              <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
-                <Col span={20}>{/* <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3> */}</Col>
+              <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
+                <Col className={cls('select')}>
+                  <div>Chọn tình trạng nhóm: </div>
+                </Col>
+                <Col>
+                  <div style={{ width: '150px' }}>
+                    <Select
+                      placeholder={'Tất cả'}
+                      onChange={handleChangeSelectedOption}
+                      options={[
+                        { value: 'OPEN', label: 'Nhóm mới tạo' },
+                        { value: 'FAIL_ADVISOR', label: 'Rớt hướng dẫn' },
+                        { value: 'FAIL_REVIEWER', label: 'Rớt phản biện' },
+                        { value: 'FAIL_SESSION_HOST', label: 'Rớt hội đồng' },
+                        { value: 'PASS_ADVISOR', label: 'Đậu hướng dẫn' },
+                        { value: 'PASS_REVIEWER', label: 'Đậu phản biện' },
+                        { value: 'PASS_SESSION_HOST', label: 'Đậu hội dồng' },
+                      ]}
+                    />
+                  </div>
+                </Col>
+                <Col>
+                  <Button
+                    type="dashed"
+                    size="large"
+                    style={{
+                      margin: '0 10px',
+                      animation: 'none',
+                      color: 'rgb(80, 72, 229)',
+                    }}
+                    onClick={() => setData(listAssign)}
+                  >
+                    Tất cả
+                  </Button>
+                </Col>
+                {/* <Col span={20}><h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3></Col> */}
               </Row>
 
               <div className={cls('left')}>{renderTable}</div>

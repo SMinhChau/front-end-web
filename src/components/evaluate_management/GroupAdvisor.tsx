@@ -38,8 +38,6 @@ const GroupAdvisor = () => {
       assignService
         .getAssignByTypeAdvisor(user.id, { typeEvaluation: 'ADVISOR' })
         .then((result) => {
-          console.log('getlist -> result.data', result.data);
-
           const _data = result.data.map((value: AssignAdvisor, index: number) => {
             return {
               name: value.group.name,

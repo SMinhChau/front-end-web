@@ -22,6 +22,7 @@ const SemesterManagement = () => {
       dataIndex: 'name',
       key: 'name',
       width: 140,
+
       render: (text: string) => (
         <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
           {text}

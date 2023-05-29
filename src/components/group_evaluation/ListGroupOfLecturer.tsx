@@ -46,7 +46,7 @@ const ListGroupOfLecturer = () => {
       .getAssignByLecturer(termState.termIndex.id, user.id, type)
       .then((result) => {
         setLoadingTranscript(false);
-        console.log('getlist -> result.data', result.data);
+
         const _data = result.data.map((value: AssignAdvisor, index: number) => {
           return {
             key: index,
@@ -61,12 +61,11 @@ const ListGroupOfLecturer = () => {
         });
 
         setListAssign(_data);
-        console.log('_data', _data);
+
         setData(_data);
       })
       .catch((error) => {
         setLoadingTranscript(false);
-        console.log('error', error);
       });
   };
 
@@ -140,7 +139,6 @@ const ListGroupOfLecturer = () => {
       render: (id) => {
         const _item = listAssign.filter((i) => i.id === id)[0];
         const status = checkDisableButton(_item.status);
-        console.log('status -->', status);
 
         return (
           <Button
@@ -166,7 +164,6 @@ const ListGroupOfLecturer = () => {
   ];
 
   const handleGetInfoStudent = (id: number) => {
-    console.log('id student', id);
     getTranscriptByStudent(id);
   };
 
@@ -175,8 +172,6 @@ const ListGroupOfLecturer = () => {
     studentService
       .getTranscriptsSummary(_id, termState.termIndex.id)
       .then((result) => {
-        console.log('result.data', result.data);
-
         setLoadingTranscript(false);
         setLoadingDetail(false);
         // setTranscriptsSummary(result.data);
@@ -191,11 +186,9 @@ const ListGroupOfLecturer = () => {
       return i.student;
     });
 
-    console.log('data.groupLecture>>>.', data);
     const lecturerTable = data.groupLecturer.members.map((i) => {
       return i.lecturer;
     });
-    console.log('lecturerTable.', lecturerTable);
 
     const studenColum = [
       {

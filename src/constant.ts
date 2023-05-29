@@ -6,6 +6,10 @@ export const checkGender = (value: string) => {
   if (value === 'MALE') return 'Nam';
   if (value === 'FEMALE') return 'Nữ';
 };
+export const checkIsTopic = (value: boolean) => {
+  if (value === true) return 'Có';
+  if (value === false) return 'Chưa có';
+};
 export const checkDegree = (value: string) => {
   if (value === 'MASTERS') return 'Tiến sĩ';
   if (value === 'DOCTER') return 'Thạc sĩ';
@@ -90,6 +94,16 @@ export const getNameStatus = (value: string) => {
   if (value === 'REFUSE') return 'Không được duyệt';
   if (value === 'PEDING') return 'Đang chờ';
   if (value === 'ACCEPT') return 'Đã duyệt';
+};
+export const getNameColorStatus = (value: string) => {
+  switch (value) {
+    case 'REFUSE':
+      return 'red';
+    case 'PEDING':
+      return 'green';
+    case 'ACCEPT':
+      return 'blue';
+  }
 };
 
 export enum TypeStatusGroup {
@@ -422,4 +436,28 @@ export const formatString = (text: string) => {
     .replace(/6\./g, '\n6.' || '\n-')
     .replace(/7\./g, '\n7.' || '\n-')
     .replace(/8\./g, '\n8.' || '\n-');
+};
+
+export const getLevelTopic = (text: string) => {
+  switch (text) {
+    case 'HIGH':
+      return 'Rất khó';
+    case 'MEDIUM':
+      return 'Khó';
+    case 'LOW':
+      return 'Trung Bình';
+    case null:
+      return 'Chưa xác định';
+  }
+};
+
+export const getLevelColorTopic = (text: string) => {
+  switch (text) {
+    case 'HIGH':
+      return 'orange';
+    case 'MEDIUM':
+      return 'purple';
+    case 'LOW':
+      return 'bule';
+  }
 };

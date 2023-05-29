@@ -216,7 +216,7 @@ const EvaluateManagement = () => {
     evaluateService
       .exportFile(termState.termIndex.id, type)
       .then((result) => {
-        console.log('result', result);
+       
         const url = window.URL.createObjectURL(new Blob([result.data], { type: 'application/pdf' }));
         const link = document.createElement('a');
         link.href = url;
@@ -341,7 +341,7 @@ const EvaluateManagement = () => {
 
       <Row justify={'center'} style={{ width: '100%' }}>
         <Col span={21}>
-          <Table dataSource={evaluate} columns={baseColumns} scroll={{ y: 450 }} pagination={{ pageSize: 7 }} />
+          <Table dataSource={evaluate} columns={baseColumns} pagination={{ pageSize: 7 }} />
         </Col>
 
         <Col span={3}>
