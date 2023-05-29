@@ -447,7 +447,7 @@ const TopicManagement = () => {
                           options={[
                             { value: 'HIGH', label: 'Rất khó' },
                             { value: 'MEDIUM', label: 'Khó' },
-                            { value: 'LOW', label: 'Trung Bình' },
+                            { value: 'LOW', label: 'Bình thường' },
                           ]}
                         />
                       ) : (
@@ -457,7 +457,7 @@ const TopicManagement = () => {
                           options={[
                             { value: 'HIGH', label: 'Rất khó' },
                             { value: 'MEDIUM', label: 'Khó' },
-                            { value: 'LOW', label: 'Trung Bình' },
+                            { value: 'LOW', label: 'Bình thường' },
                           ]}
                         />
                       )}
