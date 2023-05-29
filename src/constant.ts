@@ -445,7 +445,7 @@ export const getLevelTopic = (text: string) => {
     case 'MEDIUM':
       return 'Khó';
     case 'LOW':
-      return 'Trung Bình';
+      return 'Bình thường';
     case null:
       return 'Chưa xác định';
   }
