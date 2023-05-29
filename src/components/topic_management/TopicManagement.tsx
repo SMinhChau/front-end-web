@@ -13,7 +13,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import Config from '../../utils/config';
 import ColumnSetting from '../column_setting/ColumnSetting';
 import TextArea from 'antd/es/input/TextArea';
-import { ErrorCodeDefine, formatString, getNameStatus, showMessage, showMessageEror } from '../../constant';
+import {
+  ErrorCodeDefine,
+  formatString,
+  getLevelColorTopic,
+  getLevelTopic,
+  getNameStatus,
+  showMessage,
+  showMessageEror,
+} from '../../constant';
 import { EnumRole } from 'src/enum';
 import RejectUserLogin from '../notification/RejectUserLogin';
 import { ColumnsType } from 'antd/es/table';
@@ -41,6 +49,8 @@ const TopicManagement = () => {
   const termState = useAppSelector((state) => state.term);
   const [studentOfList, setStudentOfList] = useState<Array<Student>>([]);
   const [topicName, setTopicName] = useState<Topic>();
+  const [level, setLevel] = useState('');
+  const [levelUpdate, setLevelUpdate] = useState('');
 
   useEffect(() => {
     getListLecturerOfMajor();
@@ -48,8 +58,6 @@ const TopicManagement = () => {
 
   const getListLecturerOfMajor = () => {
     studentService.getStudent({ termId: termState.termIndex.id }).then((result) => {
-      console.log('result.data -> students', result.data);
-
       setStudentOfList(result.data);
     });
   };
@@ -106,7 +114,21 @@ const TopicManagement = () => {
         );
       },
     },
-
+    {
+      title: 'Cấp độ',
+      dataIndex: 'level',
+      key: 'level',
+      render: (text) => {
+        const _name = getLevelTopic(text);
+        return (
+          <Tag color={getLevelColorTopic(text)} key={getLevelTopic(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', color: getLevelColorTopic(text) }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
+    },
     {
       title: 'Bình luận',
       dataIndex: 'comment',
@@ -120,6 +142,7 @@ const TopicManagement = () => {
         );
       },
     },
+
     {
       title: 'Xem chi tiết',
       dataIndex: 'id',
@@ -179,16 +202,18 @@ const TopicManagement = () => {
       dataIndex: 'id',
       fixed: 'left',
       width: 120,
-      render: (id: any) => (
-        <div className={cls('button')}>
-          <Button className={cls('btn')} onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
-            <DeleteOutlined style={{ color: 'red' }} />
-          </Button>
-          <Button className={cls('btn')} onClick={() => showEditModal(id)}>
-            <EditOutlined style={{ color: '#30a3f1' }} />
-          </Button>
-        </div>
-      ),
+      render: (id: any) => {
+        return (
+          <div className={cls('button')}>
+            <Button className={cls('btn')} onClick={() => deleteTerm(id)} disabled={status === 'PEDING' ? false : true}>
+              <DeleteOutlined style={{ color: 'red' }} />
+            </Button>
+            <Button className={cls('btn')} onClick={() => showEditModal(id)}>
+              <EditOutlined style={{ color: '#30a3f1' }} />
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -200,7 +225,6 @@ const TopicManagement = () => {
       })
       .then((response) => {
         setTopic(response.data);
-        console.log('response.data', response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -240,6 +264,7 @@ const TopicManagement = () => {
       topicService
         .createTopic({
           ...value,
+          level: level,
           termId: termState.termIndex.id,
         })
         .then((_response) => {
@@ -255,6 +280,7 @@ const TopicManagement = () => {
         .updateTopic(idUpdate as number, {
           ...value,
           termId: termState.termIndex.id,
+          level: levelUpdate,
         })
         .then((_response) => {
           showMessage('Cập nhật thành công', 5000);
@@ -278,6 +304,9 @@ const TopicManagement = () => {
       });
   };
   const showEditModal = (id: number) => {
+    const velel = topic.filter((i) => i.id === id)[0];
+    setLevelUpdate(velel.level);
+
     setOpen(true);
     setStatus('update');
     setIdUpdate(id);
@@ -290,17 +319,25 @@ const TopicManagement = () => {
 
     setIdAssign(id);
   };
+  const handleSelectChangeLevel = (option: any) => {
+    setLevel(option.value);
+
+    if (status === 'update') {
+      setLevelUpdate(option.value);
+    }
+  };
+
+  const handleSelectChangeLevelUpdate = (option: any) => {
+    setLevelUpdate(option.value);
+  };
 
   const handleAssignforStudent = () => {
-    console.log('í student', asignId);
     lecturerService
       .asignTopicForStudent({ topicId: Number(topicName?.id), studentId: Number(asignId) })
       .then((result) => {
-        console.log('ré ->', result?.data);
         showMessage('Gắn đề tài thành công', 3000);
       })
       .catch((error) => {
-        console.log('er', error);
         showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
       });
   };
@@ -393,6 +430,33 @@ const TopicManagement = () => {
                   >
                     <InputNumber min={1} max={10} />
                   </Form.Item>
+
+                  <Form.Item label="Cấp độ">
+                    <div style={{ width: '200px' }}>
+                      {status === 'insert' ? (
+                        <Select
+                          placeholder={'Chọn cấp độ'}
+                          onChange={handleSelectChangeLevel}
+                          options={[
+                            { value: 'HIGH', label: 'Rất khó' },
+                            { value: 'MEDIUM', label: 'Khó' },
+                            { value: 'LOW', label: 'Trung Bình' },
+                          ]}
+                        />
+                      ) : (
+                        <Select
+                          placeholder={getLevelTopic(levelUpdate)}
+                          onChange={handleSelectChangeLevelUpdate}
+                          options={[
+                            { value: 'HIGH', label: 'Rất khó' },
+                            { value: 'MEDIUM', label: 'Khó' },
+                            { value: 'LOW', label: 'Trung Bình' },
+                          ]}
+                        />
+                      )}
+                    </div>
+                  </Form.Item>
+
                   <Form.Item label="Mô tả" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]} name="description">
                     <TextArea rows={2} />
                   </Form.Item>

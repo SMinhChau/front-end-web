@@ -67,35 +67,18 @@ function FooterEnd() {
     <div className={cls('header')}>
       <ToastContainer />
       <div className={cls('content')}>
-        <div className={cls('left')}>
-          <Space wrap>
-            <Popover content={content} trigger="hover" placement="left">
-              <Badge>
-                <Avatar
-                  size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 80 }}
-                  style={{ backgroundColor: '#87d068' }}
-                  icon={<UserOutlined />}
-                />
-              </Badge>
-            </Popover>
-          </Space>
-        </div>
+        <Space wrap>
+          <Popover content={content} trigger="hover" placement="left">
+            <Badge>
+              <Avatar
+                size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 60, xxl: 60 }}
+                style={{ backgroundColor: '#87d068' }}
+                icon={<UserOutlined />}
+              />
+            </Badge>
+          </Popover>
+        </Space>
       </div>
-
-      {!userState.is_login && (
-        <Col span={24} offset={22}></Col>
-        // <Col span={24} offset={9}>
-        //   <Row justify={'center'} align={'stretch'}>
-        //     <Col>
-        //       <Link to="/login" style={{ margin: '0 20px' }}>
-        //         <Button size="large" type="primary">
-        //           Đăng nhập
-        //         </Button>
-        //       </Link>
-        //     </Col>
-        //   </Row>
-        // </Col>
-      )}
     </div>
   );
 }

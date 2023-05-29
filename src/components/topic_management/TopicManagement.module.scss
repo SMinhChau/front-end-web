@@ -23,7 +23,7 @@
       align-items: center;
       justify-content: space-around;
       .name {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: #264653;
         padding-right: 20px;
       }
@@ -32,18 +32,35 @@
       font-size: 18px;
     }
   }
+
   .text_colum {
     font-size: 16px;
     line-height: 1.8;
     text-align: left;
     white-space: pre-wrap;
     color: #264653;
+    overflow-y: hidden;
   }
+
   .button {
     display: flex;
     flex-direction: row;
     .btn {
       margin: 2px;
     }
+  }
+  ::-webkit-scrollbar {
+    height: 8px;
+    width: 0px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(#52a4ca, 0.2);
+    border: 3px solid transparent;
+    border-radius: 4px;
   }
 }

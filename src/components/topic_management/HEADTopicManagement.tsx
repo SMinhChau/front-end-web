@@ -9,7 +9,7 @@ import Topic from '../../entities/topic';
 
 import { ToastContainer } from 'react-toastify';
 
-import { formatString, getNameStatus, showMessage } from '../../constant';
+import { formatString, getLevelColorTopic, getLevelTopic, getNameColorStatus, getNameStatus, showMessage } from '../../constant';
 import { ColumnsType } from 'antd/es/table';
 import Select from 'react-select';
 import { log } from 'console';
@@ -68,13 +68,12 @@ const HEADTopicManagement = () => {
         return (
           <>
             <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
-              {text && formatString(text)}....
+              {text && formatString(text)}
             </div>
           </>
         );
       },
     },
-
     {
       title: 'Mục tiêu',
       dataIndex: 'target',
@@ -84,7 +83,7 @@ const HEADTopicManagement = () => {
         return (
           <>
             <div className={cls('text_colum')} style={{ maxHeight: '180px', overflow: 'auto' }}>
-              {text && formatString(text)}....
+              {text && formatString(text)}
             </div>
           </>
         );
@@ -95,11 +94,13 @@ const HEADTopicManagement = () => {
       title: 'Bình luận',
       dataIndex: 'comment',
       key: 'comment',
-      width: 200,
+      width: 100,
       render: (text) => {
         return (
           <>
-            <div className={cls('text_colum')}>{text && text.slice(0, 90)}</div>{' '}
+            <div style={{ maxHeight: '180px', overflow: 'auto' }} className={cls('text_colum')}>
+              {text && text.slice(0, 90)}
+            </div>
           </>
         );
       },
@@ -117,6 +118,21 @@ const HEADTopicManagement = () => {
       ),
     },
     {
+      title: 'Cấp độ',
+      dataIndex: 'level',
+      key: 'level',
+      render: (text) => {
+        const _name = getLevelTopic(text);
+        return (
+          <Tag color={getLevelColorTopic(text)} key={getLevelTopic(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', color: getLevelColorTopic(text) }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
+    },
+    {
       title: 'Xem chi tiết',
       dataIndex: 'id',
       key: 'id',
@@ -129,12 +145,12 @@ const HEADTopicManagement = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       width: 60,
-      render: (status: any) => {
+      render: (status: string) => {
+        const color = getNameColorStatus(status);
+
         return (
-          <Tag color={status === 'PEDING' ? 'green' : 'red'} key={getNameStatus(status)}>
-            <div style={{ color: getNameStatus(status)?.toLocaleLowerCase() === 'Đã duyệt'.toLocaleLowerCase() ? 'green' : 'red' }}>
-              {getNameStatus(status)}
-            </div>
+          <Tag color={color} key={getNameColorStatus(status)}>
+            <div style={{ color: color }}>{getNameStatus(status)}</div>
           </Tag>
         );
       },
@@ -185,6 +201,7 @@ const HEADTopicManagement = () => {
         .getTopic({ termId: termState.termIndex.id })
         .then((response) => {
           setTopic(response.data);
+
           setData(response.data);
           const _data: Filter[] = response.data.reduce(
             (accumulator: { value: number; label: string }[], current: { lecturer: { id: number; name: string } }) => {
@@ -196,6 +213,7 @@ const HEADTopicManagement = () => {
             },
             [],
           );
+
           setListLecturer(_data);
         })
         .catch((error) => {
@@ -236,11 +254,16 @@ const HEADTopicManagement = () => {
 
   const handleSelectChange = (selectedOptionReview: any) => {
     const id = selectedOptionReview.value;
-    console.log('name');
+
     const m = topic.filter((value) => value.lecturer?.id === id);
     setData(m);
-    console.log('m ->', m);
   };
+
+  const handleSelectChangeLevel = (option: any) => {
+    const m = topic.filter((value) => value.level === option.value);
+    setData(m);
+  };
+
   const handleGetAll = (selectedOptionReview: any) => {
     setData(topic);
   };
@@ -253,39 +276,66 @@ const HEADTopicManagement = () => {
       <ToastContainer />
 
       <div className={cls('semester_func')}>
-        <Button
-          type="dashed"
-          onClick={handleGetAll}
-          size="large"
-          style={{
-            animation: 'none',
-            color: 'rgb(80, 72, 229)',
-            fontWeight: '600',
-          }}
-          className={cls('btn')}
-        >
-          Tất cả
-        </Button>
-        <div className={cls('selectTerm')}>
-          <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
-            <div className={cls('name')}>Chọn giảng viên</div>
-            <Col>
-              <div style={{ width: '200px' }}>
-                <Select
-                  placeholder={'Tất cả'}
-                  onChange={handleSelectChange}
-                  options={listLerturer.map((val) => {
-                    return {
-                      value: val.value,
-                      label: val.label,
-                    };
-                  })}
-                />
+        <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
+          <Col>
+            {' '}
+            <Button
+              type="dashed"
+              onClick={handleGetAll}
+              size="large"
+              style={{
+                animation: 'none',
+                color: 'rgb(80, 72, 229)',
+                fontWeight: '600',
+              }}
+              className={cls('btn')}
+            >
+              Tất cả
+            </Button>
+          </Col>
+          <Col>
+            <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+              <div className={cls('name')} style={{ marginRight: '5px' }}>
+                Cấp độ:
               </div>
-            </Col>
-          </Row>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}></div>
+              <Col>
+                <div style={{ width: '200px' }}>
+                  <Select
+                    placeholder={'Tất cả'}
+                    onChange={handleSelectChangeLevel}
+                    options={[
+                      { value: 'HIGH', label: 'Rất khó' },
+                      { value: 'MEDIUM', label: 'Khó' },
+                      { value: 'LOW', label: 'Trung Bình' },
+                    ]}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <div className={cls('selectTerm')}>
+              <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+                <div className={cls('name')}>Chọn giảng viên:</div>
+                <Col>
+                  <div style={{ width: '200px' }}>
+                    <Select
+                      placeholder={'Tất cả'}
+                      onChange={handleSelectChange}
+                      options={listLerturer.map((val) => {
+                        return {
+                          value: val.value,
+                          label: val.label,
+                        };
+                      })}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+
         <Modal
           destroyOnClose
           open={open}

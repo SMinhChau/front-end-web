@@ -122,8 +122,6 @@ const GroupLecturer = () => {
 
   const getGroupLecturerDontHaveGroup = (type: TypeEvalution) => {
     lecturerService.getGroupLecturerDontHaveByType({ termId: termState.termIndex.id, type: type }).then((response) => {
-      console.log('setListLecturerGroupByType', response.data);
-
       setListLecturerGroupByType(response.data);
     });
   };
@@ -165,7 +163,6 @@ const GroupLecturer = () => {
         setLoading(false);
 
         setLoadingInfoGroup(false);
-        console.log('getGroupStudentOfLecturer', result?.data);
 
         setGroupStudents(result?.data);
       })
@@ -508,12 +505,10 @@ const GroupLecturer = () => {
 
   const handleSelectChangeFilter = (value: any) => {
     const _data = groupLecturers.filter((item) => item.type === value.value);
-    console.log('data filter', _data);
 
     setData(_data);
   };
   const handleSelectChangeFilterCreate = (value: any) => {
-    console.log('selectedOption', value.value);
     getGroupLecturerDontHaveGroup(value.value);
     setTypeCreate(value.value);
   };

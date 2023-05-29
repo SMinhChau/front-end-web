@@ -63,14 +63,11 @@ const Management = () => {
   }, [termState.termSelected]);
 
   const onchangeValue = (value: any) => {
-    console.log('onchangeValue value', value.value);
-
     setTermSelect(value.value);
     dispatch(TermSlices.actions.setTermSelected(value.value));
   };
 
   const router = useLocation();
-  console.log(router);
 
   const renderTerm = useMemo(() => {
     return (

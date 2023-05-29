@@ -78,7 +78,6 @@ const GroupAdvisor = () => {
               groupOfLecturer: value.groupLecturer.members,
             };
           });
-          console.log('data->>>>>>>>>', data);
 
           setListAssign(_data);
 
@@ -169,7 +168,6 @@ const GroupAdvisor = () => {
   };
 
   const handleGetInfoStudent = (id: number) => {
-    console.log('id student', id);
     getTranscriptByStudent(id);
   };
 
@@ -225,11 +223,7 @@ const GroupAdvisor = () => {
     );
   };
 
-  console.log('isShowRender', isShow);
-
   const renderTable = useMemo(() => {
-    console.log('isShow', isShow);
-
     return (
       <Table
         columns={baseColumns}
@@ -245,7 +239,6 @@ const GroupAdvisor = () => {
   }, [data, listAssign, listTopic]);
 
   const handlerChangeType = (props: any) => {
-    console.log('props.target.value', props.target.value);
     setTypeEvalution(props.target.value);
   };
 
@@ -254,8 +247,6 @@ const GroupAdvisor = () => {
     studentService
       .getTranscriptsSummary(_id, termState.termIndex.id)
       .then((result) => {
-        console.log('result.data', result.data);
-
         setLoadingTranscript(false);
         setLoadingDetail(false);
         setTranscriptsSummary(result.data);
@@ -296,9 +287,6 @@ const GroupAdvisor = () => {
 
   const renderInfoForStudent = useMemo(() => {
     const student = transcriptsSummary?.student;
-    console.log('typeEvalution', typeEvalution);
-
-    console.log('getDatabyType()', getDatabyType());
 
     const STUDENT = [
       {
@@ -390,8 +378,6 @@ const GroupAdvisor = () => {
         <>
           <Table
             dataSource={getDatabyType()?.map((value) => {
-              console.log('tttttt', getDatabyType());
-
               return {
                 id: value?.lecturer?.id,
                 username: value?.lecturer?.username,
@@ -467,12 +453,9 @@ const GroupAdvisor = () => {
 
   const handleSelectChange = (selectedOptionReview: any) => {
     const id = selectedOptionReview.value;
-    console.log('id -> ', id);
-    console.log('listAssign', listAssign);
 
     const m = listAssign.filter((value) => value.topic?.id === id);
     setData(m);
-    console.log('m ->', m);
   };
 
   return (
@@ -480,11 +463,11 @@ const GroupAdvisor = () => {
       <div className={cls('list_evaluation')}>
         <div className={cls('info')}>
           <h3 className={cls('title_group_left')}>Danh sách nhóm đang quản lý</h3>
-          <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
-            <Col span={4}>
+          <Row justify={'space-between'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
+            <Col>
               <div className={cls('name')}>Chọn đề tài:</div>
             </Col>
-            <Col span={6}>
+            <Col>
               <Row justify={'start'} align={'middle'} style={{ width: '100%' }}>
                 <Col span={24}>
                   <div className={cls('selectItem')} style={{ width: '300px', zIndex: 999, position: 'relative' }}>
@@ -526,7 +509,7 @@ const GroupAdvisor = () => {
               <div className={cls('right')}>
                 <Row justify={'center'} align={'top'} style={{ width: '100%' }}>
                   <Col span={24}>
-                    <div className={cls('title_group')}>Thông tin chi tiết</div>
+                    <div className={cls('title_group_member')}>Thông tin chi tiết từng thành viên</div>
                     {renderInfoForStudent}
                   </Col>
                 </Row>

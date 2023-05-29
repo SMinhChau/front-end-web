@@ -146,7 +146,6 @@ const GroupDetail = () => {
         .then((result) => {
           setLoading(false);
           setInfoGroup(result.data);
-          console.log('result.data -> ìno', result.data);
 
           getTopic(result.data?.topic?.id);
           const option = optionsTypeReport.find((option) => option.value == result.data.typeReport);
@@ -212,20 +211,19 @@ const GroupDetail = () => {
         .catch((er) => console.log('getGroupLecturersDetail Host', er));
     }
   }, [termState]);
+
   const onFinishChosseTypeReport = () => {
     const idGroup = id;
     groupService
       .updateTypeReport(Number(idGroup), typeReport.value)
       .then((resutl) => {
-        console.log('update sucess');
+        showMessage('Cập nhật thành công', 3000);
       })
       .catch((er) => console.log('getGroupLecturersDetail Host', er));
   };
 
   const onFinishChosseGroupReview = (value: { typeEvaluation: string; groupId: number }) => {
     const idGroup = id;
-
-    console.log('status', status);
 
     if (status === 'insert') {
       lecturerService
@@ -267,7 +265,6 @@ const GroupDetail = () => {
 
   const onFinishChosseGroupSessionHost = (value: { typeEvaluation: string; groupId: number }) => {
     const idGroup = id;
-    console.log('statusHost', statusHost);
 
     if (statusHost === 'insert') {
       lecturerService
@@ -409,8 +406,6 @@ const GroupDetail = () => {
   }, [lecturer]);
 
   const renderFormAssignReview = useMemo(() => {
-    console.log('status ->>> ', status);
-
     return (
       <>
         <Form

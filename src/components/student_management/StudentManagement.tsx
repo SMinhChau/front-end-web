@@ -1,25 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import style from './StudentManagement.module.scss';
-import {
-  Table,
-  Avatar,
-  Button,
-  Upload,
-  Modal,
-  Form,
-  Input,
-  message,
-  Card,
-  Select,
-  Row,
-  Col,
-  Image,
-  Descriptions,
-  Space,
-  Tag,
-  Tooltip,
-} from 'antd';
+import { Table, Avatar, Button, Upload, Modal, Form, Input, message, Card, Row, Col, Image, Descriptions, Space, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, UploadOutlined, EditOutlined } from '@ant-design/icons';
 import studentService from '../../services/student';
@@ -27,10 +9,11 @@ import Student from '../../entities/student';
 import { ToastContainer, toast } from 'react-toastify';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useAppSelector } from '../../redux/hooks';
-import { ErrorCodeDefine, checkDegree, checkGender, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
+import { ErrorCodeDefine, checkDegree, checkGender, checkIsTopic, checkTypeTraining, showMessage, showMessageEror } from '../../constant';
 import { UploadFile as MyUploadFile, UploadProps as MyUploadProps } from 'antd';
 import Search from 'antd/es/input/Search';
 import { MdOutlinePassword } from 'react-icons/md';
+import Select from 'react-select';
 
 const avatarDefault = 'assets/avatars/avatarDefault.png';
 
@@ -110,6 +93,21 @@ const StudentManagement = () => {
       },
     },
     {
+      title: 'Đề tài',
+      dataIndex: 'isTopicExists',
+      key: 'isTopicExists',
+      render: (text) => {
+        const _name = checkIsTopic(text)?.toLocaleUpperCase();
+        return (
+          <Tag color={text === true ? 'green' : 'red'} key={checkDegree(text)}>
+            <div className={cls('text_colum')} style={{ maxHeight: '160px', color: text === true ? 'green' : 'red' }}>
+              {_name}
+            </div>
+          </Tag>
+        );
+      },
+    },
+    {
       title: 'Cấp lại mật khẩu',
       dataIndex: 'id',
       width: 150,
@@ -140,6 +138,9 @@ const StudentManagement = () => {
   const [error, setError] = useState<string>('');
   const [fileImage, setFileImage] = useState<RcFile>();
   const termState = useAppSelector((state) => state.term);
+  const [gender, setGender] = useState('');
+  const [typeTraining, setTypeTraining] = useState('');
+  const [isTopic, setIsTopic] = useState();
 
   const [initData, setInitData] = useState<{
     avatar: string;
@@ -177,7 +178,6 @@ const StudentManagement = () => {
       })
       .catch((error) => {
         setFileList([]);
-        console.log('error', error);
 
         showMessageEror('Tải file thất bại! Vui lòng kiểm tra lại', 3000);
       })
@@ -218,8 +218,6 @@ const StudentManagement = () => {
       setFileList(newFileList);
     },
     beforeUpload: (file) => {
-      console.log(file);
-
       setFileList([...fileList, file]);
 
       return false;
@@ -247,8 +245,6 @@ const StudentManagement = () => {
   const onChangeImage: MyUploadProps['onChange'] = ({ fileList: newFileList }) => {
     if (newFileList.length > 0) {
       if (beforeUploadImage(newFileList[0] as RcFile)) {
-        console.log('File list', newFileList);
-
         setFileListImage(newFileList);
         setError('');
       }
@@ -265,8 +261,32 @@ const StudentManagement = () => {
     return '';
   };
 
-  const handleChangeSelectedOption = (value: string) => {
-    console.log(`selected ${value}`);
+  const handleChangeSelectedOption = (value: any) => {
+    setGender(value.value);
+  };
+  const handleChangeSelectedOptionType = (value: any) => {
+    setTypeTraining(value.value);
+  };
+  const handleChangeSelectedOptionTable = (value: any) => {
+    setviewType(value.value);
+  };
+  const handleChangeSelectedOptionIsTopic = (value: any) => {
+    getListStudentByIsTopic(value.value);
+  };
+
+  const getListStudentByIsTopic = (isTopic: boolean) => {
+    studentService
+      .getStudent({ termId: termState.termIndex.id, isTopicExists: isTopic })
+      .then((result) => {
+        setData(
+          result.data.map((value: any) => {
+            return { ...value, key: value.id };
+          }),
+        );
+      })
+      .catch((error) => {
+        showMessageEror(ErrorCodeDefine[error.response.data.code].message, 5000);
+      });
   };
 
   const onFinish = (value: any) => {
@@ -277,10 +297,10 @@ const StudentManagement = () => {
         termId: termState.termIndex.id,
         username: value?.username,
         name: value?.name,
-        gender: value?.gender,
+        gender: gender,
         email: value?.email,
         phoneNumber: value?.phoneNumber,
-        typeTraining: value?.typeTraining,
+        typeTraining: typeTraining,
       })
       .then((result) => {
         setOpen(false);
@@ -293,7 +313,6 @@ const StudentManagement = () => {
       });
   };
   const onSearch = (value: string) => {
-    console.log('value', value);
     if (value.toUpperCase() === '') {
       setData(student);
     } else {
@@ -326,13 +345,10 @@ const StudentManagement = () => {
       <div className={cls('function')}>
         <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
           <Col>
-            <label htmlFor="select_view">Hiển thị: </label>
             <Select
-              defaultValue="table"
-              style={{ width: 120 }}
-              onChange={(value: 'table' | 'card') => {
-                setviewType(value);
-              }}
+              placeholder={'Hiển thị'}
+              // defaultValue="table"
+              onChange={handleChangeSelectedOptionTable}
               options={[
                 { value: 'table', label: 'Bảng' },
                 { value: 'card', label: 'Thẻ' },
@@ -384,18 +400,20 @@ const StudentManagement = () => {
           </Col>
           <Col span={7}>
             <div className={cls('search')}>
-              <Search className={cls('search_iput')} placeholder="Nhập tên giảng viên" allowClear size="large" onSearch={onSearch} />
+              <Search className={cls('search_iput')} placeholder="Nhập tên sinh viên" allowClear size="large" onSearch={onSearch} />
             </div>
           </Col>
           <Col>
-            {/* {viewType === 'table' && (
-                            <ColumnSetting
-                                setColumnVisible={setColumnVisible}
-                                columns={baseColumns}
-                                cacheKey={Config.STUDENT_CACHE_KEY}
-                                style={{ marginLeftF: 20 }}
-                            />
-                        )} */}
+            <div style={{ width: '150px' }}>
+              <Select
+                placeholder={'Sinh viên có/chứa có đề tài'}
+                onChange={handleChangeSelectedOptionIsTopic}
+                options={[
+                  { value: 'true', label: 'Có đề tài' },
+                  { value: 'false', label: 'Chưa có đề tài' },
+                ]}
+              />
+            </div>
           </Col>
           <Button
             type="dashed"
@@ -467,7 +485,6 @@ const StudentManagement = () => {
 
                       <Form.Item name="gender" label="Giới tính">
                         <Select
-                          style={{ width: 120 }}
                           onChange={handleChangeSelectedOption}
                           options={[
                             { value: 'MALE', label: 'Nam' },
@@ -484,10 +501,9 @@ const StudentManagement = () => {
                         <Input />
                       </Form.Item>
 
-                      <Form.Item name="typeTraining" label="Loại đào tạo">
+                      <Form.Item label="Loại đào tạo">
                         <Select
-                          style={{ width: 120 }}
-                          onChange={handleChangeSelectedOption}
+                          onChange={handleChangeSelectedOptionType}
                           options={[
                             { value: 'UNIVERSITY', label: 'Đại học' },
                             { value: 'COLLEGE', label: 'Cao đẳng' },

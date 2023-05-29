@@ -80,7 +80,7 @@ function Login() {
               name="username"
               rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
             >
-              <Input style={{ fontSize: '1.3rem' }} />
+              <Input style={{ fontSize: '1.1rem' }} />
             </Form.Item>
 
             <Form.Item
@@ -88,7 +88,7 @@ function Login() {
               name="password"
               rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}
             >
-              <Input.Password style={{ fontSize: '1.3rem' }} />
+              <Input.Password style={{ fontSize: '1.1rem' }} />
             </Form.Item>
 
             <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>

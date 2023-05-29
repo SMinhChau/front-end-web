@@ -214,7 +214,6 @@ const MajorManagement = () => {
   };
 
   const onFinishChangeRole = () => {
-    console.log('_id', _id);
     majorService
       .updateRoleOfMajor(Number(_id), { role: 'HEAD_LECTURER' })
       .then(() => {
@@ -225,10 +224,6 @@ const MajorManagement = () => {
       .catch((error) => {
         showMessageEror(ErrorCodeDefine[error.response.data.code].message, 3000);
       });
-  };
-
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
   };
 
   return (

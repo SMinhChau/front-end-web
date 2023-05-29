@@ -111,9 +111,7 @@ const TeacherManagementHead = () => {
         const _name = checkGender(text)?.toLocaleUpperCase();
         return (
           <Tag color={_name === 'NAM' ? 'green' : 'blue'} key={checkDegree(text)}>
-            <div className={cls('text_colum')} style={{ maxHeight: '160px', overflow: 'auto' }}>
-              {_name}
-            </div>
+            <div className={cls('text_colum')}>{_name}</div>
           </Tag>
         );
       },
@@ -327,8 +325,6 @@ const TeacherManagementHead = () => {
   };
 
   const onFinish = (value: any) => {
-    console.log('value', value);
-
     lecturerService
       .addLecturer({
         ...value,
@@ -366,9 +362,6 @@ const TeacherManagementHead = () => {
   };
 
   const showEditModal = (id: number) => {
-    console.log('update id -> ', id);
-    console.log('lecturer -> ', lecturer);
-
     setUpdateId(id);
     setOpen(true);
     setStatus('update');
@@ -410,7 +403,6 @@ const TeacherManagementHead = () => {
         showMessage('Đã cập nhật', 3000);
       })
       .catch((errr) => {
-        console.log('errr', error);
         showMessageEror('Lỗi cập nhật', 3000);
       });
   };

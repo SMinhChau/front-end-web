@@ -2,7 +2,7 @@
 
 .header {
   height: $headerHeight;
-  width: 100%;
+  // width: 100%;
   display: flex;
 
   justify-items: end;
@@ -13,10 +13,6 @@
   z-index: 9;
   // right: 40px;
 
-  background-color: #f0f2f5;
-  .login {
-    // position: relative;
-  }
   .content {
     background-color: transparent;
     border-radius: 50px;
@@ -27,7 +23,7 @@
     align-items: stretch;
     flex-direction: row-reverse;
     flex-wrap: wrap-reverse;
-    top: 80vh; /* Đặt vị trí từ đỉnh cửa sổ trình duyệt */
+    top: 70vh; /* Đặt vị trí từ đỉnh cửa sổ trình duyệt */
 
     .name {
       font-size: 1.1rem;

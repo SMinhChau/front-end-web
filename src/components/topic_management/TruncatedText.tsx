@@ -89,7 +89,7 @@ const TruncatedText: React.FC<Props> = ({ id, listOfTopic, topicInfo, topicfromD
             onClick={toggleExpand}
             type="dashed"
             icon={<ArrowRightOutlined color="blue" />}
-            size="large"
+            size="small"
             style={{
               animation: 'none',
               color: 'blue',

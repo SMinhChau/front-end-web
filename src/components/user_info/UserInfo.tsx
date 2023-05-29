@@ -51,8 +51,6 @@ const UserInfo = () => {
     majorService
       .getMajorById(user?.majors?.id)
       .then((result) => {
-        console.log('result get MASjpr id', result);
-
         setMajor(result?.data);
       })
       .catch((errer) => console.log('errr', errer));
@@ -127,10 +125,8 @@ const UserInfo = () => {
 
   const onFinish = (value: any) => {
     var bodyFormData = new FormData();
-    console.log('fileImage 1', fileImage);
 
     if (fileImage) {
-      console.log('file -> ', fileImage);
       bodyFormData.append('avatar', fileImage);
     } else {
       bodyFormData.append('avatar', user?.avatar);
@@ -141,8 +137,6 @@ const UserInfo = () => {
     bodyFormData.append('email', value?.email);
     bodyFormData.append('phoneNumber', value?.phoneNumber);
     bodyFormData.append('degree', value?.degree);
-
-    console.log('bodyFormData', bodyFormData);
 
     dispatch(authAPI.updateInfo()(bodyFormData));
   };
@@ -167,8 +161,6 @@ const UserInfo = () => {
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     if (newFileList.length > 0) {
       if (beforeUpload(newFileList[0] as RcFile)) {
-        console.log('File list', newFileList);
-
         setFileList(newFileList);
         setError('');
       }
