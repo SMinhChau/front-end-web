@@ -55,7 +55,14 @@ const HEADTopicManagement = () => {
       title: 'SL nhóm tối đa',
       dataIndex: 'quantityGroupMax',
       key: 'quantityGroupMaxh',
-      width: 100,
+      width: 200,
+      render: (text) => <div className={cls('text_colum')}>{text}</div>,
+    },
+    {
+      title: 'SL nhóm đã chọn',
+      dataIndex: 'totalGroupChoose',
+      key: 'totalGroupChoose',
+      width: 200,
       render: (text) => <div className={cls('text_colum')}>{text}</div>,
     },
 

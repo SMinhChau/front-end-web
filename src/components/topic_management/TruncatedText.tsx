@@ -53,6 +53,10 @@ const TruncatedText: React.FC<Props> = ({ id, listOfTopic, topicInfo, topicfromD
       lable: 'Số lượng Sinh viên có thể đăng ký',
       value: String(topic?.quantityGroupMax),
     },
+    {
+      lable: 'Số nhóm Sinh viên đã chọn',
+      value: String(topic?.totalGroupChoose),
+    },
 
     {
       lable: 'Ghi chú',
