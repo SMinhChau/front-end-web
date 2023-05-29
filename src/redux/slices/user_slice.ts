@@ -89,10 +89,7 @@ export const userSlice = createSlice({
             state.functions = menus.HEAD_LECTURER;
             state.errorCheck = true;
             break;
-          case EnumRole.SUB_HEAD_LECTURER:
-            state.functions = menus.SUB_HEAD_LECTURER;
-            state.errorCheck = true;
-            break;
+
           case EnumRole.LECTURER:
             state.functions = menus.LECTURER;
             state.errorCheck = true;
@@ -105,15 +102,6 @@ export const userSlice = createSlice({
           case EnumRole.HEAD_LECTURER:
             if (state.isRole === 'HEAD_LECTURER') {
               state.functions = menus.HEAD_LECTURER;
-              state.errorCheck = true;
-            } else {
-              state.errorCheck = false;
-            }
-            break;
-
-          case EnumRole.SUB_HEAD_LECTURER:
-            if (state.isRole === 'SUB_HEAD_LECTURER') {
-              state.functions = menus.SUB_HEAD_LECTURER;
               state.errorCheck = true;
             } else {
               state.errorCheck = false;
@@ -152,10 +140,7 @@ export const userSlice = createSlice({
             state.functions = menus.HEAD_LECTURER;
             state.errorCheck = true;
             break;
-          case EnumRole.SUB_HEAD_LECTURER:
-            state.functions = menus.SUB_HEAD_LECTURER;
-            state.errorCheck = true;
-            break;
+
           case EnumRole.LECTURER:
             state.functions = menus.LECTURER;
             state.errorCheck = true;
@@ -168,15 +153,6 @@ export const userSlice = createSlice({
           case EnumRole.HEAD_LECTURER:
             if (state.isRole === 'HEAD_LECTURER') {
               state.functions = menus.HEAD_LECTURER;
-              state.errorCheck = true;
-            } else {
-              state.errorCheck = false;
-            }
-            break;
-
-          case EnumRole.SUB_HEAD_LECTURER:
-            if (state.isRole === 'SUB_HEAD_LECTURER') {
-              state.functions = menus.SUB_HEAD_LECTURER;
               state.errorCheck = true;
             } else {
               state.errorCheck = false;

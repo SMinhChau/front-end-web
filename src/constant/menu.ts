@@ -55,43 +55,7 @@ const menus = {
       url: '/group-lecturer',
     },
   ],
-  SUB_HEAD_LECTURER: [
-    {
-      name: 'Quản lý Học Kỳ',
-      image: FcCalendar,
-      url: '/term',
-    },
-    {
-      name: 'Quản lý Giảng Viên',
-      image: FcManager,
-      url: '/teacher',
-    },
-    {
-      name: 'Quản lý Sinh Viên',
-      image: FcPortraitMode,
-      url: '/student',
-    },
-    {
-      name: 'Duyệt Đề tài',
-      image: FcViewDetails,
-      url: '/topic',
-    },
-    {
-      name: 'Quản lý Đánh giá',
-      image: FcTodoList,
-      url: '/evaluate',
-    },
-    {
-      name: 'Quản lý nhóm sinh viên',
-      image: FcPortraitMode,
-      url: '/group',
-    },
-    {
-      name: 'Quản lý Nhóm hội đồng',
-      image: FcManager,
-      url: '/group-lecturer',
-    },
-  ],
+
   LECTURER: [
     {
       name: 'Thông tin Học Kỳ',
