@@ -110,10 +110,7 @@ function Login() {
                       </Radio>
                     </Col>
 
-                    <Col>
-                      <Radio value={EnumRole.SUB_HEAD_LECTURER} style={{ marginRight: '60px' }}>
-                        <div className={cls('_lable')}>Phó bộ môn</div>
-                      </Radio>
+                    <Col offset={8}>
                       <Radio value={EnumRole.LECTURER}>
                         <div className={cls('_lable')}>Giảng viên</div>
                       </Radio>
