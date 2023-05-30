@@ -138,128 +138,134 @@
     padding: 30px;
     position: relative;
     width: 45%;
-    height: 52%;
+    height: 45%;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
       rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 
     border-radius: 10px;
-    .btn {
-      font-size: 1.1rem;
-    }
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .lable {
-      font-size: 1.1rem;
-      font-weight: 500;
-    }
-    .lable {
-      font-size: 1.1rem;
-    }
-    .lable_radio {
-      font-size: 1.1rem;
-      font-weight: 400;
-      color: #0043ff;
-    }
-
-    ._lable {
-      font-size: 1.1rem;
-      color: #344e41;
-      & :hover {
-        font-size: 1.2rem;
+    .form_content {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      align-items: center;
+      .btn {
+        font-size: 1.1rem;
+      }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .lable {
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+      .lable {
+        font-size: 1.1rem;
+      }
+      .lable_radio {
+        font-size: 1.1rem;
+        font-weight: 400;
         color: #0043ff;
       }
-    }
-    img {
-      position: absolute;
-      height: 60px;
 
-      top: 5px;
-      margin: 5px;
-      left: 5px;
-
-      &:hover {
-        cursor: pointer;
+      ._lable {
+        font-size: 1.1rem;
+        color: #344e41;
+        & :hover {
+          font-size: 1.2rem;
+          color: #0043ff;
+        }
       }
-    }
+      img {
+        position: absolute;
+        height: 60px;
 
-    .form_header {
-      text-shadow: 1px 3px 1px #f5cac3;
-      text-transform: uppercase;
-      color: #3a0ca3;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 1.6rem;
-      font-weight: 600;
-      padding-top: 20px;
-      padding-bottom: 10px;
-    }
+        top: 5px;
+        margin: 5px;
+        left: 5px;
 
-    .form_group {
-      border: 1px solid gray;
-      width: 70%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 20px;
-      border-radius: 20px;
-
-      position: relative;
-      background-color: #fff !important;
-      justify-content: center;
-      align-items: center;
-      input {
-        width: 100%;
-        border: none;
-
-        &:focus {
-          outline: none;
+        &:hover {
+          cursor: pointer;
         }
       }
 
-      span {
-        position: absolute;
-        right: 10px;
-        top: 12px;
+      .form_header {
+        text-shadow: 1px 3px 1px #f5cac3;
+        text-transform: uppercase;
+        color: #3a0ca3;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      .form_group {
+        border: 1px solid gray;
+        width: 70%;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 20px;
+        border-radius: 20px;
+
+        position: relative;
+        background-color: #fff !important;
+        justify-content: center;
+        align-items: center;
+        input {
+          width: 100%;
+          border: none;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        span {
+          position: absolute;
+          right: 10px;
+          top: 12px;
+          cursor: pointer;
+        }
+      }
+      .forgot_password {
+        // display: block;
+        // width: 90%;
+        // text-align: end;
+        // justify-content: end;
+        // text-decoration: none;
+        // margin-top: 10px;
+        .lable {
+          font-size: 1.1rem;
+          color: blue;
+        }
+      }
+      .content_function {
+        display: flex;
+        width: 100%;
+        // text-align: center;
+
+        justify-content: center;
+        align-items: center;
+      }
+
+      button {
+        width: 50%;
+        font-size: 20px;
+        margin-top: 10px;
+        padding: 10px;
+        height: 10%;
+        border: none;
+        border-radius: 20px;
         cursor: pointer;
-      }
-    }
-    .forgot_password {
-      // display: block;
-      // width: 90%;
-      // text-align: end;
-      // justify-content: end;
-      // text-decoration: none;
-      // margin-top: 10px;
-      .lable {
-        font-size: 1.1rem;
-        color: blue;
-      }
-    }
-    .content_function {
-      display: flex;
-      width: 100%;
-      // text-align: center;
+        background-color: #007aff;
+        color: #fff;
+        font-weight: 600;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-      justify-content: center;
-      align-items: center;
-    }
-
-    button {
-      width: 50%;
-      font-size: 20px;
-      margin-top: 3px;
-      padding: 10px;
-      height: 10%;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      background-color: #007aff;
-      color: #fff;
-      font-weight: 600;
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-      &:hover {
-        background-color: #34aadc;
+        &:hover {
+          background-color: #34aadc;
+        }
       }
     }
   }

@@ -71,78 +71,80 @@ function Login() {
       <ToastContainer />
       {/* <img src={bgImg} alt="" id="bg_login" className={cls('bg')} /> */}
       <Form action="" labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} onFinish={login} size="large">
-        <img src={logo} alt="" />
-        <div className={cls('form_header')}>Đăng nhập</div>
-        <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
-          <Col span={24}>
-            <Form.Item
-              label={<div className={cls('lable')}>Tên đăng nhập</div>}
-              name="username"
-              rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
-            >
-              <Input style={{ fontSize: '1.1rem' }} />
-            </Form.Item>
+        <div className={cls('form_content')}>
+          <img src={logo} alt="" />
+          <div className={cls('form_header')}>Đăng nhập</div>
+          <Row justify={'space-between'} style={{ width: '100%' }} align={'middle'}>
+            <Col span={24}>
+              <Form.Item
+                label={<div className={cls('lable')}>Tên đăng nhập</div>}
+                name="username"
+                rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+              >
+                <Input style={{ fontSize: '1.1rem' }} />
+              </Form.Item>
 
-            <Form.Item
-              label={<div className={cls('lable')}>Mật khẩu</div>}
-              name="password"
-              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}
-            >
-              <Input.Password style={{ fontSize: '1.1rem' }} />
-            </Form.Item>
+              <Form.Item
+                label={<div className={cls('lable')}>Mật khẩu</div>}
+                name="password"
+                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu', min: 6 }]}
+              >
+                <Input.Password style={{ fontSize: '1.1rem' }} />
+              </Form.Item>
 
-            <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
-              <Col span={8}>
-                <div className={cls('lable_radio')}>
-                  Đăng nhập với quyền <UserOutlined sizes="30" />
-                </div>
-              </Col>
+              <Row justify={'start'} align={'middle'} style={{ width: '100%', padding: '10px' }}>
+                <Col span={8}>
+                  <div className={cls('lable_radio')}>
+                    Đăng nhập với quyền <UserOutlined sizes="30" />
+                  </div>
+                </Col>
 
-              <Col span={16}>
-                <Radio.Group size="large" onChange={onChangeCheckbox} value={value}>
-                  <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
-                    <Col>
-                      <Radio value={'ADMIN'} style={{ marginRight: '40px' }}>
-                        <div className={cls('_lable')}>Người quản lý</div>
-                      </Radio>
-                      <Radio value={EnumRole.HEAD_LECTURER}>
-                        <div className={cls('_lable')}>Trưởng bộ môn</div>
-                      </Radio>
-                    </Col>
+                <Col span={16}>
+                  <Radio.Group size="large" onChange={onChangeCheckbox} value={value}>
+                    <Row justify={'space-between'} align={'middle'} style={{ width: '100%' }}>
+                      <Col>
+                        <Radio value={'ADMIN'} style={{ marginRight: '40px' }}>
+                          <div className={cls('_lable')}>Người quản lý</div>
+                        </Radio>
+                        <Radio value={EnumRole.HEAD_LECTURER}>
+                          <div className={cls('_lable')}>Trưởng bộ môn</div>
+                        </Radio>
+                      </Col>
 
-                    <Col offset={8}>
-                      <Radio value={EnumRole.LECTURER}>
-                        <div className={cls('_lable')}>Giảng viên</div>
-                      </Radio>
-                    </Col>
-                  </Row>
-                </Radio.Group>
-              </Col>
-            </Row>
-            <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
-              <Col span={18}>
-                <div className={cls('content_function')}>
-                  <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
-                    {/* <Col offset={4}>
+                      <Col offset={8}>
+                        <Radio value={EnumRole.LECTURER}>
+                          <div className={cls('_lable')}>Giảng viên</div>
+                        </Radio>
+                      </Col>
+                    </Row>
+                  </Radio.Group>
+                </Col>
+              </Row>
+              <Row justify={'center'} align={'middle'} style={{ width: '100%' }}>
+                <Col span={18}>
+                  <div className={cls('content_function')}>
+                    <Row justify={'end'} align={'middle'} style={{ width: '100%' }}>
+                      {/* <Col offset={4}>
                       <Checkbox onChange={onChange}> Quản lý</Checkbox>
                     </Col> */}
-                    <Col offset={4}>
-                      <Link to="/forgot-password" className={cls('forgot_password')}>
-                        <div className={cls('lable')}> Quên mật khẩu?</div>
-                      </Link>
-                    </Col>
-                  </Row>
-                </div>
-              </Col>
-            </Row>
+                      <Col offset={4}>
+                        <Link to="/forgot-password" className={cls('forgot_password')}>
+                          <div className={cls('lable')}> Quên mật khẩu?</div>
+                        </Link>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+              </Row>
 
-            <Row justify={'center'}>
-              <button type="submit">
-                <div className={cls('btn')}>Đăng nhập</div>
-              </button>
-            </Row>
-          </Col>
-        </Row>
+              <Row justify={'center'}>
+                <button type="submit">
+                  <div className={cls('btn')}>Đăng nhập</div>
+                </button>
+              </Row>
+            </Col>
+          </Row>
+        </div>
       </Form>
 
       <ul className={cls('circles')}>

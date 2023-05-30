@@ -404,7 +404,6 @@ const GroupEvaluation = () => {
                           };
                         })}
                         columns={columnsLecturer}
-                        pagination={{ pageSize: 2 }}
                       />
                     </div>
                   </Skeleton>
@@ -434,7 +433,7 @@ const GroupEvaluation = () => {
                 </Divider>
                 <Skeleton loading={loadingDetail} active paragraph={{ rows: 5 }}>
                   <div className={cls('group_content')}>
-                    <Table dataSource={transcripts} columns={columns} scroll={{ x: 400, y: 290 }} />
+                    <Table dataSource={transcripts} columns={columns} scroll={{ x: 400, y: 400 }} />
                   </div>
                 </Skeleton>
                 {studentIdSelect && (
