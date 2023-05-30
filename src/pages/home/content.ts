@@ -4,7 +4,7 @@ const slide2 = 'assets/home/sl02.png';
 
 const contentHome = [
   {
-    title: 'Hệ thống quản lý học phần khóa luận tốt nghiệp của trường Đại học Công nghiệp Thành phố Hồ Chí Minh.',
+    title: 'Xây dựng hệ thống hỗ trợ triển khai học phần khóa luận tốt nghiệp của Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
     main: 'Hệ thống cung cấp cho Giảng Viên quy trình quản lý khóa luận, giúp cho việc quản lý khóa luận trở nên hiệu quả. Cho phép Giảng Viên thực hiện các công việc liên quan đến việc quản lý khóa luận của Sinh Viên theo trình tự hợp lý với các công việc như: học kỳ, giảng viên, sinh viên, đề tài,xem xét, đánh giá,...  ',
     slide: 'Đổi mới, nâng tầm cao mới - Năng động, hội nhập toàn cầu',
     image: slide2,
@@ -19,7 +19,7 @@ const contentHome = [
 ];
 
 export const MAIN = {
-  title: 'Hệ thống quản lý học phần khóa luận tốt nghiệp của trường Đại học Công nghiệp Thành phố Hồ Chí Minh.',
+  title: 'Xây dựng hệ thống hỗ trợ triển khai học phần khóa luận tốt nghiệp của Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
   main: 'Một phần mềm hỗ trợ quản lý quá trình đăng ký khóa luận cho sinh viên. Hệ thống này cung cấp nhiều tính năng giúp sinh viên có thể đăng ký đề tài khóa luận, chọn giảng viên hướng dẫn, quản lý tiến độ, nộp báo cáo và đăng ký bảo vệ khóa luận.',
 };
 export const LIST_DES = [

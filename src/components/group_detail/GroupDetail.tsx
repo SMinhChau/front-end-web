@@ -638,35 +638,37 @@ const GroupDetail = () => {
   const renderFormTypeReport = useMemo(() => {
     return (
       <>
-        <Form layout="vertical" onFinish={onFinishChosseTypeReport} style={{ maxWidth: 600 }}>
-          <Row>
-            <Col span={18}>
-              <Form.Item label="" rules={[{ required: true }]}>
-                <Select
-                  onChange={handleSelectTypeReport}
-                  placeholder={'Chọn loại báo cáo'}
-                  options={optionsTypeReport}
-                  value={typeReport}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item wrapperCol={{ span: 24 }}>
-                <Row justify={'end'} style={{ bottom: '0px' }}>
-                  <Col>
-                    <Space wrap>
-                      <Tooltip title={getStatusGroup(String(inforGroup?.status))} color={getStatusGroupColor(String(inforGroup?.status))}>
-                        <Button disabled={checkDisableButton(String(inforGroup?.status))} type="primary" htmlType="submit">
-                          Cập nhật
-                        </Button>
-                      </Tooltip>
-                    </Space>
-                  </Col>
-                </Row>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
+        {infoHost?.id ? (
+          <Form layout="vertical" onFinish={onFinishChosseTypeReport} style={{ maxWidth: 600 }}>
+            <Row>
+              <Col span={18}>
+                <Form.Item label="" rules={[{ required: true }]}>
+                  <Select
+                    onChange={handleSelectTypeReport}
+                    placeholder={'Chọn loại báo cáo'}
+                    options={optionsTypeReport}
+                    value={typeReport}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item wrapperCol={{ span: 24 }}>
+                  <Row justify={'end'} style={{ bottom: '0px' }}>
+                    <Col>
+                      <Space wrap>
+                        <Tooltip title={getStatusGroup(String(inforGroup?.status))} color={getStatusGroupColor(String(inforGroup?.status))}>
+                          <Button disabled={checkDisableButton(String(inforGroup?.status))} type="primary" htmlType="submit">
+                            Cập nhật
+                          </Button>
+                        </Tooltip>
+                      </Space>
+                    </Col>
+                  </Row>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        ) : null}
       </>
     );
   }, [statusHost, groupLecturerHost, handleSelectChangeHost, infoHost]);

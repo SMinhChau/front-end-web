@@ -293,6 +293,7 @@ const GroupLecturer = () => {
       title: 'Mã GV',
       dataIndex: 'username',
       key: 'username',
+      width: 150,
       render: (text: string) => (
         <div className={cls('text_colum')} style={{ maxHeight: '50px', overflow: 'auto' }}>
           {text}
@@ -325,31 +326,23 @@ const GroupLecturer = () => {
         );
       },
     },
-    {
-      title: 'SĐT',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
-      width: 120,
-      render: (text: string) => (
-        <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
-          {text}
-        </div>
-      ),
-    },
+
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      width: 150,
+      width: 100,
       render: (text: string) => (
         <div className={cls('text_colum')} style={{ maxHeight: '60px', overflow: 'auto' }}>
           {text}
         </div>
       ),
     },
+
     {
       title: 'Xóa',
       dataIndex: 'id',
+      width: 50,
       render: (id: any) => (
         <Button onClick={() => deleteMemberGroupInfo(id)}>
           <DeleteOutlined style={{ color: 'red' }} />
@@ -464,7 +457,7 @@ const GroupLecturer = () => {
       <>
         {groupStudents?.length > 0 ? (
           <>
-            <Table columns={baseColumns} dataSource={groupStudents} scroll={{ x: 50, y: 90 }} />
+            <Table columns={baseColumns} dataSource={groupStudents} pagination={{ pageSize: 7 }} />
           </>
         ) : (
           <>
@@ -478,7 +471,7 @@ const GroupLecturer = () => {
   }, [groupStudents, groupDes, loading, groupLecturers]);
 
   const renderTable = useMemo(() => {
-    return <Table dataSource={data} columns={columns} scroll={{ x: 400 }} pagination={{ pageSize: 7 }} />;
+    return <Table dataSource={data} columns={columns} pagination={{ pageSize: 7 }} />;
   }, [groupLecturers, columns, lecturer]);
 
   const renderTableGroupDes = useMemo(() => {
@@ -497,8 +490,6 @@ const GroupLecturer = () => {
           };
         })}
         columns={columnsLecturer}
-        scroll={{ x: 400, y: 150 }}
-        pagination={{ pageSize: 2 }}
       />
     );
   }, [groupLecturers, groupDes, loading, data]);

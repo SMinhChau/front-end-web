@@ -13,9 +13,9 @@ import { setAllow } from 'src/redux/slices/user_slice';
 import { EnumRole } from 'src/enum';
 import Select from 'react-select';
 const cls = classNames.bind(style);
-const avatarDefault = 'assets/avatars/avatarDefault.png';
+const avatarDefault = '/assets/avatars/avatarDefault.png';
 
-const logo = 'assets/Logo_IUH.png';
+const logo = '/assets/Logo_IUH.png';
 
 const Management = () => {
   const { Text } = Typography;
