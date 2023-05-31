@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Modal, Form, DatePicker, Select, Row, Col, Card, Typography, Tag, Space, Tooltip } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined, UpSquareOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined, UpSquareOutlined, ExportOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import style from './SemesterManagement.module.scss';
 import termService from '../../services/term';
@@ -11,7 +11,8 @@ import Term from '../../entities/term';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setTermSlice } from '../../redux/slices/term_slice';
 import { ErrorCodeDefine, getStatusViewPoint, showMessage, showMessageEror } from '../../constant';
-
+import studentService from 'src/services/student';
+import * as XLSX from 'xlsx';
 const cls = classNames.bind(style);
 const { Text } = Typography;
 
@@ -220,6 +221,33 @@ const SemesterManagement = () => {
     {
       title: '',
       dataIndex: 'id',
+      key: 'id',
+      render: (id: any) => {
+        return (
+          <Space wrap>
+            <Tooltip title="Xuất danh sách sinh viên" color={'geekblue'}>
+              <Button
+                className={cls('btn')}
+                type="dashed"
+                icon={<ExportOutlined />}
+                onClick={() => {
+                  exportListOfStudent();
+                }}
+                size="large"
+                style={{
+                  animation: 'none',
+                  color: 'blue',
+                  fontWeight: '600',
+                }}
+              ></Button>
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
       render: (id: any) => (
         <div style={{ width: '100%', flexDirection: 'column' }}>
           <Button onClick={() => deleteTerm(id)} style={{ marginBottom: '5px' }}>
@@ -234,7 +262,6 @@ const SemesterManagement = () => {
           </Button>
         </div>
       ),
-      with: '100px',
     },
   ];
   const [terms, setTerms] = useState<Array<Term>>([]);
@@ -420,6 +447,36 @@ const SemesterManagement = () => {
       label: 'Học Kỳ 2',
     },
   ];
+
+  const exportListOfStudent = () => {
+    studentService
+      .exportFile({ termId: termState.termIndex.id })
+      .then((result) => {
+        exportCSV(result.data).then((e) => console.log(e));
+      })
+      .catch((er) => {
+        console.log('er ->', er);
+      });
+  };
+  const exportCSV = async (blob: any) => {
+    const buf = await blob.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'binary' });
+    /* Get first worksheet */
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array', cellStyles: true });
+    const finalData = new Blob([excelBuffer]);
+    const url = window.URL.createObjectURL(finalData);
+
+    const link = document.createElement('a');
+    link.href = url;
+    const fileName = `${termState?.termIndex?.name}.xlsx`;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+  const downloadxls = (data: any) => {
+    console.log(data);
+  };
 
   const renderModalUpdate = useMemo(() => {
     return (

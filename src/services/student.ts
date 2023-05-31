@@ -69,6 +69,15 @@ class StudentService {
       data,
     });
   }
+
+  async exportFile(params: { termId: number; studentId?: number }) {
+    return await axiosAuth({
+      url: `/lecturer/students/export-transcript`,
+      params,
+      method: 'get',
+      responseType: 'blob', // Important
+    });
+  }
 }
 
 const studentService = new StudentService();
