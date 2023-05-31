@@ -388,7 +388,7 @@ const TeacherManagement = () => {
   };
 
   const renderTableLecturer = useMemo(() => {
-    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 530 }} />;
+    return <Table dataSource={data} columns={baseColumns} pagination={{ pageSize: 7 }} scroll={{ x: 450, y: 600 }} />;
   }, [lecturer, baseColumns, data]);
 
   const reSetPasss = (id: number) => {
@@ -455,8 +455,20 @@ const TeacherManagement = () => {
             </div>
           </Col>
 
+          <div className={cls('name')} style={{ width: '200px', zIndex: 99999, position: 'fixed' }}>
+            <Select
+              placeholder={'Chọn chuyên ngành'}
+              onChange={handleSelectChangeMajorFilter}
+              options={listMajor.map((val) => {
+                return {
+                  value: val.value,
+                  label: `${val.label} - Mã: ${val.value}`,
+                };
+              })}
+            />
+          </div>
           <Col span={7}>
-            <div className={cls('search')}>
+            <div className={cls('search')} style={{ marginLeft: '150px' }}>
               <Search
                 // onChange={onChange}
                 className={cls('search_iput')}
@@ -467,18 +479,7 @@ const TeacherManagement = () => {
               />
             </div>
           </Col>
-          <div className={cls('name')}>Chọn chuyên ngành:</div>
-          <div style={{ width: '200px' }}>
-            <Select
-              onChange={handleSelectChangeMajorFilter}
-              options={listMajor.map((val) => {
-                return {
-                  value: val.value,
-                  label: `${val.label} - Mã: ${val.value}`,
-                };
-              })}
-            />
-          </div>
+
           <Button
             type="dashed"
             size="large"
