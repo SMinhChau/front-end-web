@@ -69,6 +69,8 @@ const GroupAdvisor = () => {
         .then((result) => {
           const _data = result.data.map((value: AssignAdvisor, index: number) => {
             return {
+              group: value.group,
+
               key: index,
               id: value.id,
               name: value.group.name,
@@ -114,8 +116,11 @@ const GroupAdvisor = () => {
       title: 'Mã nhóm',
       dataIndex: 'id',
       key: 'id',
-      render: (text) => {
-        return <div className={cls('text_colum')}>{text}</div>;
+      width: 100,
+      render: (id) => {
+        const _id = listAssign.filter((i) => i.id === id)[0];
+
+        return <div className={cls('text_colum')}>{_id.group.id}</div>;
       },
     },
 
