@@ -56,6 +56,7 @@ const ListGroupOfLecturer = () => {
             member: value.group.members,
             topic: value.group.topic,
             group: value.group,
+
             groupLecturer: value.groupLecturer,
           };
         });
@@ -90,8 +91,10 @@ const ListGroupOfLecturer = () => {
       dataIndex: 'id',
       key: 'id',
       width: 100,
-      render: (text) => {
-        return <div className={cls('text_colum')}>{text}</div>;
+      render: (id) => {
+        const _id = listAssign.filter((i) => i.id === id)[0];
+
+        return <div className={cls('text_colum')}>{_id.group.id}</div>;
       },
     },
 
